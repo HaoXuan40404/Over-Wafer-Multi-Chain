@@ -6,8 +6,6 @@ import codecs
 import sys
 import os
 
-sys.path.append(os.getcwd() + '/../../')
-
 from basic import Chain
 from pys import utils
 from pys import log
@@ -140,6 +138,7 @@ def parser_test():
     log.init_logging('../../conf/logging.conf')
     confparser = ConfParser('../../conf/config.ini')
     confparser.do_parser()
+    print(confparser.get_nodes())
 
 if __name__ == '__main__':
     parser_test()
