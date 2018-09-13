@@ -140,10 +140,9 @@ class TempNode(object):
         os.chdir('../../../')
         #output
         
-        os.system('./build fisco-bcos --genesis ./build/node0/genesis.json  --config ./build/node0/config.json --export-genesis ./output/genesis.json  >./build/node0/fisco-bcos.log 2>&1')
-
         time.sleep(6)
         os.system('bash ./build/node0/stop.sh')
+        os.system('./build/fisco-bcos --genesis ./build/node0/genesis.json  --config ./build/node0/config.json --export-genesis ./output/genesis.json  >./build/node0/fisco-bcos.log 2>&1')
         os.system('rm -rf ./build')
 
         print("    Installing temp node fisco-bcos success!")
@@ -158,6 +157,6 @@ class TempNode(object):
 if __name__=="__main__":
     print('main')
     test = TempNode('')
-    #test.install()
+    test.install('1','2')
 
    
