@@ -4,9 +4,6 @@ import os
 import sys
 
 class ChainData:
-    '''
-    数据文件夹的路径
-    '''
     data_dir = ''
     def __init__(self, chain_id, version):
         self.chain_id = chain_id

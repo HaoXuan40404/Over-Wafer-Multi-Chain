@@ -1,16 +1,26 @@
 from pys import log
 from pys import utils
-from pys import parser
+from data import ChainData
 
-import data
+import parser
 
 def build(cfg):
+
+    log.get_logger().debug('building, cfg is %s', cfg)
+
+    # 配置解析
     p = parser.ConfParser(cfg)
     p.do_parser()
-    cd = data.ChainData(p.get_chain_id(), p.get_chain_version())
-    if cd.exist():
-        raise Exception('chain_id on version exist, ', ('chainid is %s, version is %s') % (chain_id, chain_version) )
+    cdata = ChainData(p.get_chain_id(), p.get_chain_version())
+    if cdata.exist():
+        raise Exception('chainid with version already exist, id is %s, version is %s' % (p.get_chain_id(), p.get_chain_version())
     
+    # 构建安装包
+    for node in p.get_nodes():
+        pass
+
+    
+
     
 
 

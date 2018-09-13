@@ -1,13 +1,11 @@
 import configparser
 import logging
+import codecs
 
-import utils
-import log
+from pys import utils
+from pys import log
 
-# create logger
-logger = logging.getLogger("instance")
-
-class Ports:
+class Port:
     def __init__(self, rpc_port, p2p_port, channel_port):
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
@@ -32,7 +30,7 @@ class Ports:
         return self.channel_port
     
     def __repr__(self):
-        return 'Ports [rpc_port %u, p2p_port %u, channel_port %u]' % (self.rpc_port, self.p2p_port, self.channel_port)
+        return '[rpc_port] %d, [p2p_port] %d, [channel_port] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
 
 class NodeEle:
     def __init__(self, node_desc):
@@ -42,21 +40,23 @@ class NodeEle:
         self.node_num = 0
     
     def do_parser(self):
-        if isinstance(self.node_desc, str):
-            l = self.node_desc.split()
-            if len(l) != 3:
-                raise Exception("node_desc invalid ", self.node_desc)
-            if not utils.valid_ip(l[0]):
-                raise Exception("invalid host_ip ", l[0])
-            if not utils.valid_ip(l[1]):
-                raise Exception("invalid p2p_ip ", l[1])
-            if l[2] <= 0:
-                raise Exception("num lt 0 ", l[2])
-            self.host_ip = l[0]
-            self.p2p_ip = l[1]
-            self.node_num = l[2]
-        else:
-            raise Exception("node_desc not string ", self.node_desc)
+
+        l = self.node_desc.split()
+
+        if len(l) != 3:
+            raise Exception("node_desc invalid format ", self.node_desc)
+
+        if not utils.valid_ip(l[0]):
+            raise Exception("node_desc invalid format invalid host_ip ", l[0])
+        if not utils.valid_ip(l[1]):
+            raise Exception("node_desc invalid format invalid p2p_ip ", l[1])
+        if l[2] <= 0:
+            raise Exception("node_desc invalid format node_num lt 0 ", l[2])
+        self.host_ip = l[0]
+        self.p2p_ip = l[1]
+        self.node_num = int(l[2])
+
+        log.get_logger().info('cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
 
     def get_host_ip(self):
         return self.host_ip
@@ -68,36 +68,33 @@ class NodeEle:
         return self.node_num
     
     def __repr__(self):
-        return 'Node [host_ip %s, p2p_ip %s, node_num %u]' % (self.host_ip, self.p2p_ip, self.node_num)
+        return 'Node [host_ip %s, p2p_ip %s, node_num %d]' % (self.host_ip, self.p2p_ip, self.node_num)
 
 class ConfParser:
-    '''
-    '''
     def __init__(self, cfg):
         self.config = cfg
         self.chain_id = ''
         self.chain_verion = ''
-        self.install_dir = ''
-        self.ports = Ports(0, 0, 0)
+        self.ports = Port(0, 0, 0)
         self.nodes = []
     
     def __repr__(self):
-        return 'ConfParser [ chain_id %s, chain_version %s, install_dir %s, ports %s]' % (self.chain_id, self.chain_verion, self.install_dir, self.ports)
+        return 'ConfParser [ chain_id %s, chain_version %s, ports %s]' % (self.chain_id, self.chain_verion, self.ports)
 
     def do_parser(self):
 
-        logger.info('cfg parser %s', self.config)
-        
+        log.get_logger().info('cfg parser %s', self.config)
+
         if not utils.valid_string(self.config):
             raise Exception('config not string ', self.config)
         
         # read and parser config file
         cf = configparser.ConfigParser()
-        cf.read(self.config)
-
+        with codecs.open(self.config, 'r', encoding='utf-8') as f:
+            cf.readfp(f)
+            
         self.chain_id = cf.get('chain', 'chainid')
         self.chain_verion = cf.get('chain', 'version')
-        self.install_dir = cf.get('chain', 'install_dir')
 
         self.ports.set_rpc_port(cf.getint('ports', 'rpc_port'))
         self.ports.set_p2p_port(cf.getint('ports', 'p2p_port'))
@@ -109,20 +106,21 @@ class ConfParser:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
                 n.do_parser()
                 self.nodes.append(n)
-            except:
+            except Exception, err:
+                # log.get_logger().info('cfg parser end, result is %s', self)
                 break
             index = (index + 1)
+        
+        if len(self.nodes) == 0:
+            raise Exception('invalid cfg format, nodes empty')
 
-        logger.info('cfg parser end, result is %s', self)
+        log.get_logger().info('cfg parser end, result is %s', self)
 
     def get_chain_id(self):
         return self.chain_id
     
     def get_chain_version(self):
         return self.chain_verion
-    
-    def get_install_dir(self):
-        return self.install_dir
 
     def get_ports(self):
         return self.ports
@@ -132,7 +130,7 @@ class ConfParser:
 
 def parser_test():
     log.init_logging('../conf/logging.conf')
-    confparser = ConfParser('config.ini')
+    confparser = ConfParser('../conf/config.ini')
     confparser.do_parser()
 
 if __name__ == '__main__':

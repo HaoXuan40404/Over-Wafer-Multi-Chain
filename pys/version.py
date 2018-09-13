@@ -9,5 +9,5 @@ def set_release_note_path(p):
     release_note_path = p
     
 def version():
-    with open(release_note_path, 'r+') as f:
+    with open(release_note_path, 'r') as f:
         print(f.read())

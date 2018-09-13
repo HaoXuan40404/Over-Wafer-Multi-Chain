@@ -11,14 +11,14 @@ from pys import data
 from pys import build
 
 def init():
-    # »ñÈ¡µ±Ç°Ä¿Â¼, ÓÃÀ´³õÊ¼»¯¸÷¸öÄ£¿éµÄÒÀÀµÂ·¾¶ 
+    # è·å–å½“å‰ç›®å½•, ç”¨æ¥åˆå§‹åŒ–å„ä¸ªæ¨¡å—çš„ä¾èµ–è·¯å¾„ 
     pwd = os.getcwd()
-    # logging³õÊ¼»¯
+    # loggingåˆå§‹åŒ–
     log.init_logging(pwd + '/conf/logging.conf')
-    # ³õÊ¼»¯Ö¤Êé(»ú¹¹Ãû³Æ¡¢Ö¤ÊéÂ·¾¶)
+    # åˆå§‹åŒ–è¯ä¹¦(æœºæ„åç§°ã€è¯ä¹¦è·¯å¾„)
     ca.set_agent('WB')
     ca.set_ca_path(pwd + '/data/ca')
-    # ³õÊ¼»¯Êı¾İÄ¿Â¼
+    # åˆå§‹åŒ–æ•°æ®ç›®å½•
     data.set_data_dir(pwd + '/data/chain')
     # version
     version.set_release_note_path(pwd + '/release_note.txt')

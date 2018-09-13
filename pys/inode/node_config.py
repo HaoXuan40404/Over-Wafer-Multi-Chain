@@ -42,6 +42,7 @@ class Config:
         self.eventlog = EVENTLOG
         self.statlog = STATLOG
         self.logconf = LOGCONF
+
     def set_sys_addr(self, addr):
         self.systemproxyaddress = addr
         
@@ -61,7 +62,7 @@ class Config:
         '''
         将config对象转换为json对象
         '''
-        return json.dumps(self.__dict__)
+        return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
 
     def fromJson(self, sjson):
         '''
@@ -77,16 +78,15 @@ def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channe
     cf.set_rpc_port(rpc_port)
     cf.set_channel_port(channel_port)
     cf.set_p2p_port(p2p_port)
-    print(cf)
     return cf.toJson()
 
 def config_test():
     build_config_json('12345', '85405', '30303', '8821')
-    # print(build_config_json('12345', '85405', '30303', '8821'))
+    print(build_config_json('12345', '85405', '30303', '8821'))
 
 def config_test0():
     build_config_json('12345')
-    # print(build_config_json('12345'))
+    print(build_config_json('12345'))
 
 if __name__ == '__main__':
     config_test() 

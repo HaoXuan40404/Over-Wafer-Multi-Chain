@@ -14,7 +14,7 @@ def valid_port(port):
         return False
 
 def valid_string(s):
-    if isinstance(s, str) and (len(s) > 0):
+    if (isinstance(s, str) or isinstance(s, unicode)) and (len(s) > 0):
         return True
     else:
         return False
