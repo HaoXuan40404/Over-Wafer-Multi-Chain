@@ -110,6 +110,8 @@ class TempNode(object):
         # copy fisco-bcos
         #os.system('cp "${PATH}/fisco-bcos" ./build')
         # get bootstrapnodes.json
+        bootstrapnodes_path = './build/node0/data/bootstrapnodes.json'
+        self.bootstrapnodes_json(bootstrapnodes_path,p2p_port)
        
         #replace config.json
         config_path = './build/node0/config.json'
