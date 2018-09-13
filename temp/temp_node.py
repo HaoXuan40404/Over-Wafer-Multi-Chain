@@ -116,7 +116,7 @@ class TempNode(object):
         #deploy system contract failed
         if not os.path.exists("./build/web3sdk/bin/output/SystemProxy.address"):
             if not os.path.isfile("./build/web3sdk/bin/output/SystemProxy.address"):
-                os.system('bash ./build/tempNode/stop.sh')
+                os.system('bash ./build/node0/stop.sh')
                 return 1
             else:
                # error_message "system contract address file is not exist, web3sdk deploy system contract not success."
@@ -128,7 +128,7 @@ class TempNode(object):
         
         syaddress = commands.getoutput('cat ./build/web3sdk/bin/output/SystemProxy.address')
         if not syaddress:
-            os.system('bash ./build/tempNode/stop.sh')
+            os.system('bash ./build/node0/stop.sh')
             os.environ['message']="system contract address file is empty, web3sdk deploy system contract not success."
             os.system('bash ${utils} error')
             return 1
