@@ -8,7 +8,7 @@ def valid_ip(ip):
         return False
 
 def valid_port(port):
-    if isinstance(port, int) and (port > 0) and (port < 65535):
+    if isinstance(port, int) and (port > 0) and (port <= 65535):
         return True
     else:
         return False

@@ -1,29 +1,30 @@
+#coding:utf-8
+
 import sys
 import os
-import argparse
+import logging
 
-sys.path.append(os.path.abspath('.') + './pytools')
+from pys import log
+from pys import ca
+from pys import version
+from pys import data
+from pys import build
 
-import version
+def init():
+    # 获取当前目录, 用来初始化各个模块的依赖路径 
+    pwd = os.getcwd()
+    # logging初始化
+    log.init_logging(pwd + '/conf/logging.conf')
+    # 初始化证书(机构名称、证书路径)
+    ca.set_agent('WB')
+    ca.set_ca_path(pwd + '/data/ca')
+    # 初始化数据目录
+    data.set_data_dir(pwd + '/data/chain')
+    # version
+    version.set_release_note_path(pwd + '/release_note.txt')
 
 def main():
-    parser = argparse.ArgumentParser('multi-chain usage')
-    parser.add_argument('-C', '--config', type=str, dest='config',
-                        help="input config file which in ini format")
-    parser.add_argument("-V", "--version", action="store_true",
-                        help="version of multi-chain")
-    parser.add_argument("--new_account", help="generate a new account")
-    args = parser.parse_args()
-
-    for arg in args.__dict__.keys():
-        print(args.__dict__)
-        print(arg)
-        if args.__dict__['version']:
-            version.version('./release_note.txt')
-            sys.exit(-1)
-        elif arg == 'config':
-            print(args.__dict__[arg])
-
+    init()
 
 if __name__ == '__main__':
     main()
