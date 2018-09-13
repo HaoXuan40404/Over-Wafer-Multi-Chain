@@ -18,6 +18,8 @@ class TempNode(object):
         global NODE_ID
         NODE_ID = "8c0fbe3a9b31775fc9786d7ae791e72b299d71bec18f18eb908caf637c71eaab4c691e738c41bc03478dd262077230056a4b0f07e9043445ea5632560326b8f5"
         self.config=VarReplace.VarReplace()
+        os.environ['utils'] ='./scripts/utils.sh'
+        os.environ['percent_num_progress'] = './scripts/percent_num_progress_bar.sh'
 
     def config_json(self,config_path,rpc_port,p2p_port,channel_port,chain_id):
         '''build config.json'''
@@ -166,7 +168,7 @@ class TempNode(object):
         node_num_per_host = len(node_id_list)
         node_num_per_host = 3
         for i in range(0,node_num_per_host):
-            node_path= 'PATH '+ '_' + i + '.json'
+            node_path= 'PATH '+ '_' + str(i) + '.json'
             print(" ==== register node json =>" + node_path)
             os.environ['node_path'] = node_path
             #os.system('bash system_contract_tools.sh NodeAction registerNode file:${node_path}')
@@ -176,9 +178,10 @@ class TempNode(object):
         os.chdir('../../../')
         #output
     
-        time.sleep(6)
+        #time.sleep(6)
+        os.system('bash ./scripts/percent_num_progress_bar.sh 1')
         os.system('bash ./build/node0/stop.sh')
-        gessis_json_path
+        gessis_json_path = './build/output/genesis.json'
         os.environ['gessis_json_path'] = gessis_json_path
         #os.system('./build/fisco-bcos --genesis ./build/node0/genesis.json  --config ./build/node0/config.json --export-genesis ${gessis_json_path}  >./build/node0/fisco-bcos.log 2>&1')
         os.system('./build/fisco-bcos --genesis ./build/node0/genesis.json  --config ./build/node0/config.json --export-genesis ./output/genesis.json  >./build/node0/fisco-bcos.log 2>&1')
