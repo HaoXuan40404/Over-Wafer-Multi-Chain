@@ -18,4 +18,3 @@ def valid_string(s):
         return True
     else:
         return False
-

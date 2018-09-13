@@ -3,41 +3,36 @@
 import os
 import sys
 
-class ChainData:
+class DataMgr:
     data_dir = ''
-    def __init__(self, chain_id, version):
-        self.chain_id = chain_id
-        self.version = version
-
-    def __repr__(self):
-        return 'chain is %s, version is %s' % (self.chain_id, self.version)
+    def __init__(self):
+        pass
     
-    def dir(self):
-        return ChainData.data_dir + ('/pkg/%s/%s' % (self.chain_id, self.version))
+    def dir(self, chain_id, chain_version):
+        return DataMgr.data_dir + ('/pkg/%s/%s' % (chain_id, chain_version))
 
-    def create(self):
-        os.makedirs(dir())
+    def create(self, chain_id, chain_version):
+        os.makedirs(dir(chain_id, chain_version))
 
-    def exist(self):
-        return os.path.isdir(dir())
+    def exist(self, chain_id, chain_version):
+        return os.path.isdir(dir(chain_id, chain_version))
 
-    def remove(self):
-        return os.removedirs(dir())
+    def remove(self, chain_id, chain_version):
+        return os.removedirs(dir(chain_id, chain_version))
 
 def set_data_dir(p):
     if not os.path.isdir(p):
         os.makedirs(p)
-    ChainData.data_dir = p
+    DataMgr.data_dir = p
 
 def get_data_dir():
-    return ChainData.data_dir
-
+    return DataMgr.data_dir
 
 def data_test():
     set_data_dir(os.getcwd())
-    cd = ChainData('12345', 'v1.0')
+    cd = DataMgr()
     print(cd)
-    print(cd.dir())
+    print(cd.dir('123', '456'))
 
 if __name__ == '__main__':
     data_test()

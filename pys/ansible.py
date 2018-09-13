@@ -12,7 +12,7 @@ def set_user(user):
     Ansible.user = user
 
 def set_dir(dir):
-    Ansible.dir = dir
+    Ansible.dir = dir 
 
 def ansible_test():
     ae = Ansible()

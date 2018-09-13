@@ -1,11 +1,17 @@
+#coding:utf-8
+
 import configparser
 import logging
 import codecs
 
 from pys import utils
 from pys import log
+from basic import Chain
 
 class Port:
+    '''
+    端口
+    '''
     def __init__(self, rpc_port, p2p_port, channel_port):
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
@@ -73,13 +79,12 @@ class NodeEle:
 class ConfParser:
     def __init__(self, cfg):
         self.config = cfg
-        self.chain_id = ''
-        self.chain_verion = ''
-        self.ports = Port(0, 0, 0)
+        self.chain = None
+        self.port = None
         self.nodes = []
     
     def __repr__(self):
-        return 'ConfParser [ chain_id %s, chain_version %s, ports %s]' % (self.chain_id, self.chain_verion, self.ports)
+        return 'ConfParser [ chain %s, ports %s]' % (self.chain, self.port)
 
     def do_parser(self):
 
@@ -93,37 +98,36 @@ class ConfParser:
         with codecs.open(self.config, 'r', encoding='utf-8') as f:
             cf.readfp(f)
             
-        self.chain_id = cf.get('chain', 'chainid')
-        self.chain_verion = cf.get('chain', 'version')
+        chain_id = cf.get('chain', 'chainid')
+        chain_version = cf.get('chain', 'version')
+        self.chain = Chain(chain_id, chain_version)
 
-        self.ports.set_rpc_port(cf.getint('ports', 'rpc_port'))
-        self.ports.set_p2p_port(cf.getint('ports', 'p2p_port'))
-        self.ports.set_channel_port(cf.getint('ports', 'channel_port'))
+        rpc_port = cf.getint('ports', 'rpc_port')
+        p2p_port = cf.getint('ports', 'p2p_port')
+        channel_port = cf.getint('ports', 'channel_port')
+        self.port = Port(rpc_port, p2p_port, channel_port)
 
         index = 0
         while True:
             try:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
+                index += 1
                 n.do_parser()
                 self.nodes.append(n)
             except Exception, err:
                 # log.get_logger().info('cfg parser end, result is %s', self)
                 break
-            index = (index + 1)
         
         if len(self.nodes) == 0:
             raise Exception('invalid cfg format, nodes empty')
 
         log.get_logger().info('cfg parser end, result is %s', self)
 
-    def get_chain_id(self):
-        return self.chain_id
-    
-    def get_chain_version(self):
-        return self.chain_verion
+    def get_chain(self):
+        return self.chain
 
-    def get_ports(self):
-        return self.ports
+    def get_port(self):
+        return self.port
     
     def get_nodes(self):
         return self.nodes
