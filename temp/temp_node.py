@@ -134,19 +134,20 @@ class TempNode(object):
 
         # replace genesis 
         os.system('cp ./build/tpl_dir/temp_node_genesis.json.tpl ./build/node0/genesis.json')
-        str_nodeid = str(NODE_ID)
+        str_nodeid = [str(NODE_ID)]
         self.config.get_to_write('./build/node0/genesis.json',"initMinerNodes",str_nodeid)
         print("god is => " + str(god_addr))
         self.config.get_to_write('./build/node0/genesis.json',"god" ,god_addr)
-        print("generate_genesisBlock ,god => " + str(NODE_ID))
+        print("generate_genesisBlock ,NODE_ID => " + str(NODE_ID))
 
 
         # app.xml  make start.sh and change it same to stop.sh start_godminer.sh already do this
         applicationContext_path = './build/web3sdk/conf/applicationContext_path'
         self.application_Context_replace(applicationContext_path,clientcert_pwd,keystore_pwd,channel_port,DEFAULT_SYSTEM_CONTRACT_ADDRESS)
 
+        os.system('bash ./build/node0/start.sh')
         print("    Waiting for temp node starting ...")
-        time.sleep(5)
+        os.system('bash ./scripts/percent_num_progress_bar.sh 1')
 
         os.environ['WEB3SDK_CONFIG_PORT']=str(channel_port)
         # check if temp node is running
