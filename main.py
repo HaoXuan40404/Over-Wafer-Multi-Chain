@@ -4,19 +4,11 @@ import sys
 import os
 import logging
 
-<<<<<<< .mine
 from pys import log
 from pys import ca
 from pys import version
 from pys import data
 from pys import build
-=======
-sys.path.append(os.path.abspath('.') + './pys')
-
-
-
-
->>>>>>> .theirs
 
 def init():
     # 获取当前目录, 用来初始化各个模块的依赖路径 
@@ -36,7 +28,6 @@ def version():
     sys.exit(-1)
 
 def main():
-<<<<<<< .mine
     init()
 
 
