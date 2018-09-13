@@ -17,7 +17,7 @@ class TempNode(object):
         DEFAULT_SYSTEM_CONTRACT_ADDRESS="0x919868496524eedc26dbb81915fa1547a20f8998"
 
     '''install function'''
-    def install(self):
+    def install(self,node_id_list,gessis_json_path):
         print("    Installing temp fisco-bcos environment start")
         os.system('cp -rf ./tpl ./build')
         config=tpl_change.Json_Replace()
@@ -122,15 +122,11 @@ class TempNode(object):
         config.replace_str(json_path,'${IDX_TPL}',"0")
         syaddress = DEFAULT_SYSTEM_CONTRACT_ADDRESS
         #get syaddress to applicationContext and config.json
-        print("system contract deployed ,syaddress => " + str(god_addr))
-        config.replace_str("./build/web3sdk/conf/applicationContext.xml",str(god_addr),syaddress)
         print("system contract deployed ,syaddress => " + syaddress)
 
-        config.replace_str("./build/node0/config.json",DEFAULT_SYSTEM_CONTRACT_ADDRESS,syaddress)
+
 
         os.chdir('./build/web3sdk/bin')
-
- 
         node_num_per_host = 3
         for j in range(0,node_num_per_host):
             node_index=str(j)
@@ -143,8 +139,8 @@ class TempNode(object):
         os.system('bash system_contract_tools.sh NodeAction all')
         os.chdir('../../../')
         #output
-        os.system('./build fisco-bcos --genesis ./build/node0/  --config ./build/node0/config.json --export-genesis ./output/genesis.json  >./build/node0/fisco-bcos.log 2>&1')
-        #./fisco-bcos  --genesis $installation_build_dir/$TEMP_NODE_NAME/build/node0/genesis.json  --config $installation_build_dir/$TEMP_NODE_NAME/build/node0/config.json --export-genesis $TEMP_BUILD_DIR/genesis.json  >$installation_build_dir/$TEMP_NODE_NAME/build/node0/fisco-bcos.log 2>&1
+        
+        os.system('./build fisco-bcos --genesis ./build/node0/genesis.json  --config ./build/node0/config.json --export-genesis ./output/genesis.json  >./build/node0/fisco-bcos.log 2>&1')
 
         time.sleep(6)
         os.system('bash ./build/node0/stop.sh')
@@ -162,6 +158,6 @@ class TempNode(object):
 if __name__=="__main__":
     print('main')
     test = TempNode('')
-    test.install()
+    #test.install()
 
    
