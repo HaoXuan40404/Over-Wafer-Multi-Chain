@@ -4,27 +4,65 @@ import sys
 import os
 import logging
 
+<<<<<<< .mine
 from pys import log
 from pys import ca
 from pys import version
 from pys import data
 from pys import build
+=======
+sys.path.append(os.path.abspath('.') + './pys')
+
+
+
+
+>>>>>>> .theirs
 
 def init():
-    # è·å–å½“å‰ç›®å½•, ç”¨æ¥åˆå§‹åŒ–å„ä¸ªæ¨¡å—çš„ä¾èµ–è·¯å¾„ 
+    # »ñÈ¡µ±Ç°Ä¿Â¼, ÓÃÀ´³õÊ¼»¯¸÷¸öÄ£¿éµÄÒÀÀµÂ·¾¶ 
     pwd = os.getcwd()
-    # loggingåˆå§‹åŒ–
+    # logging³õÊ¼»¯
     log.init_logging(pwd + '/conf/logging.conf')
-    # åˆå§‹åŒ–è¯ä¹¦(æœºæ„åç§°ã€è¯ä¹¦è·¯å¾„)
+    # ³õÊ¼»¯Ö¤Êé(»ú¹¹Ãû³Æ¡¢Ö¤ÊéÂ·¾¶)
     ca.set_agent('WB')
     ca.set_ca_path(pwd + '/data/ca')
-    # åˆå§‹åŒ–æ•°æ®ç›®å½•
+    # ³õÊ¼»¯Êı¾İÄ¿Â¼
     data.set_data_dir(pwd + '/data/chain')
     # version
     version.set_release_note_path(pwd + '/release_note.txt')
 
+def version():
+    version.version('./release_note.txt')
+    sys.exit(-1)
+
 def main():
+<<<<<<< .mine
     init()
 
+
+
+
+
+=======
+    parser = argparse.ArgumentParser('multi-chain usage')
+    parser.add_argument('--config', type=str, dest='config',
+                        help="input config file which in ini format")
+    parser.add_argument("-V", "--version", action="store_true",
+                        help="version of multi-chain")
+    args = parser.parse_args()
+>>>>>>> .theirs
+    print(args)
+    for arg in args.__dict__:
+        if arg == 'version' and args.version:
+            version()
+        elif arg == 'config' and args.config is not None:
+            config_file = args.config
+            print(config_file)
+
+<<<<<<< .mine
+
+=======
+
+>>>>>>> .theirs
 if __name__ == '__main__':
     main()
