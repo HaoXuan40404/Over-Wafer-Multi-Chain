@@ -3,10 +3,14 @@
 import configparser
 import logging
 import codecs
+import sys
+import os
 
+sys.path.append(os.getcwd() + '/../../')
+
+from basic import Chain
 from pys import utils
 from pys import log
-from basic import Chain
 
 class Port:
     '''
@@ -133,8 +137,8 @@ class ConfParser:
         return self.nodes
 
 def parser_test():
-    log.init_logging('../conf/logging.conf')
-    confparser = ConfParser('../conf/config.ini')
+    log.init_logging('../../conf/logging.conf')
+    confparser = ConfParser('../../conf/config.ini')
     confparser.do_parser()
 
 if __name__ == '__main__':
