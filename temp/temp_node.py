@@ -120,6 +120,7 @@ class TempNode(object):
 
         #then start to write godInfo.txt
         os.system('./build/fisco-bcos --newaccount ./build/godInfo.txt')
+        os.system('bash ./scripts/percent_num_progress_bar.sh 2')
         line = self.config.get_str("./build/godInfo.txt")[1]
         print(line,type(line))
         god_addr = line.split(":")[1]
