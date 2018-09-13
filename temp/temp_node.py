@@ -148,7 +148,7 @@ class TempNode(object):
 
         os.system('bash ./build/node0/start.sh')
         print("    Waiting for temp node starting ...")
-        os.system('bash ./scripts/percent_num_progress_bar.sh 1')
+        os.system('bash ./scripts/percent_num_progress_bar.sh 2')
 
         os.environ['WEB3SDK_CONFIG_PORT']=str(channel_port)
         # check if temp node is running
