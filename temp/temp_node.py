@@ -108,57 +108,10 @@ class TempNode(object):
             print("channel port " + str(channel_port) + " is listening...")
 
 
-        #deploy system contract
-        os.system('chmod +x ./build/web3sdk/bin/web3sdk')
-        os.system('chmod +x ./build/web3sdk/bin/system_contract_tools.sh')
-
-
-        #deploy system contract failed
-        if not os.path.exists("./build/web3sdk/bin/output/SystemProxy.address"):
-            if not os.path.isfile("./build/web3sdk/bin/output/SystemProxy.address"):
-                os.system('bash ./build/node0/stop.sh')
-                return 1
-            else:
-               # error_message "system contract address file is not exist, web3sdk deploy system contract not success."
-                os.environ['message']="system contract address file is not exist, web3sdk deploy system contract not success."
-                os.system('bash ${utils} error')
-            os.environ['message']="system contract address file is not exist, web3sdk deploy system contract not success."
-            os.system('bash ${utils} error')
-            return 1
-        
-        syaddress = commands.getoutput('cat ./build/web3sdk/bin/output/SystemProxy.address')
-        if not syaddress:
-            os.system('bash ./build/node0/stop.sh')
-            os.environ['message']="system contract address file is empty, web3sdk deploy system contract not success."
-            os.system('bash ${utils} error')
-            return 1
-
-        os.system('cp ./build/web3sdk/bin/output/SystemProxy.address ./build/syaddress.txt')
-
-        time.sleep(1)
-
-        #god miner config
-        #dos2unix web3sdk
-        os.chdir('./build/web3sdk/bin')
-        os.system('chmod a+x web3sdk')
-        os.system('rm blk_number.txt')
-        os.system('bash ./web3sdk eth_blockNumber | grep BlockHeight >> blk_number.txt')
-        line_blk = config.get_str("./blk_number.txt")[0]
-        print(line_blk,type(line_blk))
-        blk = line_blk.split(":")[1]
-        blk = blk.replace("\n","")
-
-        os.chdir('../../../')
-        print("block number is ",blk)
-        blk=int(blk)+1
-        blk=hex(blk)
-        print("block number is ",blk)
-        print(blk,type(blk))
-
         #write in godminer.json
         os.system('cp ./build/tpl_dir/godminer.json.tpl ./build/node0/godminer.json')
         json_path="./build/node0/godminer.json"
-        config.replace_str(json_path,"${GODMINERSTART_TPL}",str(blk))
+        config.replace_str(json_path,"${GODMINERSTART_TPL}",'0')
         config.replace_str(json_path,"${GODMINEREND_TPL}","0xffffffffff")
         config.replace_str(json_path,'${PORT_TPL}',str(channel_port))
         config.replace_str(json_path,'${IDENTITYTYPE_TPL}',"1")
@@ -167,7 +120,7 @@ class TempNode(object):
         config.replace_str(json_path,'${NODEDESC_TPL}',"127.0.0.1")
         config.replace_str(json_path,'${NODEID_TPL}',str(node_id))
         config.replace_str(json_path,'${IDX_TPL}',"0")
-
+        syaddress = DEFAULT_SYSTEM_CONTRACT_ADDRESS
         #get syaddress to applicationContext and config.json
         print("system contract deployed ,syaddress => " + str(god_addr))
         config.replace_str("./build/web3sdk/conf/applicationContext.xml",str(god_addr),syaddress)
@@ -189,6 +142,7 @@ class TempNode(object):
         print("all register node => ")
         os.system('bash system_contract_tools.sh NodeAction all')
         os.chdir('../../../')
+        #output
         os.system('./build fisco-bcos --genesis ./build/node0/  --config ./build/node0/config.json --export-genesis ./output/genesis.json  >./build/node0/fisco-bcos.log 2>&1')
         #./fisco-bcos  --genesis $installation_build_dir/$TEMP_NODE_NAME/build/node0/genesis.json  --config $installation_build_dir/$TEMP_NODE_NAME/build/node0/config.json --export-genesis $TEMP_BUILD_DIR/genesis.json  >$installation_build_dir/$TEMP_NODE_NAME/build/node0/fisco-bcos.log 2>&1
 
