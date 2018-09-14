@@ -12,7 +12,9 @@ import ConfigParser
 class TempNode(object):
     
     def __init__(self):
-        '''init class'''
+        '''
+        init class
+        '''
         global DEFAULT_SYSTEM_CONTRACT_ADDRESS
         DEFAULT_SYSTEM_CONTRACT_ADDRESS="0x919868496524eedc26dbb81915fa1547a20f8998"
         global NODE_ID
@@ -22,7 +24,9 @@ class TempNode(object):
         os.environ['percent_num_progress'] = './scripts/percent_num_progress_bar.sh'
 
     def config_json(self,config_path,rpc_port,p2p_port,channel_port,chain_id):
-        '''build config.json'''
+        '''
+        build config.json
+        '''
         config_path = config_path
         os.environ['config_path'] = config_path
         os.system('cp ./build/tpl_dir/config.json.tpl ${config_path}')
@@ -42,7 +46,9 @@ class TempNode(object):
         return 0
 
     def application_Context_replace(self,applicationContext_path,clientcert_pwd,keystore_pwd,channel_port,DEFAULT_SYSTEM_CONTRACT_ADDRESS):
-        '''build applicationContext.xml'''
+        '''
+        build applicationContext.xml
+        '''
         applicationContext_path = applicationContext_path
         os.environ['applicationContext_path'] = applicationContext_path
         os.system('cp ./build/tpl_dir/applicationContext.xml.tpl ${applicationContext_path}')
@@ -54,7 +60,9 @@ class TempNode(object):
         return 0
 
     def bootstrapnodes_json(self,bootstrapnodes_path,p2p_port):
-        '''build bootstrapnodes.json'''
+        '''
+        build bootstrapnodes.json
+        '''
         bootstrapnodes_path = bootstrapnodes_path
         os.environ['bootstrapnodes_path'] = bootstrapnodes_path
         os.system('cp ./build/tpl_dir/bootstrapnodes.json.tpl ${bootstrapnodes_path}')
@@ -64,7 +72,9 @@ class TempNode(object):
     
 
     def godminer_replace(self,godminer_path,channel_port,NODE_ID):
-        '''build godminer.json'''
+        '''
+        build godminer.json
+        '''
         godminer_path = godminer_path
         os.environ['godminer_path'] = godminer_path
         os.system('cp ./build/tpl_dir/godminer.json.tpl ${godminer_path}')  
@@ -80,7 +90,8 @@ class TempNode(object):
         
 
     def node_install(self,node_id_list,gessis_json_path):
-        '''install function
+        '''
+        install function
 
         mkdir build from tpl
         start temp_node
@@ -172,7 +183,7 @@ class TempNode(object):
         node_num_per_host = len(node_id_list)
         node_num_per_host = 3
         for i in range(0,node_num_per_host):
-            node_path= 'PATH '+ '_' + str(i) + '.json'
+            node_path= str(node_id_list) + str(i) + '/node.json'
             print(" ==== register node json =>" + node_path)
             os.environ['node_path'] = node_path
             #os.system('bash system_contract_tools.sh NodeAction registerNode file:${node_path}')
@@ -180,9 +191,8 @@ class TempNode(object):
         print("all register node => ")
         os.system('bash system_contract_tools.sh NodeAction all')
         os.chdir('../../../')
-        #output
-    
-        #time.sleep(6)
+
+        #output genesis.json
         os.system('bash ./scripts/percent_num_progress_bar.sh 1')
         os.system('bash ./build/node0/stop.sh')
         gessis_json_path = './build/output/genesis.json'
