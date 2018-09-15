@@ -1,28 +1,49 @@
 #coding:utf-8
+
 import os
 import sys
 
-from pys import log
+from pys import path
 from pys import utils
-from data import DataMgr
-
-import parser
+from data import Data
+from pys.log import logger
+from pys.chain import parser
+from pys.node import node_build
+from pys.node.bootstrapsnode import P2pHosts
+from pys.node.bootstrapsnode import P2pHost
 
 def build(cfg):
+    '''
+    解析config.conf配置并且构建区块链的安装包
+    '''
+    logger.info('building, cfg is %s', cfg)
+    try:
+        # 配置解析
+        cc = parser.do_parser(cfg)
 
-    log.get_logger().debug('building, cfg is %s', cfg)
+        dir = Data().dir(cc.get_chain().get_id(), cc.get_chain().get_version())
+        port = cc.get_port()
+        chain = cc.get_chain()
 
-    # 配置解析
-    conf_parser = parser.ConfParser(cfg)
-    conf_parser.do_parser()
-    cdata = DataMgr()
-    if cdata.exist(conf_parser.get_chain().get_id(), conf_parser.get_chain().get_version()):
-        raise Exception('chainid with version already exist, id is %s, version is %s' % (conf_parser.get_chain().get_id(), conf_parser.get_chain().get_version()))
-    
-    # 构建安装包
-    for node in conf_parser.get_nodes():
-        print(node)
+        # 创建文件夹
+        if not os.path.isdir(dir):
+            os.makedirs(dir)
 
+        # 生成bootstrapsnode.json
+        phs = P2pHosts()
+        for node in cc.get_nodes():
+            for index in range(node.get_node_num()):
+                phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
+        with open(dir + '/bootstrapnodes.json',"w+") as f:
+            f.write(phs.to_json())
+        
+        # 构建各个安装包
+        for node in cc.get_nodes():
+            node_build.build_install_dir(dir, chain, port, node)
+    except:
+        pass
+        
+    logger.info('build end.')
     
 
 

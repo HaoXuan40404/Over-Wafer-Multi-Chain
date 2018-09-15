@@ -1,0 +1,18 @@
+{
+    "networkid": "12345", 
+    "eventlog": "ON", 
+    "sealEngine": "PBFT", 
+    "channelport": "8821", 
+    "cryptomod": "0", 
+    "logverbosity": "4", 
+    "keystoredir": "./keystore/", 
+    "logconf": "./log.conf", 
+    "wallet": "./keys.info", 
+    "datadir": "./data/", 
+    "rpcport": 30306, 
+    "systemproxyaddress": 8548, 
+    "p2pport": 8824, 
+    "coverlog": "OFF", 
+    "listenip": "0.0.0.0", 
+    "statlog": "ON"
+}

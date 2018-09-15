@@ -1,13 +1,7 @@
 #coding:utf-8
 
-import os
+from pys import path
 
-release_note_path=''
-
-def set_release_note_path(p):
-    global release_note_path
-    release_note_path = p
-    
 def version():
-    with open(release_note_path, 'r') as f:
+    with open(path.get_path() + '/release_note.txt', 'r') as f:
         print(f.read())

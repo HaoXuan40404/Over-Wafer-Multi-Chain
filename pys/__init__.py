@@ -1,2 +1,2 @@
 # __init__.py
-__all__ = ['ca', 'log', 'utils', 'version', 'ansible']
+__all__ = ['path', 'ca', 'log', 'utils', 'version', 'ansible']

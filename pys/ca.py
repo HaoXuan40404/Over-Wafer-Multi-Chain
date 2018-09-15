@@ -23,8 +23,8 @@ def set_ca_path(p):
 def get_ca_path():
     return CA.CA_path
 
-def is_root_ca_exist():
+def root_ca_exist():
     return os.path.exists(CA.CA_path + '/ca.crt') and os.path.exists(CA.CA_path + '/ca.key')
 
-def is_agent_ca_exist():
+def agent_ca_exist():
     return os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.crt') and os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.key')

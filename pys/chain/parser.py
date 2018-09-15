@@ -6,13 +6,13 @@ import codecs
 import sys
 import os
 
-from basic import Chain
+from chain import Chain
 from pys import utils
-from pys import log
+from pys.log import logger
 
 class Port:
     '''
-    端口
+    一组端口描述
     '''
     def __init__(self, rpc_port, p2p_port, channel_port):
         self.rpc_port = rpc_port
@@ -64,7 +64,7 @@ class NodeEle:
         self.p2p_ip = l[1]
         self.node_num = int(l[2])
 
-        log.get_logger().info('cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
+        logger.info('cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
 
     def get_host_ip(self):
         return self.host_ip
@@ -78,52 +78,26 @@ class NodeEle:
     def __repr__(self):
         return 'Node [host_ip %s, p2p_ip %s, node_num %d]' % (self.host_ip, self.p2p_ip, self.node_num)
 
-class ConfParser:
-    def __init__(self, cfg):
-        self.config = cfg
+class ConfigConf:
+    '''
+    构建一条新链的配置文件
+    '''
+    def __init__(self):
         self.chain = None
         self.port = None
         self.nodes = []
     
     def __repr__(self):
-        return 'ConfParser [ chain %s, ports %s]' % (self.chain, self.port)
+        return 'ConfParser [ chain %s, ports %s, nodes %s ]' % (self.chain, self.port, self.nodes)
 
-    def do_parser(self):
+    def set_chain(self, chain):
+        self.chain = chain
 
-        log.get_logger().info('cfg parser %s', self.config)
+    def set_port(self, port):
+        self.port = port
 
-        if not utils.valid_string(self.config):
-            raise Exception('config not string ', self.config)
-        
-        # read and parser config file
-        cf = configparser.ConfigParser()
-        with codecs.open(self.config, 'r', encoding='utf-8') as f:
-            cf.readfp(f)
-            
-        chain_id = cf.get('chain', 'chainid')
-        chain_version = cf.get('chain', 'version')
-        self.chain = Chain(chain_id, chain_version)
-
-        rpc_port = cf.getint('ports', 'rpc_port')
-        p2p_port = cf.getint('ports', 'p2p_port')
-        channel_port = cf.getint('ports', 'channel_port')
-        self.port = Port(rpc_port, p2p_port, channel_port)
-
-        index = 0
-        while True:
-            try:
-                n = NodeEle(cf.get('nodes', 'node%u' % index))
-                index += 1
-                n.do_parser()
-                self.nodes.append(n)
-            except Exception, err:
-                # log.get_logger().info('cfg parser end, result is %s', self)
-                break
-        
-        if len(self.nodes) == 0:
-            raise Exception('invalid cfg format, nodes empty')
-
-        log.get_logger().info('cfg parser end, result is %s', self)
+    def add_node(self, node):
+        self.nodes.append(node)
 
     def get_chain(self):
         return self.chain
@@ -134,11 +108,56 @@ class ConfParser:
     def get_nodes(self):
         return self.nodes
 
-def parser_test():
-    log.init_logging('../../conf/logging.conf')
-    confparser = ConfParser('../../conf/config.ini')
-    confparser.do_parser()
-    print(confparser.get_nodes())
+def do_parser(cfg):
+    '''
+    解析config.conf配置文件, 返回Config.conf对象
+    '''
+    if not utils.valid_string(cfg):
+            raise Exception('config not string ', cfg)
 
-if __name__ == '__main__':
-    parser_test()
+    logger.info('cfg parser %s', cfg)
+
+     # read and parser config file
+    cf = configparser.ConfigParser()
+    with codecs.open(cfg, 'r', encoding='utf-8') as f:
+        cf.readfp(f)
+    
+    cc = ConfigConf()
+
+    chain_id = cf.get('chain', 'chainid')
+    if not utils.valid_string(chain_id):
+        raise Exception('invalid chain id, ', chain_id)
+
+    chain_version = cf.get('chain', 'version')
+    if not utils.valid_string(chain_id):
+        raise Exception('invalid chain version, ', chain_version)
+    cc.set_chain(Chain(chain_id, chain_version))
+
+    rpc_port = cf.getint('ports', 'rpc_port')
+    if not utils.valid_port(rpc_port):
+        raise Exception('invalid rpc_port, ', rpc_port)
+    p2p_port = cf.getint('ports', 'p2p_port')
+    if not utils.valid_port(p2p_port):
+        raise Exception('invalid p2p_port, ', p2p_port)
+    channel_port = cf.getint('ports', 'channel_port')
+    if not utils.valid_port(channel_port):
+        raise Exception('invalid channel_port, ', channel_port)
+    cc.set_port(Port(rpc_port, p2p_port, channel_port))
+
+    index = 0
+    while True:
+        try:
+            n = NodeEle(cf.get('nodes', 'node%u' % index))
+            index += 1
+            n.do_parser()
+            cc.add_node(n)
+        except Exception, err:
+            # logger.info('cfg parser end, result is %s', self)
+            break
+    
+    if len(cc.get_nodes()) == 0:
+        raise Exception('invalid cfg format, nodes empty')
+
+    logger.info('cfg parser end, result is %s', cc)
+
+    return cc
