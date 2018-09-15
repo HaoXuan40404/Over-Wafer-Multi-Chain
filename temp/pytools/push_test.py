@@ -11,8 +11,11 @@ global package_number
 
 
 class ChainIpPackage:
-    '''init class'''
+    
     def __init__(self):
+        '''
+        init class
+        '''
         print("__init__start...")
         self.send_var = ansible.AnsibleBuild()
         # chian_map = set({})
@@ -20,8 +23,11 @@ class ChainIpPackage:
         #     chian_map.add('chain_' + str(i))
         #read ini
 
-    '''get ip'''
+    
     def ip_get(self,PATH):
+        '''
+        get ip
+        '''
         cfg_ini = ConfigParser.ConfigParser()
         cfg_ini.read(PATH)
         number = cfg_ini.options('nodes') 
@@ -37,15 +43,21 @@ class ChainIpPackage:
         self.ip = ip
         return 0
 
-    '''push package'''
+    
     def push_package(self,send_PATH):
+        '''
+        push package
+        '''
         for i in range(0,len(self.ip)):
             self.send_var.test_module(self.ip[i],send_PATH)
         return 0
 
 
-'''main function'''
+
 if __name__=="__main__":
+    '''
+    main function
+    '''
     
     PATH = './config.ini'
     unit_test = ChainIpPackage()

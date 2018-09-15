@@ -8,14 +8,20 @@ import argparse
 
 
 
-'''help function'''
+
 def help(self):
+    '''
+    help function
+    '''
     return 0
 
 
 
-'''main function'''
+
 if __name__=="__main__":
+    '''
+    main function
+    '''
     print('main')
     parser = argparse.ArgumentParser(description='multi-chain usage')
     parser.add_argument('-c', '--config', type=str, dest='config', help='input config file which in ini format')

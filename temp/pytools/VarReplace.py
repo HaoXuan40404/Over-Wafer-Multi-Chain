@@ -8,8 +8,10 @@ import json
 
 class VarReplace(object):
 		
-    '''get json'''
     def get_new_json(self,filepath,key,value):
+        '''
+        get json
+        '''
         key_ = key.split(".")
         #key_ = key
         key_length = len(key_)
@@ -27,24 +29,31 @@ class VarReplace(object):
         f.close()
         return json_data
 
-    '''write json'''	
+    	
     def rewrite_json_file(self,filepath,json_data):
+        '''
+        write json
+        '''
         with open(filepath, 'w') as f:
             json.dump(json_data,f)
         f.close()
 
-    '''just use them two
-	   enter the path the key whick your want to changed and the value
-	'''
-    def get_to_write(self,filepath,key,value):
 
+    def get_to_write(self,filepath,key,value):
+        '''
+        just use them two
+	    enter the path the key whick your want to changed and the value
+	    '''
         m_json_data = self.get_new_json(filepath,key,value)	
         self.rewrite_json_file(filepath,m_json_data)
 
         return 0
 
-    '''replace file str'''
+    
     def replace_str(self, filepath, old_str, new_str):
+        '''
+        replace file str
+        '''
         f = open(filepath,'r+')
         all_lines = f.readlines()
         f.seek(0)
@@ -54,8 +63,11 @@ class VarReplace(object):
             f.write(line)
         f.close()
 
-    '''get file str'''
+    
     def get_str(self, filepath):
+        '''
+        get file str
+        '''
         f = open(filepath,'r+')
         all_lines = f.readlines()
         #for line in all_lines:
