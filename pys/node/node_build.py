@@ -6,6 +6,7 @@ import json
 
 import node_config
 from pys import path
+from pys import ca
 from pys.log import logger
 
 def build_install_dir(dir, chain, port, node):
@@ -31,9 +32,7 @@ def build_install_dir(dir, chain, port, node):
     while index < node.get_node_num():
         subdir = node_dir + ('/node%d' % index)
         os.makedirs(subdir)
-        os.makedirs(subdir + '/data')
         
-        shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
         shutil.copy(path.get_path() + '/tpl/log.conf', subdir)
         shutil.copy(path.get_path() + '/scripts/node_start.sh', subdir + '/start.sh')
         shutil.copy(path.get_path() + '/scripts/node_stop.sh', subdir + '/stop.sh')
@@ -42,6 +41,12 @@ def build_install_dir(dir, chain, port, node):
         cfg_json = node_config.build_config_json(chain.get_id(), port.get_rpc_port() + index, port.get_p2p_port() + index, port.get_channel_port() + index)
         with open(subdir + '/config.json',"w+") as f:
             f.write(cfg_json)
+
+        os.makedirs(subdir + '/data')
+        shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
+
+        #节点证书
+        
 
         index += 1
 

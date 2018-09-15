@@ -29,11 +29,13 @@ def build(cfg):
         if not os.path.isdir(dir):
             os.makedirs(dir)
 
-        # 生成bootstrapsnode.json
         phs = P2pHosts()
         for node in cc.get_nodes():
+            # 生成bootstrapsnode.json
             for index in range(node.get_node_num()):
                 phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
+                # 为每个节点分配ca
+                # add soon
         with open(dir + '/bootstrapnodes.json',"w+") as f:
             f.write(phs.to_json())
         

@@ -6,7 +6,6 @@ function copy_module()
     local ansible_src=$2
     local ansible_dest=$3
     ansible ${package_config} -m copy -a "src=${ansible_src} dest=${ansible_dest}"
-    exit 0
 }
 
 ###unarchive_module###
@@ -16,7 +15,6 @@ function unarchive_module()
     local ansible_src=$2
     local ansible_dest=$3
     ansible ${package_config} -m unarchive -a "src=${ansible_src} dest=${ansible_dest}, mode=0755 copy=yes"
-    exit 0
 }
 
 ###build_module###
@@ -56,13 +54,6 @@ function this_test()
     echo "print dir =>" ${param2}
     ansible ${param1} -m shell -a "echo ${param2}"
 }
-
-
-
-echo $1
-echo $2
-echo $3
-echo $4
 
 case $1 in
     copy) copy_module $2 $3 $4;;
