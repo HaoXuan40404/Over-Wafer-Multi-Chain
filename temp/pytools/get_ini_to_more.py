@@ -5,14 +5,20 @@ import time
 import ConfigParser
 
 class EnvironmentVariables(object):
-    '''init class''' 
+    
     def __init__(self,PATH):
+        '''
+        init class
+        ''' 
         self.PATH = PATH
         #self.chain_number, self.chain_list, self.p2p_port, self.rpc_port, self.channel_port, self.keystore_pwd, self.clientcert_pwd
         self.chain_list = []
 
-    '''get function'''
+    
     def get_ini(self):
+        '''
+        get function
+        '''
         cfg_ini = ConfigParser.ConfigParser()
         config_file_path=self.PATH
         cfg_ini.read(config_file_path)
@@ -28,8 +34,11 @@ class EnvironmentVariables(object):
 
         return 0
 
-    '''print function'''
+    
     def print_ini(self):
+        '''
+        print function
+        '''
         print('chain_number => %d' %(self.chain_number))
         print("chain => %s"  %(type(self.chain_list)))
         print("chain => %s"  %(self.chain_list))
@@ -40,14 +49,20 @@ class EnvironmentVariables(object):
         print("clientcert_pwd => %d"  %(self.clientcert_pwd))
         return 0
         
-    '''return function'''
+    
     def get_chain_number(self):
+        '''
+        return function
+        '''
         return self.chain_number
     
 
 
-'''main function'''
+
 if __name__=="__main__":
+    '''
+    main function
+    '''
     print('main')
     number = '1232312312'
     for i in range(0,len(number)):
