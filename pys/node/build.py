@@ -4,9 +4,11 @@ import os
 import shutil
 import json
 
-import node_config
+from pys import utils
 from pys import path
 from pys import ca
+
+from pys.node import config
 from pys.log import logger
 
 def build_install_dir(dir, chain, port, node):
@@ -28,6 +30,10 @@ def build_install_dir(dir, chain, port, node):
     shutil.copy(path.get_path() + '/scripts/unregister.sh', node_dir)
     shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
 
+    old = 'NODE@HOSTIP'
+    new = 'node0@127.0.0.1:%d' % port.get_channel_port()
+    utils.replace(node_dir + '/web3sdk/conf/applicationContext.xml', old, new)
+
     index = 0
     while index < node.get_node_num():
         subdir = node_dir + ('/node%d' % index)
@@ -38,7 +44,7 @@ def build_install_dir(dir, chain, port, node):
         shutil.copy(path.get_path() + '/scripts/node_stop.sh', subdir + '/stop.sh')
         shutil.copy(path.get_path() + '/scripts/node_check.sh', subdir + '/check.sh')
 
-        cfg_json = node_config.build_config_json(chain.get_id(), port.get_rpc_port() + index, port.get_p2p_port() + index, port.get_channel_port() + index)
+        cfg_json = config.build_config_json(chain.get_id(), port.get_rpc_port() + index, port.get_p2p_port() + index, port.get_channel_port() + index)
         with open(subdir + '/config.json',"w+") as f:
             f.write(cfg_json)
 

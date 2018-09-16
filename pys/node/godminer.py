@@ -1,14 +1,22 @@
 import json
 
+NODEID = '8c0fbe3a9b31775fc9786d7ae791e72b299d71bec18f18eb908caf637c71eaab4c691e738c41bc03478dd262077230056a4b0f07e9043445ea5632560326b8f5'
+NODEDESC = 'temp'
+AGENCYINFO = 'temp'
+PEERIP = '127.0.0.1'
+PORT = 30303
+IDENTIFYTYPE = 1
+IDX = 0
+
 class Miner:
     def __init__(self):
-        self.Nodeid = ''
-        self.Nodedesc = ''
-        self.Agencyinfo = ''
-        self.Peerip = ''
-        self.Identitytype = 1
-        self.Port = ''
-        self.Idx = ''
+        self.Nodeid = NODEID
+        self.Nodedesc = NODEDESC
+        self.Agencyinfo = AGENCYINFO
+        self.Peerip = PEERIP
+        self.Identitytype = IDENTIFYTYPE
+        self.Port = PORT
+        self.Idx = IDX
 
     def set_nodeid(self, nodeid):
         self.Nodeid = nodeid
@@ -33,3 +41,9 @@ class Miner:
 
     def to_json(self):
         return json.dumps(self, default = lambda obj : obj.__dict__, sort_keys=True, indent=4)
+
+def build_godminer_json(ip, port):
+    m = Miner()
+    m.set_peerip(ip)
+    m.set_port(port)
+    return m.to_json()

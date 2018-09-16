@@ -8,7 +8,7 @@ from pys.log import logger
 config.json的默认配置
 '''
 SEALENGINE = 'PBFT'
-SYSTEMPROXYADDRESS = '0x0'
+SYSTEMPROXYADDRESS = '0xe4cd3e488cbf0a98e8ecd8bc5eefaf10e5d54905'
 LISTEN_IP = '0.0.0.0'
 CRYPTOMOD = '0'
 RPCPORT = '8545'
@@ -72,12 +72,11 @@ class Config:
         '''
         pass
 
-def build_config_json(network_id, sys_addr = SYSTEMPROXYADDRESS, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT):
+def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT):
     '''
     构造config.json
     '''
     cf = Config(network_id)
-    cf.set_sys_addr(sys_addr)
     cf.set_rpc_port(rpc_port)
     cf.set_channel_port(channel_port)
     cf.set_p2p_port(p2p_port)

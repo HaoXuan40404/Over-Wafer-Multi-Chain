@@ -1,16 +1,13 @@
 #coding:utf-8
 
+import os
 import logging
 import logging.config
 
-LOGGER_NAME = 'instance'
+from pys import path
 
-logger = logging.getLogger(LOGGER_NAME)
-
-def init_logging(log_conf_path):
-    # logging init
-    logging.config.fileConfig(log_conf_path)
-    
-    logger = logging.getLogger(LOGGER_NAME)
-    # log start
-    logger.info('init_logging init. ')
+# logging init
+logging.config.fileConfig(os.getcwd() + '/conf/logging.conf')
+logger = logging.getLogger('instance')
+# log start
+logger.info('init_logging init. ')

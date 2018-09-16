@@ -8,5 +8,5 @@
         echo "${node} is running, pid is $weth_pid."
     else
         echo "start ${node} ..."
-        nohup ./fisco-bcos  --genesis ${curdir}/genesis.json  --config ${curdir}/config.json  >> ${curdir}/log/log 2>&1 &
+        nohup ./fisco-bcos  --genesis ${curdir}/genesis.json  --config ${curdir}/config.json  --godminer godminer.json >> ${curdir}/log/log 2>&1 &
     fi

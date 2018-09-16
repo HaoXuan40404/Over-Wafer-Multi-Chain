@@ -8,27 +8,34 @@ from pys import utils
 from data import Data
 from pys.log import logger
 from pys.chain import parser
-from pys.node import node_build
+from pys.node import build
+from pys.node import temp_node
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
-def build(cfg):
+def chain_build(cfg):
     '''
     解析config.conf配置并且构建区块链的安装包
     '''
     logger.info('building, cfg is %s', cfg)
+
+    # 配置解析
     try:
-        # 配置解析
         cc = parser.do_parser(cfg)
+    except Exception as e:
+        logger.warn('parser cfg end exception, e = ' + e)
+        return 
 
-        dir = Data().dir(cc.get_chain().get_id(), cc.get_chain().get_version())
-        port = cc.get_port()
-        chain = cc.get_chain()
+    dir = Data().dir(cc.get_chain().get_id(), cc.get_chain().get_version())
+    port = cc.get_port()
+    chain = cc.get_chain()
+    # 创建文件夹
+    if os.path.isdir(dir):
+        logger.warn('dir already exist, dir is ' + dir)
+        return 
+    os.makedirs(dir)
 
-        # 创建文件夹
-        if not os.path.isdir(dir):
-            os.makedirs(dir)
-
+    try:
         phs = P2pHosts()
         for node in cc.get_nodes():
             # 生成bootstrapsnode.json
@@ -41,11 +48,17 @@ def build(cfg):
         
         # 构建各个安装包
         for node in cc.get_nodes():
-            node_build.build_install_dir(dir, chain, port, node)
-    except:
-        pass
+            build.build_install_dir(dir, chain, port, node)
+
+        # 构建temp节点
+        temp_node.temp_node_build(dir, port)
         
-    logger.info('build end.')
+        logger.info('build end ok.')
+
+    except:
+        logger.warn('build end exception')
+        if os.path.isdir(dir):
+            os.removedirs(dir)
     
 
 
