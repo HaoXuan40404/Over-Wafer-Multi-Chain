@@ -42,7 +42,7 @@ def chain_build(cfg):
             # 生成bootstrapsnode.json
             for index in range(node.get_node_num()):
                 phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
-                node_json_lists.append(dir + '/' + node.get_host_ip() + ('/node%d' % index) + '/node.json')
+                node_json_lists.append(dir + '/' + node.get_host_ip() + ('/node%d' % index) + '/data/node.json')
         with open(dir + '/bootstrapnodes.json',"w+") as f:
             f.write(phs.to_json())
         
