@@ -23,16 +23,18 @@ def build_install_dir(dir, chain, port, node):
 
     os.makedirs(node_dir)
 
+    # 脚本
     shutil.copy(path.get_path() + '/scripts/start.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/stop.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/check.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/register.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/unregister.sh', node_dir)
-    shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
 
-    old = 'NODE@HOSTIP'
-    new = 'node0@127.0.0.1:%d' % port.get_channel_port()
-    utils.replace(node_dir + '/web3sdk/conf/applicationContext.xml', old, new)
+    # web3sdk
+    shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
+    shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt', node_dir + '/web3sdk/conf')
+    shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore', node_dir + '/web3sdk/conf')
+    utils.replace(node_dir + '/web3sdk/conf/applicationContext.xml', 'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
     index = 0
     while index < node.get_node_num():
@@ -52,7 +54,6 @@ def build_install_dir(dir, chain, port, node):
         shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
 
         #节点证书
-        
 
         index += 1
 

@@ -21,6 +21,9 @@ def set_ca_path(p):
         os.makedirs(p)
     CA.CA_path = p
 
+def get_agent_ca_path():
+    return CA.CA_path + '/' + CA.agent
+
 def get_ca_path():
     return CA.CA_path
 
