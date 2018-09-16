@@ -53,7 +53,7 @@ def build_install_dir(dir, chain, port, node):
         os.makedirs(subdir + '/data')
         shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
 
-        #节点证书
+        ca.generator_node_ca(subdir + '/data', node.get_p2p_ip() + '_' + str(index), ca.get_agent())
 
         index += 1
 
