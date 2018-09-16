@@ -2,8 +2,10 @@
 
 import os
 import shutil
+import time
 
 import config
+import commands
 
 from pys import utils
 from pys import path
@@ -34,9 +36,23 @@ def temp_node_build(dir, port):
 def start_temp_node(dir):
     '''
     '''
-    pass
+    cmd = 'bash %s/temp/node/start.sh' % dir
+    status, output = commands.getstatusoutput(cmd);
+    print 'start status code: ', status
+    print 'output: ', output
+
+    # sleep for temp start
+    time.sleep(10)
+
+    cmd = 'bash %s/temp/node/check.sh' % dir
+    status, output = commands.getstatusoutput(cmd);
+    print 'check status code: ', status
+    print 'output: ', output
 
 def stop_temp_node(dir):
     '''
     '''
-    pass
+    cmd = 'bash %s/temp/node/stop.sh' % dir
+    status, output = commands.getstatusoutput(cmd);
+    print 'stop status code: ', status
+    print 'output: ', output

@@ -52,6 +52,8 @@ def chain_build(cfg):
 
         # 构建temp节点
         temp_node.temp_node_build(dir, port)
+        temp_node.start_temp_node(dir)
+        temp_node.stop_temp_node(dir)
         
         logger.info('build end ok.')
 
