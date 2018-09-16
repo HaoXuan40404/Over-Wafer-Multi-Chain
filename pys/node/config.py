@@ -49,13 +49,13 @@ class Config:
         self.systemproxyaddress = addr
         
     def set_rpc_port(self, rpc_port):
-        self.rpcport = rpc_port
+        self.rpcport = str(rpc_port)
 
     def set_p2p_port(self, p2p_port):
-        self.p2pport = p2p_port
+        self.p2pport = str(p2p_port)
 
     def set_channel_port(self, channel_port):
-        self.channelport = channel_port
+        self.channelport = str(channel_port)
 
     def __repr__(self):
         return self.toJson()
