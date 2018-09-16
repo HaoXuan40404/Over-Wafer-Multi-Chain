@@ -31,7 +31,7 @@ def temp_node_build(dir, port):
             f.write(cfg_json)
 
     old = 'NODE@HOSTIP'
-    new = 'node0@127.0.0.1:%d' % port.get_p2p_port()
+    new = 'node0@127.0.0.1:%d' % port.get_channel_port()
     utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml', old, new)
     logger.info('build temp node end')
 

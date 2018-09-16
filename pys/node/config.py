@@ -34,7 +34,7 @@ class Config:
         self.cryptomod = CRYPTOMOD
         self.rpcport = RPCPORT
         self.p2pport = P2PPORT
-        self.channelport = CHANNELPORT
+        self.channelPort = CHANNELPORT
         self.wallet = WALLET
         self.keystoredir = KEYSTOREDIR
         self.datadir = DATADIR
