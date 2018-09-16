@@ -40,21 +40,35 @@ def start_temp_node(dir):
     '''
     cmd = 'bash %s/temp/node/start.sh' % dir
     status, output = commands.getstatusoutput(cmd);
-    print 'start status code: ', status
-    print 'output: ', output
+    logger.debug('start status, status is %d, output is %s', status, output)
 
     # sleep for temp start
     time.sleep(10)
 
     cmd = 'bash %s/temp/node/check.sh' % dir
-    status, output = commands.getstatusoutput(cmd);
-    print 'check status code: ', status
-    print 'output: ', output
+    status, output = commands.getstatusoutput(cmd)
+    logger.debug('check status, status is %d, output is %s', status, output)
+
+    if utils.valid_string(output) and (output.find('node is running') != -1):
+        return True
+    else:
+        return False
 
 def stop_temp_node(dir):
     '''
     '''
     cmd = 'bash %s/temp/node/stop.sh' % dir
-    status, output = commands.getstatusoutput(cmd);
-    print 'stop status code: ', status
-    print 'output: ', output
+    status, output = commands.getstatusoutput(cmd)
+    logger.debug('stop status, status is %d, output is %s', status, output)
+
+def clean_temp_node(dir):
+    '''
+    '''
+    stop_temp_node(dir)
+    os.removedirs(dir + '/temp')
+
+def registerNode(dir, nodejson):
+    cmd = 'bash %s/temp/web3sdk/bin/web3sdk NodeAction registerNode file:%s' % (dir, nodejson)
+    status, output = commands.getstatusoutput(cmd)
+    
+    logger.debug('register status, status is %d, output is %s', status, output)
