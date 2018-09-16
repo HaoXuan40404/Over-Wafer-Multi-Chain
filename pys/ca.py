@@ -53,7 +53,7 @@ def generator_node_ca(dir, node, agent = CA.agent):
     os.environ['agent'] = agent
     os.environ['node'] = node
     os.environ['out']= dir
-    os.system('bash $scripts/generate_node_cert.sh -a $agent -d $ -n $node -o $dir')
+    os.system('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
 
 def generator_sdk_ca(dir):
     os.environ['out'] = dir
