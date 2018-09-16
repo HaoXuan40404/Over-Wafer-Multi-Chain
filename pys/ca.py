@@ -33,13 +33,13 @@ def root_ca_exist():
 def agent_ca_exist():
     return os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.crt') and os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.key')
 
-def generate_root_ca(dir = CA.CA_path):
+def generate_root_ca(dir):
 
     os.environ['scripts'] = path.get_path() + '/scripts/'
     os.environ['out'] = dir
     os.system('bash $scripts/generate_chain_cert.sh -o $out')
 
-def generator_agent_ca(dir, ca = CA.CA_path, agent = CA.agent):
+def generator_agent_ca(dir, ca, agent):
 
     os.environ['scripts'] = path.get_path() + '/scripts/'
     os.environ['out'] = dir
@@ -47,7 +47,7 @@ def generator_agent_ca(dir, ca = CA.CA_path, agent = CA.agent):
     os.environ['agent'] = agent
     os.system('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
 
-def generator_node_ca(dir, node, agent = CA.agent):
+def generator_node_ca(dir, node, agent):
 
     os.environ['scripts'] = path.get_path() + '/scripts/'
     os.environ['agent'] = agent
