@@ -2,6 +2,7 @@
 
 import os
 import sys
+import shutil
 
 from pys import path
 from pys import utils
@@ -64,7 +65,7 @@ def chain_build(cfg):
     except:
         logger.warn('build end exception')
         if os.path.isdir(dir):
-            os.removedirs(dir)
+            shutil.rmtree(dir)
     
 
 

@@ -2,6 +2,7 @@
 
 import os
 import sys
+import shutil
 
 from pys import path
 
@@ -20,4 +21,4 @@ class Data:
         return os.path.isdir(self.dir(chain_id, chain_version))
 
     def remove(self, chain_id, chain_version):
-        return os.removedirs(dir(chain_id, chain_version))
+        return shutil.rmtree(dir(chain_id, chain_version))
