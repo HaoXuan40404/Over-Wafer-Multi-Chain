@@ -73,4 +73,4 @@ def registerNode(dir, nodejson):
     cmd = 'bash %s/temp/web3sdk/bin/web3sdk NodeAction registerNode file:%s' % (dir, nodejson)
     status, output = commands.getstatusoutput(cmd)
 
-    logger.debug('register status, status is %d, output is %s', status, output)
+    logger.debug('register status, status is %d', status)
