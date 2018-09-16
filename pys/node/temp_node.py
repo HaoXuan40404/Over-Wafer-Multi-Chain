@@ -21,6 +21,8 @@ def temp_node_build(dir, port):
     shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/temp/web3sdk')
 
     shutil.copytree(path.get_path() + '/tpl/temp_node', dir + '/temp/node')
+    #拷贝fisco-bcos文件
+    shutil.copy(path.get_fisco_dir() + '/fisco-bcos', dir + '/temp/node/')
 
     shutil.copy(dir + '/temp/node/sdk/ca.crt', dir + '/temp/web3sdk/conf')
     shutil.copy(dir + '/temp/node/sdk/client.keystore', dir + '/temp/web3sdk/conf')
