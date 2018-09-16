@@ -25,7 +25,7 @@
 	</bean>
 
 	<bean id="toolConf" class="org.bcos.contract.tools.ToolConf">
-		<property name="systemProxyAddress" value="cat: ./build/godInfo.txt: No such file or directory" />
+		<property name="systemProxyAddress" value="0xe4cd3e488cbf0a98e8ecd8bc5eefaf10e5d54905" />
 		<property name="privKey" value="bcec428d5205abe0f0cc8a734083908d9eb8563e31f943d760786edf42ad67dd" />
 		<property name="account" value="0x776bd5cf9a88e9437dc783d6414bccc603015cf0" />
 		<property name="outPutpath" value="./output/" />

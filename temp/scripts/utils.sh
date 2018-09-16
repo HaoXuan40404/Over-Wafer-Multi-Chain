@@ -1,28 +1,5 @@
 #!/bin/bash
 
-# print message to stderr , if need and will exit
-function error_message()
-{
-    #local message=$2
-#    echo "ERROR - ${message}" >&2 
-    echo "ERROR - ${message}"
-    exit 1
-}
-
-# print message to stderr , if need and will exit
-function error_message_without_exit()
-{
-    local message=$1
-#    echo "ERROR - ${message}" >&2 
-    echo "ERROR - ${message}"
-}
-
-#exit direct
-function error_exit()
-{
-    exit 1
-}
-
 #check if the port is used
 function check_port() 
 {
