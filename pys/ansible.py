@@ -35,7 +35,7 @@ def mkdir_module(ip,dest):
     '''
     mkdir module
     '''
-    os.system('bash ' + ansible_path + 'ansible.sh shell '  + ip +  ' ' + dest)
+    os.system('bash ' + ansible_path + 'ansible.sh mkdir '  + ip +  ' ' + dest)
     return 0
 
 def copy_module(ip,src,dest):
