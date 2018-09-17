@@ -11,7 +11,7 @@ from pys import ca
 from pys.node import config
 from pys.log import logger
 
-def build_install_dir(dir, chain, port, node):
+def build_install_dir(dir, chain, port, node, temp):
     '''
     构建一个节点的安装包目录结构
     '''
@@ -46,6 +46,9 @@ def build_install_dir(dir, chain, port, node):
         shutil.copy(path.get_path() + '/scripts/node_stop.sh', subdir + '/stop.sh')
         shutil.copy(path.get_path() + '/scripts/node_check.sh', subdir + '/check.sh')
 
+        #拷贝fisco-bcos文件
+        shutil.copy(path.get_fisco_dir() + '/fisco-bcos', subdir)
+
         cfg_json = config.build_config_json(chain.get_id(), port.get_rpc_port() + index, port.get_p2p_port() + index, port.get_channel_port() + index)
         with open(subdir + '/config.json',"w+") as f:
             f.write(cfg_json)
@@ -54,6 +57,10 @@ def build_install_dir(dir, chain, port, node):
         shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
 
         ca.generator_node_ca(subdir + '/data', node.get_p2p_ip() + '_' + str(index), ca.get_agent_ca_path())
+        
+        #注册节点到系统合约
+        if  not temp is None:
+            temp.registerNode(dir, subdir + '/data/node.json')
 
         index += 1
 

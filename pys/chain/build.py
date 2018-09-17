@@ -39,29 +39,33 @@ def chain_build(cfg):
     try:
         phs = P2pHosts()
         # 生成bootstrapsnode.json
-        node_json_lists = []
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
-                node_json_lists.append(dir + '/' + node.get_host_ip() + ('/node%d' % index) + '/data/node.json')
         with open(dir + '/bootstrapnodes.json',"w+") as f:
             f.write(phs.to_json())
         
+        temp_node.temp_node_build(dir, port)
+        # 构建temp节点
+        if not temp_node.start_temp_node(dir):
+            logger.warn('start temp node failed.')
+            raise Exception('temp node start failed')
+
         # 构建各个安装包
         for node in cc.get_nodes():
-            build.build_install_dir(dir, chain, port, node)
-
-        # 构建temp节点
-        temp_node.temp_node_build(dir, port)
-        if temp_node.start_temp_node(dir):
-            for nodejson in node_json_lists:
-                temp_node.registerNode(dir, nodejson)
-            temp_node.stop_temp_node(dir)
-            temp_node.export_genesis(dir)
-            temp_node.clean_temp_node(dir)
-        else:
-            raise Exception('temp node start failed')
+            build.build_install_dir(dir, chain, port, node, temp_node)
         
+        temp_node.stop_temp_node(dir)
+        temp_node.export_genesis(dir)
+        temp_node.clean_temp_node(dir)
+
+        # 拷贝genesis.json文件到各个文件夹
+        for node in cc.get_nodes():
+            index = 0
+            while index < node.get_node_num():
+                shutil.copy(dir + '/genesis.json', dir + ('/%s/node%d/data' % (node.get_host_ip(), index)) )
+                index += 1
+
         logger.info('build end ok.')
 
     except:
