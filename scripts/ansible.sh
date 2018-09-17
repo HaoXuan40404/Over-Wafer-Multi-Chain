@@ -73,5 +73,5 @@ case $1 in
     mkdir) mkdir_module $2 $3;;
     this) print_ip $2 $3;;
     
-    *) echo "others";;
+    *) echo "others case";;
 esac
