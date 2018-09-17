@@ -2,7 +2,9 @@
 import os
 
 global ansible_path
-ansible_path = '../temp/'
+ansible_path = './temp/'
+print '***获取当前目录***'
+print os.getcwd()
 class Ansible:
     '''
     ansible
