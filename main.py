@@ -6,7 +6,7 @@ import sys
 
 from pys import ca, path, version
 # from pys.chain import build
-from pys.chain import opr, publish
+from pys.chain import opr, publish, build
 
 
 def init():
@@ -28,12 +28,12 @@ def cmd_view():
     parser.add_argument('--start', nargs = 2, metavar = ('chainID','version'), help='start all node')
     parser.add_argument('--stop', nargs = 2, metavar = ('chainID','version'), help='stop all node')
     args = parser.parse_args()
-    if args.config:
-        print("this is config")
-    elif args.version:
+    if args.version:
         print("this is version")
+        version.version()
     elif args.build:
         print("this is build")
+        build.chain_build(args.build[0])
     elif args.check:
         print("this is check")
         chain_id = args.check[0]
