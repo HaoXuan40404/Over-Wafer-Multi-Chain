@@ -2,7 +2,6 @@
 #copy_module
 function copy_module()
 {
-    echo "this copy"
     local package_config=$1
     local ansible_src=$2
     local ansible_dest=$3
@@ -24,7 +23,6 @@ function build_module()
     local package_config=$1
     local make_dir=$2
     ansible ${package_config} -m shell -a "bash ${make_dirt}/make.sh" -B 200 -P 5
-    exit 0
 }
 
 ###unarchive_module###
@@ -33,7 +31,6 @@ function start_module()
     local package_config=$1
     local start_path=$2
     ansible ${package_config} -m shell -a "bash ${start_path}/start.sh"
-    exit 0
 }
 
 ###stop_module###
@@ -42,7 +39,6 @@ function stop_module()
     local package_config=$1
     local stop_path=$2
     ansible ${package_config} -m shell -a "bash ${stop_path}/stop.sh"
-    exit 0
 }
 
 ###mkdir_module###
