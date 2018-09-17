@@ -4,3 +4,5 @@ dirpath="$(cd "$(dirname "$0")" && pwd)"
     curdir=$PWD
     node=$(basename ${curdir})
     ./fisco-bcos --genesis ${curdir}/genesis.json  --config ${curdir}/config.json --export-genesis $1  > ${curdir}/fisco-bcos.log 2>&1
+
+    echo "export genesis path => $1"

@@ -61,6 +61,12 @@ def stop_temp_node(dir):
     status, output = commands.getstatusoutput(cmd)
     logger.debug('stop status, status is %d, output is %s', status, output)
 
+def export_genesis(dir):
+
+    cmd = 'bash %s/temp/node/export.sh %s/%s' % (dir, dir, 'genesis.json')
+    status, output = commands.getstatusoutput(cmd)
+    logger.debug('export status, status is %d, output is %s', status, output)
+
 def clean_temp_node(dir):
     '''
     '''
