@@ -4,9 +4,9 @@ import argparse
 import os
 import sys
 
+from pys import ansible
 from pys import ca, path, version
-# from pys.chain import build
-from pys.chain import opr, publish, build
+from pys.chain import build, opr, publish
 
 
 def init():
@@ -29,33 +29,27 @@ def cmd_view():
     parser.add_argument('--stop', nargs = 2, metavar = ('chainID','version'), help='stop all node')
     args = parser.parse_args()
     if args.version:
-        print("this is version")
         version.version()
     elif args.build:
-        print("this is build")
         build.chain_build(args.build[0])
     elif args.check:
-        print("this is check")
         chain_id = args.check[0]
         chain_version = args.check[1]
         opr.check_server(chain_id, chain_version)
     elif args.publish:
-        print("this is push")
         chain_id = args.publish[0]
         chain_version = args.publish[1]
         publish.publish_server(chain_id, chain_version)
     elif args.start:
-        print("this is start")
         chain_id = args.start[0]
         chain_version = args.start[1]
         opr.start_server(chain_id, chain_version)
     elif args.stop:
-        print("this is stop")
         chain_id = args.stop[0]
         chain_version = args.stop[1]
         opr.stop_server(chain_id, chain_version)
     else:
-        print('error')
+        print('unkown cmd.')
     return 0
 
 def main():

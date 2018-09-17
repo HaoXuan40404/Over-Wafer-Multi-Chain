@@ -8,7 +8,7 @@ class Ansible:
     ansible
     '''
     user = ''
-    dir = ''
+    dir = '/data/'
     src_dir = ''
 
     def __repr__(self):
@@ -22,6 +22,8 @@ def set_user(user):
 def set_dir(dir):
     Ansible.dir = dir
 
+def get_dir():
+    return Ansible.dir
 
 def ansible_test():
     ae = Ansible()
