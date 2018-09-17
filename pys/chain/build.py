@@ -63,7 +63,7 @@ def chain_build(cfg):
         for node in cc.get_nodes():
             index = 0
             while index < node.get_node_num():
-                shutil.copy(dir + '/genesis.json', dir + ('/%s/node%d/data' % (node.get_host_ip(), index)) )
+                shutil.copy(dir + '/genesis.json', dir + ('/%s/node%d/' % (node.get_host_ip(), index)) )
                 index += 1
 
         logger.info('build end ok.')

@@ -54,6 +54,7 @@ def build_install_dir(dir, chain, port, node, temp):
             f.write(cfg_json)
 
         os.makedirs(subdir + '/data')
+        os.makedirs(subdir + '/log')
         shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
 
         ca.generator_node_ca(subdir + '/data', node.get_p2p_ip() + '_' + str(index), ca.get_agent_ca_path())

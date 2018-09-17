@@ -55,7 +55,7 @@ class Config:
         self.p2pport = str(p2p_port)
 
     def set_channel_port(self, channel_port):
-        self.channelport = str(channel_port)
+        self.channelPort = str(channel_port)
 
     def __repr__(self):
         return self.toJson()
