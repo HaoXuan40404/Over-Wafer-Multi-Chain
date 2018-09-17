@@ -12,13 +12,13 @@ class P2pHost:
 
 class P2pHosts:
     def __init__(self):
-        self.hosts = []
+        self.nodes = []
 
     def add_p2p_host(self, ph):
-        self.hosts.append(ph)
+        self.nodes.append(ph)
 
     def __repr__(self):
-        return 'hosts %s' % self.hosts
+        return 'nodes %s' % self.nodes
 
     def to_json(self):
         return json.dumps(self, default = lambda obj : obj.__dict__, sort_keys=True, indent=4)
