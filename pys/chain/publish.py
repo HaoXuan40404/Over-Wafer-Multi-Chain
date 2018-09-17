@@ -20,6 +20,6 @@ def publish_server(chain_id, chain_version):
             logger.warn('wrong host_ip ' + dir)
             
 
-# utils.invalid_ip(. . .)
+
 
     

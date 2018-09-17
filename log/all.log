@@ -24,3 +24,61 @@
 [2018-09-17 14:49:05,967][WARNING][publish][publish_server] | dir not exist, dir is /mnt/c/Users/asherli/Desktop/ywy/multi-chain/data/chain/pkg/chain_1/v1
 [2018-09-17 15:24:45,109][INFO][log][<module>] | init_logging init. 
 [2018-09-17 15:24:45,109][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:01:51,391][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:01:51,391][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:05,886][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:05,886][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:35,122][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:35,122][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:50,649][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:50,649][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:57,016][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:57,016][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:59,373][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:02:59,373][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:01,192][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:01,192][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:23,702][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:23,702][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:25,279][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:25,279][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:29,367][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:29,367][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:38,836][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:03:38,836][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:19,406][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:19,406][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:30,169][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:30,169][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:38,008][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:38,008][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:45,020][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:04:45,020][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:38,311][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:38,311][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:50,883][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:50,883][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:52,894][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:52,894][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:54,476][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:57:54,476][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:59:00,709][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:59:00,709][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:59:04,063][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:59:04,063][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:59:25,668][INFO][log][<module>] | init_logging init. 
+[2018-09-17 18:59:25,668][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:05:52,356][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:05:52,356][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:25,604][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:25,604][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:29,332][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:29,332][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:31,553][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:31,553][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:31,559][WARNING][opr][stop_server] | not this node, your node is at  /mnt/c/Users/asherli/Desktop/multi-chain/data/chain/pkg/3/4
+[2018-09-17 19:09:31,559][WARNING][opr][stop_server] | not this node, your node is at  /mnt/c/Users/asherli/Desktop/multi-chain/data/chain/pkg/3/4
+[2018-09-17 19:09:41,741][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:41,741][INFO][log][<module>] | init_logging init. 
+[2018-09-17 19:09:41,749][WARNING][opr][stop_server] | not this node, your node is at  /mnt/c/Users/asherli/Desktop/multi-chain/data/chain/pkg/3/4
+[2018-09-17 19:09:41,749][WARNING][opr][stop_server] | not this node, your node is at  /mnt/c/Users/asherli/Desktop/multi-chain/data/chain/pkg/3/4

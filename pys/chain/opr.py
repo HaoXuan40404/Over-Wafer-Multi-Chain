@@ -1,6 +1,3 @@
-# start start.sh
-# stop stop.sh
-# check 调用check.sh node_ is running
 from pys.chain import data
 import os
 from pys import ansible
@@ -9,7 +6,7 @@ from pys.log import logger
 
 dest_dir = '~/data/' 
 
-def start_server(self,chain_id, chain_version):
+def start_server(chain_id, chain_version):
     dir = data.Data().dir(chain_id,chain_version)
     if not os.path.isdir(dir):
         logger.warn('not this node, your node is at  ' + dir)
@@ -20,7 +17,7 @@ def start_server(self,chain_id, chain_version):
         else:
             logger.debug('cant start node at  ' + host)
 
-def stop_server(self,chain_id, chain_version):
+def stop_server(chain_id, chain_version):
     dir = data.Data().dir(chain_id,chain_version)
     if not os.path.isdir(dir):
         logger.warn('not this node, your node is at  ' + dir)
@@ -32,7 +29,7 @@ def stop_server(self,chain_id, chain_version):
             logger.debug('cant stop node at  ' + host)
 
 
-def check_server(self,chain_id, chain_version):
+def check_server(chain_id, chain_version):
     dir = data.Data().dir(chain_id,chain_version)
     if not os.path.isdir(dir):
         logger.warn('not this node, your node is at  ' + dir)

@@ -4,8 +4,7 @@ import os
 global ansible_path
 ansible_path = './scripts/'
 
-print '***获取当前目录***'
-print os.getcwd()
+
 class Ansible:
     '''
     ansible
