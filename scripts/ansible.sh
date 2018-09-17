@@ -2,6 +2,7 @@
 #copy_module
 function copy_module()
 {
+    echo "this copy"
     local package_config=$1
     local ansible_src=$2
     local ansible_dest=$3
