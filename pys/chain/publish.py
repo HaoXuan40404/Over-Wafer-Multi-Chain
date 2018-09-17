@@ -4,7 +4,7 @@ from pys import ansible
 from pys import utils
 from pys.log import logger
 
-dest_dir = '/data/' 
+dest_dir = '~/data/' 
 class Publish:
 
     def publish_server(self,chain_id, chain_version):
