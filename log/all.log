@@ -22,3 +22,5 @@
 [2018-09-17 14:49:05,966][INFO][log][<module>] | init_logging init. 
 [2018-09-17 14:49:05,967][WARNING][publish][publish_server] | dir not exist, dir is /mnt/c/Users/asherli/Desktop/ywy/multi-chain/data/chain/pkg/chain_1/v1
 [2018-09-17 14:49:05,967][WARNING][publish][publish_server] | dir not exist, dir is /mnt/c/Users/asherli/Desktop/ywy/multi-chain/data/chain/pkg/chain_1/v1
+[2018-09-17 15:24:45,109][INFO][log][<module>] | init_logging init. 
+[2018-09-17 15:24:45,109][INFO][log][<module>] | init_logging init. 
