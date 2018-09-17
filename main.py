@@ -6,7 +6,7 @@ import sys
 
 from pys import ca, path, version
 # from pys.chain import build
-from pys.chain import opr, publish
+from pys.chain import opr, publish, build
 
 
 def init():
@@ -21,18 +21,19 @@ def init():
 
 def cmd_view():
     parser = argparse.ArgumentParser(description='multi-chain usage')
-    parser.add_argument('-c', '--config', action="store_true", help='input config file which in ini format')
-    parser.add_argument('-v', '--version', action="store_true", help='version of multi-chain')
-    parser.add_argument('-k', '--check', nargs = 2, help='check servers status, eg. python main chain_id chain_version')
-    parser.add_argument('-g', '--generate', action="store_true", help='generate all package eg. python main chain_id chain_version')
-    parser.add_argument('-p', '--publish', nargs = 2, help='publish all package eg. python main chain_id chain_version')
-    parser.add_argument('-s', '--start', nargs = 2, help='start all node eg. python main chain_id chain_version')
-    parser.add_argument('-t', '--stop', nargs = 2, help='stop all node eg. python main chain_id chain_version')
+    parser.add_argument('--version', action="store_true", help='version of multi-chain')
+    parser.add_argument('--check', nargs = 2, metavar = ('chainID','version'), help='check servers status')
+    parser.add_argument('--build', nargs =1 ,metavar = ('./config.conf'), help='build all package')
+    parser.add_argument('--publish', nargs = 2, metavar = ('chainID','version'), help='publish all package')
+    parser.add_argument('--start', nargs = 2, metavar = ('chainID','version'), help='start all node')
+    parser.add_argument('--stop', nargs = 2, metavar = ('chainID','version'), help='stop all node')
     args = parser.parse_args()
-    if args.config:
-        print("this is config")
-    elif args.version:
+    if args.version:
         print("this is version")
+        version.version()
+    elif args.build:
+        print("this is build")
+        build.chain_build(args.build[0])
     elif args.check:
         print("this is check")
         chain_id = args.check[0]
