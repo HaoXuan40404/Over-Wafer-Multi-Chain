@@ -3,6 +3,7 @@
     cd $dirpath
     curdir=$PWD
     node=$(basename ${curdir})
+    ulimit -c unlimited
     weth_pid=`ps aux|grep "${curdir}/config.json"|grep -v grep|awk '{print $2}'`
     if [ ! -z $weth_pid ];then
         echo "${node} is running, pid is $weth_pid."
