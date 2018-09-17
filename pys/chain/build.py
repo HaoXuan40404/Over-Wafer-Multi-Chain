@@ -39,6 +39,7 @@ def chain_build(cfg):
     try:
         phs = P2pHosts()
         # 生成bootstrapsnode.json
+
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
@@ -46,7 +47,7 @@ def chain_build(cfg):
             f.write(phs.to_json())
         
         temp_node.temp_node_build(dir, port)
-        # 构建temp节点
+
         if not temp_node.start_temp_node(dir):
             logger.warn('start temp node failed.')
             raise Exception('temp node start failed')

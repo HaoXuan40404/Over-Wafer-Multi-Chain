@@ -2,6 +2,7 @@
 #copy_module
 function copy_module()
 {
+    echo "this copy"
     local package_config=$1
     local ansible_src=$2
     local ansible_dest=$3
@@ -44,28 +45,27 @@ function stop_module()
     exit 0
 }
 
-###kmdir_module###
+###mkdir_module###
 function mkdir_module()
 {
-    echo "this enter"
+    echo "this mkdir"
     local param1=$1
     local param2=$2
     ansible ${param1} -m shell -a "mkdir -p ${param2}"
 }
-
-
 ###check_module###
 function check_module()
 {
+    echo "this check"
     local package_config=$1
     local check_path=$2
-    ansible ${package_config} -m shell -a "bash ${check_path}/check.sh"
+    ansible ${param1} -m shell -a "bash  ${check_path}/check.sh"
 }
 
 ###this_test_module###
 function print_ip()
 {
-    echo "this enter"
+    echo "this print"
     local param1=$1
     local param2=$2
     echo "print ip => " ${param1}
@@ -83,7 +83,5 @@ case $1 in
     check) check_module $2 $3;;
     this) print_ip $2 $3;;
     
-
-
-    *) echo "others";;
+    *) echo "others case";;
 esac

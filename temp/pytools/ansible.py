@@ -28,6 +28,13 @@ class AnsibleBuild(object):
         os.system('bash ./ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
         return 0
 
+    def mdir_module(self,ip,dest):
+        '''
+        mkdir module
+        '''
+        os.system('bash ./ansible.sh shell ' + ip + ' ' + src + ' ' + dest)
+        return 0
+
     
     def build_module(self,ip,PATH):
         '''
