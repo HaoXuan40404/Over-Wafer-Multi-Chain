@@ -31,7 +31,7 @@ def ansible_test():
     set_dir('dir')
     print(ae)
 
-def mdir_module(ip,dest):
+def mkdir_module(ip,dest):
     '''
     mkdir module
     '''

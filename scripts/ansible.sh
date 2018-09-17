@@ -47,7 +47,7 @@ function stop_module()
 ###shell_module###
 function mkdir_module()
 {
-    echo "this enter"
+    echo "this mkdir"
     local param1=$1
     local param2=$2
     ansible ${param1} -m shell -a "mkdir -p ${param2}"
@@ -56,7 +56,7 @@ function mkdir_module()
 ###this_test_module###
 function print_ip()
 {
-    echo "this enter"
+    echo "this print"
     local param1=$1
     local param2=$2
     echo "print ip => " ${param1}
