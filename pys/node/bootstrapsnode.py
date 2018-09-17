@@ -5,7 +5,7 @@ import json
 class P2pHost:
     def __init__(self, host, p2pport):
         self.host = host
-        self.p2pport = p2pport
+        self.p2pport = str(p2pport)
     
     def __repr__(self):
         return 'host %s, p2pport %d' % (self.host, self.p2pport)
