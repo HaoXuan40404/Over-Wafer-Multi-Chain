@@ -18,7 +18,7 @@ class Publish:
             if utils.valid_ip(host):
                 print('value ip=>',host)
                 ansible.mdir_module(host,dest_dir + chain_id)
-                ansible.copy_module(host, dir + host + '*', dest_dir + chain_id + '/')
+                ansible.copy_module(host, dir  + '/' + host  + '/' + '*', dest_dir + chain_id + '/')
             else:
                 print("wrong host_ip!",host)
             
