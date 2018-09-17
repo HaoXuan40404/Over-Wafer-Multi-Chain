@@ -2,7 +2,8 @@
 import os
 
 global ansible_path
-ansible_path = './temp/'
+ansible_path = './temp/pytools/'
+
 print '***获取当前目录***'
 print os.getcwd()
 class Ansible:
@@ -34,14 +35,14 @@ def mdir_module(ip,dest):
     '''
     mkdir module
     '''
-    os.system('bash ${ansible_path}ansible.sh shell ' + ip +  ' ' + dest)
+    os.system('bash ' + ansible_path + 'ansible.sh shell'  + ip +  ' ' + dest)
     return 0
 
 def copy_module(ip,src,dest):
     '''
     cpoy module
     '''
-    os.system('bash ${ansible_path}ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
+    os.system('bash ' + ansible_path + 'ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
     return 0
 
 
@@ -49,7 +50,7 @@ def unarchive_module(ip,src,dest):
     '''
     unarchive module
     '''
-    os.system('bash ${ansible_path}ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
+    os.system('bash ' + ansible_path + 'ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
     return 0
 
 
@@ -57,7 +58,7 @@ def build_module(ip,PATH):
     '''
     build module
     '''
-    os.system('bash ${ansible_path}ansible.sh build ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
     return 0
 
 
@@ -65,7 +66,7 @@ def start_module(ip,PATH):
     '''
     start module
     '''
-    os.system('bash ${ansible_path}ansible.sh start ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
     return 0
 
 
@@ -73,7 +74,7 @@ def stop_module(ip,PATH):
     '''
     stop module
     '''
-    os.system('bash ${ansible_path}ansible.sh stop ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
     return 0
 
 
@@ -81,7 +82,7 @@ def test_module(ip,PATH):
     '''
     test module
     '''
-    os.system('bash ${ansible_path}ansible.sh this ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
     return 0
 
 
