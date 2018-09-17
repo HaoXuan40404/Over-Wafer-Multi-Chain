@@ -58,6 +58,7 @@ class NodeEle:
             raise Exception("node_desc invalid format invalid host_ip ", l[0])
         if not utils.valid_ip(l[1]):
             raise Exception("node_desc invalid format invalid p2p_ip ", l[1])
+            
         if l[2] <= 0:
             raise Exception("node_desc invalid format node_num lt 0 ", l[2])
         self.host_ip = l[0]

@@ -9,5 +9,6 @@
         echo "${node} is running, pid is $weth_pid."
     else
         echo "start ${node} ..."
+        chmod a+x ../fisco-bcos
         nohup ../fisco-bcos  --genesis ${curdir}/genesis.json  --config ${curdir}/config.json  >> ${curdir}/log/log 2>&1 &
     fi
