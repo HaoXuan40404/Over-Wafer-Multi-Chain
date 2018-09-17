@@ -21,8 +21,7 @@ def init():
 
 def main():
     init()
-    test = publish.Publish()
-    test.publish_server('chain_1','v1')
+    publish.publish_server('chain_1','v1')
     # build.chain_build(path.get_path() + '/conf/config.conf')
     #命令行 build publish start stop version_print
 

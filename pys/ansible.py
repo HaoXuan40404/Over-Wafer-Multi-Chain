@@ -2,7 +2,7 @@
 import os
 
 global ansible_path
-ansible_path = './temp/pytools/'
+ansible_path = './scripts/'
 
 print '***获取当前目录***'
 print os.getcwd()
@@ -35,7 +35,7 @@ def mdir_module(ip,dest):
     '''
     mkdir module
     '''
-    os.system('bash ' + ansible_path + 'ansible.sh shell'  + ip +  ' ' + dest)
+    os.system('bash ' + ansible_path + 'ansible.sh shell '  + ip +  ' ' + dest)
     return 0
 
 def copy_module(ip,src,dest):
@@ -58,7 +58,7 @@ def build_module(ip,PATH):
     '''
     build module
     '''
-    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh build ' + ip + ' ' + PATH)
     return 0
 
 
@@ -66,7 +66,7 @@ def start_module(ip,PATH):
     '''
     start module
     '''
-    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh start ' + ip + ' ' + PATH)
     return 0
 
 
@@ -74,9 +74,16 @@ def stop_module(ip,PATH):
     '''
     stop module
     '''
-    os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
+    os.system('bash ' + ansible_path + 'ansible.sh stop ' + ip + ' ' + PATH)
     return 0
 
+
+def check_module(ip,PATH):
+    '''check module
+    check servers status
+    '''
+    os.system('bash ' + ansible_path + 'ansible.sh check ' + ip + ' ' + PATH)
+    return 0
 
 def test_module(ip,PATH):
     '''
@@ -85,12 +92,6 @@ def test_module(ip,PATH):
     os.system('bash ' + ansible_path + 'ansible.sh ' + ip + ' ' + PATH)
     return 0
 
-
-def check_module(ip,PATH):
-    '''check module
-    check servers status
-    '''
-    return 0
 
 
 def monitor_module(ip,PATH):

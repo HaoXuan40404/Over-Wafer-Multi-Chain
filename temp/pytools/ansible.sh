@@ -44,13 +44,22 @@ function stop_module()
     exit 0
 }
 
-###shell_module###
+###kmdir_module###
 function mkdir_module()
 {
     echo "this enter"
     local param1=$1
     local param2=$2
-    ansible ${param1} -m shell -a "mkdir ${param2}"
+    ansible ${param1} -m shell -a "mkdir -p ${param2}"
+}
+
+
+###check_module###
+function check_module()
+{
+    local package_config=$1
+    local check_path=$2
+    ansible ${package_config} -m shell -a "bash ${check_path}/check.sh"
 }
 
 ###this_test_module###
@@ -71,6 +80,7 @@ case $1 in
     start) start_module $2 $3;;
     stop) stop_module $2 $3;;
     mkdir) mkdir_module $2 $3;;
+    check) check_module $2 $3;;
     this) print_ip $2 $3;;
     
 
