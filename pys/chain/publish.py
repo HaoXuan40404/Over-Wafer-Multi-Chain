@@ -14,7 +14,7 @@ def publish_server(chain_id, chain_version):
     for host in os.listdir(dir):
         if utils.valid_ip(host):
             ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
-            ansible.copy_module(host, dir  + '/' + host  + '/', dest_dir + chain_id + '/')
+            ansible.copy_module(host, dir  + '/' + host  + '/', ansible.get_dir() + '/' + chain_id)
         else:
             print("wrong host_ip!",host)
             logger.warn('wrong host_ip ' + dir)
