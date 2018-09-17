@@ -12,7 +12,7 @@ class Data:
         pass
     
     def dir(self, chain_id, chain_version):
-        return path.get_path() + ('./data/chain/pkg/' + chain_id + '/' + chain_version)
+        return path.get_path() + ('/data/chain/pkg/' + chain_id + '/' + chain_version)
 
     def create(self, chain_id, chain_version):
         os.makedirs(dir(chain_id, chain_version))

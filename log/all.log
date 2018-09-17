@@ -16,3 +16,9 @@
 [2018-09-17 14:36:41,681][INFO][log][<module>] | init_logging init. 
 [2018-09-17 14:37:28,466][INFO][log][<module>] | init_logging init. 
 [2018-09-17 14:37:28,466][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:47:16,014][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:47:16,014][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:49:05,966][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:49:05,966][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:49:05,967][WARNING][publish][publish_server] | dir not exist, dir is /mnt/c/Users/asherli/Desktop/ywy/multi-chain/data/chain/pkg/chain_1/v1
+[2018-09-17 14:49:05,967][WARNING][publish][publish_server] | dir not exist, dir is /mnt/c/Users/asherli/Desktop/ywy/multi-chain/data/chain/pkg/chain_1/v1

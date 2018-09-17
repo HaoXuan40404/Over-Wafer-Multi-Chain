@@ -38,9 +38,9 @@ def chain_build(cfg):
 
     try:
         phs = P2pHosts()
+        # 生成bootstrapsnode.json
         node_json_lists = []
         for node in cc.get_nodes():
-            # 生成bootstrapsnode.json
             for index in range(node.get_node_num()):
                 phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
                 node_json_lists.append(dir + '/' + node.get_host_ip() + ('/node%d' % index) + '/data/node.json')
@@ -56,7 +56,12 @@ def chain_build(cfg):
         if temp_node.start_temp_node(dir):
             for nodejson in node_json_lists:
                 temp_node.registerNode(dir, nodejson)
+<<<<<<< HEAD
             #export genssis.json   
+=======
+            temp_node.stop_temp_node(dir)
+            temp_node.export_genesis(dir)
+>>>>>>> 7c968de4fff33f03d07a667016ac805fe6314704
             temp_node.clean_temp_node(dir)
         else:
             raise Exception('temp node start failed')
