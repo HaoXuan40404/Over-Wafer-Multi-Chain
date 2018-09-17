@@ -56,6 +56,7 @@ def chain_build(cfg):
         if temp_node.start_temp_node(dir):
             for nodejson in node_json_lists:
                 temp_node.registerNode(dir, nodejson)
+            #export genssis.json   
             temp_node.clean_temp_node(dir)
         else:
             raise Exception('temp node start failed')

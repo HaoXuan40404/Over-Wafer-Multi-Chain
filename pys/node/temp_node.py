@@ -39,7 +39,7 @@ def start_temp_node(dir):
     '''
     '''
     cmd = 'bash %s/temp/node/start.sh' % dir
-    status, output = commands.getstatusoutput(cmd);
+    status, output = commands.getstatusoutput(cmd)
     logger.debug('start status, status is %d, output is %s', status, output)
 
     # sleep for temp start
@@ -49,7 +49,7 @@ def start_temp_node(dir):
     status, output = commands.getstatusoutput(cmd)
     logger.debug('check status, status is %d, output is %s', status, output)
 
-    if utils.valid_string(output) and (output.find('node is running') != -1):
+    if utils.valid_string(output) and (output.find('is running') != -1):
         return True
     else:
         return False

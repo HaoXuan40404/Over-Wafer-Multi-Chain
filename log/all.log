@@ -1,0 +1,18 @@
+[2018-09-17 14:26:54,052][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:26:54,052][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:26:54,059][WARNING][publish][publish_server] | dir already exist, dir is /data/chain/pkg/chain_1/v1
+[2018-09-17 14:26:54,059][WARNING][publish][publish_server] | dir already exist, dir is /data/chain/pkg/chain_1/v1
+[2018-09-17 14:28:43,887][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:28:43,887][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:33:08,146][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:33:08,146][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:33:50,671][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:33:50,671][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:33:50,677][WARNING][publish][publish_server] | dir not exist, dir is /data/chain/pkg/chain_1/v1
+[2018-09-17 14:33:50,677][WARNING][publish][publish_server] | dir not exist, dir is /data/chain/pkg/chain_1/v1
+[2018-09-17 14:34:43,441][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:34:43,441][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:36:41,681][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:36:41,681][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:37:28,466][INFO][log][<module>] | init_logging init. 
+[2018-09-17 14:37:28,466][INFO][log][<module>] | init_logging init. 

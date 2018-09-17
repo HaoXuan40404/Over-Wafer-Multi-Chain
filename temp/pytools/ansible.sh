@@ -44,8 +44,17 @@ function stop_module()
     exit 0
 }
 
+###shell_module###
+function mkdir_module()
+{
+    echo "this enter"
+    local param1=$1
+    local param2=$2
+    ansible ${param1} -m shell -a "mkdir ${param2}"
+}
+
 ###this_test_module###
-function this_test()
+function print_ip()
 {
     echo "this enter"
     local param1=$1
@@ -61,7 +70,9 @@ case $1 in
     build) build_module $2 $3;;
     start) start_module $2 $3;;
     stop) stop_module $2 $3;;
-    this) this_test $2 $3;;
+    mkdir) mkdir_module $2 $3;;
+    this) print_ip $2 $3;;
+    
 
 
     *) echo "others";;
