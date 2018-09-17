@@ -1,6 +1,8 @@
 #coding:utf-8
 import os
 
+global ansible_path
+ansible_path = '../temp/'
 class Ansible:
     '''
     ansible
@@ -8,8 +10,7 @@ class Ansible:
     user = ''
     dir = ''
     src_dir = ''
-    global ansible_path
-    ansible_path = '../temp/'
+   
      
 
     def __repr__(self):
