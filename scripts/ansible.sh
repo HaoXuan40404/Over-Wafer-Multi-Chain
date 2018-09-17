@@ -44,29 +44,16 @@ function stop_module()
 ###mkdir_module###
 function mkdir_module()
 {
-    echo "this mkdir"
-    local param1=$1
-    local param2=$2
-    ansible ${param1} -m shell -a "mkdir -p ${param2}"
+    local package_config=$1
+    local mkdir_path=$2
+    ansible ${package_config} -m shell -a "mkdir -p ${mkdir_path}"
 }
 ###check_module###
 function check_module()
 {
-    echo "this check"
     local package_config=$1
     local check_path=$2
-    ansible ${param1} -m shell -a "bash  ${check_path}/check.sh"
-}
-
-###this_test_module###
-function print_ip()
-{
-    echo "this print"
-    local param1=$1
-    local param2=$2
-    echo "print ip => " ${param1}
-    echo "print dir =>" ${param2}
-    ansible ${param1} -m shell -a "echo ${param2}"
+    ansible ${package_config} -m shell -a "bash  ${check_path}/check.sh"
 }
 
 case $1 in
@@ -77,7 +64,6 @@ case $1 in
     stop) stop_module $2 $3;;
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
-    this) print_ip $2 $3;;
     
     *) echo "others case";;
 esac
