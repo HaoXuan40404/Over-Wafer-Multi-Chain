@@ -91,7 +91,7 @@ def check_module(ip, dest):
     check servers status
     '''
     os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh ' + ip + ' ' + dest)
+              '/scripts/ansible.sh check ' + ip + ' ' + dest)
     return 0
 
 
