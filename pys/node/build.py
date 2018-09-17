@@ -30,6 +30,9 @@ def build_install_dir(dir, chain, port, node, temp):
     shutil.copy(path.get_path() + '/scripts/register.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/unregister.sh', node_dir)
 
+    #拷贝fisco-bcos文件
+    shutil.copy(path.get_fisco_dir() + '/fisco-bcos', node_dir)
+
     # web3sdk
     shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
     shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt', node_dir + '/web3sdk/conf')
@@ -45,9 +48,6 @@ def build_install_dir(dir, chain, port, node, temp):
         shutil.copy(path.get_path() + '/scripts/node_start.sh', subdir + '/start.sh')
         shutil.copy(path.get_path() + '/scripts/node_stop.sh', subdir + '/stop.sh')
         shutil.copy(path.get_path() + '/scripts/node_check.sh', subdir + '/check.sh')
-
-        #拷贝fisco-bcos文件
-        shutil.copy(path.get_fisco_dir() + '/fisco-bcos', subdir)
 
         cfg_json = config.build_config_json(chain.get_id(), port.get_rpc_port() + index, port.get_p2p_port() + index, port.get_channel_port() + index)
         with open(subdir + '/config.json',"w+") as f:
