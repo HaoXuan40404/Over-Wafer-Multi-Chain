@@ -7,7 +7,7 @@ import sys
 from pys import ansible
 from pys import ca, path, version
 from pys.chain import build, opr, publish
-
+from pys.log import logger
 
 def init():
     # 获取当前目录, 用来初始化各个模块的依赖路径 
@@ -22,11 +22,11 @@ def init():
 def cmd_view():
     parser = argparse.ArgumentParser(description='multi-chain usage')
     parser.add_argument('--version', action="store_true", help='version of multi-chain')
-    parser.add_argument('--check', nargs = 2, metavar = ('chainID','version'), help='check servers status')
+    parser.add_argument('--check', nargs = 1, metavar = ('chainID'), help='check servers status')
     parser.add_argument('--build', nargs =1 ,metavar = ('./config.conf'), help='build all package')
     parser.add_argument('--publish', nargs = 2, metavar = ('chainID','version'), help='publish all package')
-    parser.add_argument('--start', nargs = 2, metavar = ('chainID','version'), help='start all node')
-    parser.add_argument('--stop', nargs = 2, metavar = ('chainID','version'), help='stop all node')
+    parser.add_argument('--start', nargs = 1, metavar = ('chainID'), help='start all node')
+    parser.add_argument('--stop', nargs = 1, metavar = ('chainID'), help='stop all node')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -34,31 +34,24 @@ def cmd_view():
         build.chain_build(args.build[0])
     elif args.check:
         chain_id = args.check[0]
-        chain_version = args.check[1]
-        opr.check_server(chain_id, chain_version)
+        opr.check_server(chain_id)
     elif args.publish:
         chain_id = args.publish[0]
         chain_version = args.publish[1]
         publish.publish_server(chain_id, chain_version)
     elif args.start:
         chain_id = args.start[0]
-        chain_version = args.start[1]
-        opr.start_server(chain_id, chain_version)
+        opr.start_server(chain_id)
     elif args.stop:
         chain_id = args.stop[0]
-        chain_version = args.stop[1]
-        opr.stop_server(chain_id, chain_version)
+        opr.stop_server(chain_id)
     else:
-        print('unkown cmd.')
+        logger.error('unkown action.')
     return 0
 
 def main():
     init()
     cmd_view()
-    #publish.publish_server('chain_1','v1')
-    # build.chain_build(path.get_path() + '/conf/config.conf')
-    #命令行 build publish start stop version_print
 
 if __name__ == '__main__':
-
     main()

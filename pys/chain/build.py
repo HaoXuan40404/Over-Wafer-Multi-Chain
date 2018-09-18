@@ -6,9 +6,9 @@ import shutil
 
 from pys import path
 from pys import utils
-from data import Data
 from pys.log import logger
 from pys.chain import parser
+from pys.chain import data
 from pys.node import build
 from pys.node import temp_node
 from pys.node.bootstrapsnode import P2pHosts
@@ -27,7 +27,7 @@ def chain_build(cfg):
         logger.warn('parser cfg end exception, e = ' + e)
         return 
 
-    dir = Data().dir(cc.get_chain().get_id(), cc.get_chain().get_version())
+    dir = data.package_dir(cc.get_chain().get_id(), cc.get_chain().get_version())
     port = cc.get_port()
     chain = cc.get_chain()
     # 创建文件夹
