@@ -52,12 +52,12 @@ def cmd_view():
         chain_version = args.stop[1]
         opr.stop_server(chain_id, chain_version)
     elif args.monitor:
-        chain_id = args.stop[0]
-        chain_version = args.stop[1]
+        chain_id = args.monitor[0]
+        chain_version = args.monitor[1]
         opr.monitor_server(chain_id, chain_version)
     elif args.envircheck:
-        chain_id = args.stop[0]
-        chain_version = args.stop[1]
+        chain_id = args.envircheck[0]
+        chain_version = args.envircheck[1]
         check_environment.check_environment(chain_id, chain_version)
     else:
         print('unkown cmd.')
