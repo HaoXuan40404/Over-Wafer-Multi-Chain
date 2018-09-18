@@ -7,6 +7,7 @@ import sys
 from pys import ansible
 from pys import ca, path, version
 from pys.chain import build, opr, publish
+from pys.checktools import check_environment
 
 
 def init():
@@ -27,6 +28,8 @@ def cmd_view():
     parser.add_argument('--publish', nargs = 2, metavar = ('chainID','version'), help='publish all package')
     parser.add_argument('--start', nargs = 2, metavar = ('chainID','version'), help='start all node')
     parser.add_argument('--stop', nargs = 2, metavar = ('chainID','version'), help='stop all node')
+    parser.add_argument('--monitor', nargs = 2, metavar = ('chainID','version'), help='monitor all node')
+    parser.add_argument('--envircheck', nargs = 2, metavar = ('chainID','version'), help='check build environment of all node')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -48,6 +51,14 @@ def cmd_view():
         chain_id = args.stop[0]
         chain_version = args.stop[1]
         opr.stop_server(chain_id, chain_version)
+    elif args.monitor:
+        chain_id = args.stop[0]
+        chain_version = args.stop[1]
+        opr.monitor_server(chain_id, chain_version)
+    elif args.envircheck:
+        chain_id = args.stop[0]
+        chain_version = args.stop[1]
+        check_environment.check_environment(chain_id, chain_version)
     else:
         print('unkown cmd.')
     return 0
@@ -55,9 +66,6 @@ def cmd_view():
 def main():
     init()
     cmd_view()
-    #publish.publish_server('chain_1','v1')
-    # build.chain_build(path.get_path() + '/conf/config.conf')
-    #命令行 build publish start stop version_print
 
 if __name__ == '__main__':
 

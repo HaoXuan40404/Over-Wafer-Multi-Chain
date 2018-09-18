@@ -109,6 +109,17 @@ def monitor_module(ip, dest):
         monitor chains status including' 
         node messenge, blk_number, viewchange, node live or not, node on which server, peers'
     '''
+    os.system('bash ' + path.get_path() +
+              '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
+    return 0
+
+def environment_module(ip, dest):
+    '''monitor module
+        monitor chains status including' 
+        node messenge, blk_number, viewchange, node live or not, node on which server, peers'
+    '''
+    os.system('bash ' + path.get_path() +
+              '/scripts/ansible.sh environment ' + ip + ' ' + dest)
     return 0
 
 
