@@ -5,7 +5,7 @@ function copy_module()
     local package_config=$1
     local ansible_src=$2
     local ansible_dest=$3
-    ansible ${package_config} -m copy -a "src=${ansible_src} dest=${ansible_dest}" -B 200 -P 5
+    ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}" -B 200 -P 5
 }
 
 ###unarchive_module###
@@ -46,7 +46,7 @@ function mkdir_module()
 {
     local package_config=$1
     local mkdir_path=$2
-    ansible ${package_config} -m shell -a "mkdir -p ${mkdir_path}"
+    ansible ${package_config} -m file -a "path=${mkdir_path} state=directory mode=0755"
 }
 ###check_module###
 function check_module()

@@ -7,7 +7,7 @@ import sys
 from pys import ansible
 from pys import ca, path, version
 from pys.chain import build, opr, publish
-from pys.checktools import check_environment
+from pys.checktools import check_environment, readchain
 
 
 def init():
@@ -65,7 +65,13 @@ def cmd_view():
 
 def main():
     init()
+    
     cmd_view()
+    readchain.mchain_conf('./conf/mchain.conf')
+    path = readchain.get_dir()
+    ansible.set_dir(path)
+
+
 
 if __name__ == '__main__':
 
