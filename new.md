@@ -7,3 +7,5 @@ web3sdk->node0 node1 channelport 所有节点的都配置进去，查一个都�
 多链配置
 CA管理
 * PATH支持修改 开放接口 ansible这些地方
+
+dest = ansible.get_dir() + '/' + chain_id/
