@@ -5,7 +5,7 @@ function copy_module()
     local package_config=$1
     local ansible_src=$2
     local ansible_dest=$3
-    ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}" -B 200 -P 5
+    ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}" 
 }
 
 ###unarchive_module###
