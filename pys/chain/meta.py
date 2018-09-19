@@ -61,7 +61,7 @@ class Meta:
             if jsondata.has_key('nodes'):
                 for v in jsondata['nodes'].values():
                     mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
-                    logger.info('load from meta.json, meta node is ' + mn)
+                    logger.info('load from meta.json, meta node is %s', mn)
                     self.append(mn)
 
 def test_meta():
