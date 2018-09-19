@@ -14,11 +14,14 @@ from pys.node import temp_node
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
-def chain_build(cfg):
+def chain_build(cfg, fisco_dir):
     '''
     解析config.conf配置并且构建区块链的安装包
     '''
     logger.info('building, cfg is %s', cfg)
+    logger.info('building, fisco bcos path is %s', fisco_dir)
+
+    path.set_fiso_dir(fisco_dir)
 
     # 配置解析
     try:

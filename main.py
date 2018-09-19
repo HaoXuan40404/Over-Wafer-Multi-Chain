@@ -23,7 +23,7 @@ def cmd_view():
     parser = argparse.ArgumentParser(description='multi-chain usage')
     parser.add_argument('--version', action="store_true", help='version of multi-chain')
     parser.add_argument('--check', nargs = 1, metavar = ('chainID'), help='check servers status')
-    parser.add_argument('--build', nargs =1 ,metavar = ('./config.conf'), help='build all package')
+    parser.add_argument('--build', nargs =2 ,metavar = ('./config.conf', 'fisco_path'), help='build all package')
     parser.add_argument('--publish', nargs = 2, metavar = ('chainID','version'), help='publish all package')
     parser.add_argument('--start', nargs = 1, metavar = ('chainID'), help='start all node')
     parser.add_argument('--stop', nargs = 1, metavar = ('chainID'), help='stop all node')
@@ -31,7 +31,7 @@ def cmd_view():
     if args.version:
         version.version()
     elif args.build:
-        build.chain_build(args.build[0])
+        build.chain_build(args.build[0], args.build[1])
     elif args.check:
         chain_id = args.check[0]
         opr.check_server(chain_id)

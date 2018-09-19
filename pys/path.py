@@ -10,6 +10,9 @@ class Path:
     dir = ''
     fisco_dir = '/usr/local/bin'
 
+def set_fiso_dir(fisco_dir):
+    Path.fisco_dir = fisco_dir
+
 def get_fisco_dir():
     return Path.fisco_dir
 
