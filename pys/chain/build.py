@@ -14,7 +14,7 @@ from pys.node import temp_node
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
-def build_chain(cfg, fisco_path):
+def chain_build(cfg, fisco_path):
     '''
     解析cfg_dir中的所有的链的配置并且构建区块链的安装包
     '''
