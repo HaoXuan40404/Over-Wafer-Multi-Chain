@@ -25,7 +25,7 @@ function build_module()
     ansible ${package_config} -m shell -a "bash ${make_dirt}/make.sh" -B 200 -P 5
 }
 
-###unarchive_module###
+###start_module###
 function start_module()
 {
     local package_config=$1
@@ -72,22 +72,6 @@ function environment_module()
 }
 
 
-###check_module###
-function monitor_module()
-{
-    local package_config=$1
-    local check_path=$2
-    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/monitor.sh"
-}
-
-###check_module###
-function environment_module()
-{
-    local package_config=$1
-    local check_path=$2
-    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/buildcheck.sh" -B 200 -P 2 -s
- 
-}
 
 case $1 in
     copy) copy_module $2 $3 $4;;

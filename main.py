@@ -8,7 +8,7 @@ from pys import ansible
 from pys import ca, path, version
 from pys.chain import build, opr, publish
 from pys.log import logger
-from pys.checktools import check_environment, readchain
+from pys.checktools import check_environment, readchain, nodeoperation
 
 
 def init():
@@ -27,11 +27,12 @@ def cmd_view():
     parser.add_argument('--check', nargs = 1, metavar = ('chainID'), help='check servers status')
     parser.add_argument('--build', nargs =2 ,metavar = ('./config.conf', 'fisco_path'), help='build all package')
     parser.add_argument('--publish', nargs = 2, metavar = ('chainID','version'), help='publish all package')
-
     parser.add_argument('--start', nargs = 1, metavar = ('chainID'), help='start all node')
     parser.add_argument('--stop', nargs = 1, metavar = ('chainID'), help='stop all node')
     parser.add_argument('--monitor', nargs = 1, metavar = ('chainID'), help='monitor all node')
     parser.add_argument('--envircheck', nargs = 1, metavar = ('chainID'), help='check build environment of all node')
+    parser.add_argument('--start_node', nargs = 3, metavar = ('chainID','hostIP','node_index'), help='start one node')
+    parser.add_argument('--stop_node', nargs = 1, metavar = ('chainID','hostIP','node_index'), help='stop one node')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -56,6 +57,16 @@ def cmd_view():
     elif args.envircheck:
         chain_id = args.envircheck[0]
         check_environment.check_environment(chain_id)
+    elif args.start_node:
+        chain_id = args.start_node[0]
+        ip = args.start_node[1]
+        index = args.start_node[2]
+        nodeoperation.start_module(chain_id,ip,index)
+    elif args.stop_node:
+        chain_id = args.stop[0]
+        ip = args.start_node[1]
+        index = args.start_node[2]
+        nodeoperation.stop_module(chain_id,ip,index)
     else:
         logger.error('unkown action.')
     return 0
