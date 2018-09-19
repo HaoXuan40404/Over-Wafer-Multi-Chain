@@ -14,14 +14,14 @@ from pys.node import temp_node
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
-def chain_build(cfg, fisco_dir):
+def chain_build(cfg, fisco_path):
     '''
     解析config.conf配置并且构建区块链的安装包
     '''
     logger.info('building, cfg is %s', cfg)
-    logger.info('building, fisco bcos path is %s', fisco_dir)
+    logger.info('building, fisco bcos path is %s', fisco_path)
 
-    path.set_fiso_dir(fisco_dir)
+    path.set_fiso_path(fisco_path)
 
     # 配置解析
     try:
@@ -72,8 +72,8 @@ def chain_build(cfg, fisco_dir):
 
         logger.info('build end ok.')
 
-    except:
-        logger.warn('build end exception')
+    except Exception as e:
+        logger.warn('build end exception, e is %s', e)
         if os.path.isdir(dir):
             shutil.rmtree(dir)
     

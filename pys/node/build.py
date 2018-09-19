@@ -31,7 +31,7 @@ def build_install_dir(dir, chain, port, node, temp):
     shutil.copy(path.get_path() + '/scripts/unregister.sh', node_dir)
 
     #拷贝fisco-bcos文件
-    shutil.copy(path.get_fisco_dir() + '/fisco-bcos', node_dir)
+    shutil.copy(path.get_fisco_path(), node_dir)
 
     # web3sdk
     shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
