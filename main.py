@@ -32,7 +32,7 @@ def cmd_view():
     parser.add_argument('--monitor', nargs = 1, metavar = ('chainID'), help='monitor all node')
     parser.add_argument('--envircheck', nargs = 1, metavar = ('chainID'), help='check build environment of all node')
     parser.add_argument('--start_node', nargs = 3, metavar = ('chainID','hostIP','node_index'), help='start one node')
-    parser.add_argument('--stop_node', nargs = 1, metavar = ('chainID','hostIP','node_index'), help='stop one node')
+    parser.add_argument('--stop_node', nargs = 3, metavar = ('chainID','hostIP','node_index'), help='stop one node')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -64,8 +64,8 @@ def cmd_view():
         nodeoperation.start_module(chain_id,ip,index)
     elif args.stop_node:
         chain_id = args.stop[0]
-        ip = args.start_node[1]
-        index = args.start_node[2]
+        ip = args.stop_node[1]
+        index = args.stop_node[2]
         nodeoperation.stop_module(chain_id,ip,index)
     else:
         logger.error('unkown action.')
@@ -73,11 +73,11 @@ def cmd_view():
 
 def main():
     init()
-    
-    cmd_view()
     readchain.mchain_conf('./conf/mchain.conf')
     path = readchain.get_dir()
-    ansible.set_dir(path)
+    ansible.set_dir(path) 
+    cmd_view()
+
 
 if __name__ == '__main__':
     main()
