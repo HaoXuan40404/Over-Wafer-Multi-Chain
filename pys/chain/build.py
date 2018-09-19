@@ -22,7 +22,7 @@ def chain_build(cfg, fisco_path):
     path.set_fiso_path(fisco_path)
 
     cc_list = []
-    if os.path.exists(cfg):
+    if os.path.exists(cfg) and os.path.isfile(cfg):
         # 指定单个配置文件解析
         try:
             cc = parser.do_parser(cfg)
