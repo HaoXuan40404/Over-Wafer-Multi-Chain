@@ -16,33 +16,61 @@ from pys.node.bootstrapsnode import P2pHost
 
 def chain_build(cfg, fisco_path):
     '''
-    解析config.conf配置并且构建区块链的安装包
+    解析cfg_dir中的所有的链的配置并且构建区块链的安装包
     '''
-    logger.info('building, cfg is %s', cfg)
-    logger.info('building, fisco bcos path is %s', fisco_path)
 
     path.set_fiso_path(fisco_path)
 
-    # 配置解析
-    try:
-        cc = parser.do_parser(cfg)
-    except Exception as e:
-        logger.warn('parser cfg end exception, e = ' + e)
-        return 
+    cc_list = []
+    if os.path.exists(cfg):
+        # 指定单个配置文件解析
+        try:
+            cc = parser.do_parser(cfg)
+            cc_list.append(cc)
+        except Exception as e:
+            print('parser %s failed , skip ...', cfg)
+            logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
+
+    elif os.path.isdir(cfg):
+        # 指定文件夹, 解析文件夹中的所有配置文件, 解析失败则跳过
+        for c in os.listdir(cfg):
+            try:
+                logger.debug('dir is %s, cfg is %s', cfg, c)
+                cc = parser.do_parser(cfg + '/' + c)
+                cc_list.append(cc)
+            except Exception as e:
+                print('parser %s failed, skip ...', c)
+                logger.warn('parser cfg %s end exception, e %s ', c, e)
+
+    else:
+        # 指定的参数即不是目录也不是配置 
+        print('unkown cfg path , cfg is %s ', cfg)
+        logger.warn('unkown cfg path , cfg is %s', cfg)
+    
+    logger.info('cc_list is %s', cc_list)
+
+    # 构建所有链的安装包
+    for cc in cc_list:
+        __build(cc)
+
+def __build(cc):
+    '''
+    解析config.conf配置并且构建区块链的安装包
+    '''
+    logger.info('building, cc is %s', cc)
 
     dir = data.package_dir(cc.get_chain().get_id(), cc.get_chain().get_version())
     port = cc.get_port()
     chain = cc.get_chain()
     # 创建文件夹
     if os.path.isdir(dir):
-        logger.warn('dir already exist, dir is ' + dir)
+        logger.warn('version of this chain already exists chain is %s, version is %s', cc.get_chain().get_id(), cc.get_chain().get_version())
         return 
     os.makedirs(dir)
 
     try:
-        phs = P2pHosts()
         # 生成bootstrapsnode.json
-
+        phs = P2pHosts()
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 phs.add_p2p_host(P2pHost(node.get_p2p_ip(), cc.get_port().get_p2p_port() + index))
@@ -65,15 +93,14 @@ def chain_build(cfg, fisco_path):
 
         # 拷贝genesis.json文件到各个文件夹
         for node in cc.get_nodes():
-            index = 0
-            while index < node.get_node_num():
+            for index in range(node.get_node_num()):
                 shutil.copy(dir + '/genesis.json', dir + ('/%s/node%d/' % (node.get_host_ip(), index)) )
-                index += 1
 
         logger.info('build end ok.')
 
     except Exception as e:
         logger.warn('build end exception, e is %s', e)
+        temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):
             shutil.rmtree(dir)
     
