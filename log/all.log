@@ -1,0 +1,56 @@
+[2018-09-18 15:38:59,325][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:38:59,325][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:47:18,905][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:47:18,905][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:58:43,768][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:58:43,768][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:58:48,924][INFO][log][<module>] | init_logging init. 
+[2018-09-18 15:58:48,924][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:45:19,642][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:45:19,642][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:45:38,117][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:45:38,117][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:45:38,125][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain11.conf
+[2018-09-19 10:45:38,125][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain11.conf
+[2018-09-19 10:45:38,125][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain11.conf
+[2018-09-19 10:45:38,125][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain11.conf
+[2018-09-19 10:46:04,695][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:46:04,695][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:46:04,697][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 10:46:04,697][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 10:46:04,697][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 10:46:04,697][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 10:46:04,704][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 10:46:04,704][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 10:46:20,764][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:46:20,764][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:46:20,765][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 10:46:20,765][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 10:46:20,765][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 10:46:20,765][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 10:46:20,766][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 10:46:20,766][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 10:46:24,034][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:46:24,034][INFO][log][<module>] | init_logging init. 
+[2018-09-19 10:46:24,035][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 10:46:24,035][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 10:46:24,035][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 10:46:24,035][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 10:46:24,035][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 10:46:24,035][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 11:11:10,784][INFO][log][<module>] | init_logging init. 
+[2018-09-19 11:11:10,784][INFO][log][<module>] | init_logging init. 
+[2018-09-19 11:11:10,786][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 11:11:10,786][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 11:11:10,787][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 11:11:10,787][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 11:11:10,787][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 11:11:10,787][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 11:11:26,169][INFO][log][<module>] | init_logging init. 
+[2018-09-19 11:11:26,169][INFO][log][<module>] | init_logging init. 
+[2018-09-19 11:11:26,170][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 11:11:26,170][INFO][readchain][mchain_conf] | mchain.conf is ./conf/mchain.conf
+[2018-09-19 11:11:26,170][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 11:11:26,170][INFO][readchain][mchain_conf] | mchain parser ./conf/mchain.conf
+[2018-09-19 11:11:26,171][INFO][readchain][mchain_conf] | mchain.conf end
+[2018-09-19 11:11:26,171][INFO][readchain][mchain_conf] | mchain.conf end
