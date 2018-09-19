@@ -5,7 +5,11 @@ function copy_module()
     local package_config=$1
     local ansible_src=$2
     local ansible_dest=$3
+<<<<<<< HEAD
     ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}"
+=======
+    ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}" 
+>>>>>>> 0f634a1a0102382713c8547e9bc68598218afea3
 }
 
 ###unarchive_module###
@@ -46,7 +50,7 @@ function mkdir_module()
 {
     local package_config=$1
     local mkdir_path=$2
-    ansible ${package_config} -m shell -a "mkdir -p ${mkdir_path}"
+    ansible ${package_config} -m file -a "path=${mkdir_path} state=directory mode=0755"
 }
 ###check_module###
 function check_module()
@@ -72,6 +76,23 @@ function environment_module()
 }
 
 
+###check_module###
+function monitor_module()
+{
+    local package_config=$1
+    local check_path=$2
+    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/monitor.sh"
+}
+
+###check_module###
+function environment_module()
+{
+    local package_config=$1
+    local check_path=$2
+    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/buildcheck.sh" -B 200 -P 2 -s
+ 
+}
+
 case $1 in
     copy) copy_module $2 $3 $4;;
     unarchive) unarchive_module $2 $3 $4;;
@@ -81,7 +102,12 @@ case $1 in
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;
+<<<<<<< HEAD
     environment) environment_module $2 $3;
 
+=======
+    environment) environment_module $2 $3;;
+    
+>>>>>>> 0f634a1a0102382713c8547e9bc68598218afea3
     *) echo "others case";;
 esac
