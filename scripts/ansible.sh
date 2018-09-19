@@ -98,6 +98,6 @@ case $1 in
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;
-    environment) environment_module $2 $3;
+    environment) environment_module $2 $3;;
     *) echo "others case";;
 esac
