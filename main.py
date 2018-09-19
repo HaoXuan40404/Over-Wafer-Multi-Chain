@@ -8,6 +8,8 @@ from pys import ansible
 from pys import ca, path, version
 from pys.chain import build, opr, publish
 from pys.log import logger
+from pys.checktools import check_environment, readchain
+
 
 def init():
     # 获取当前目录, 用来初始化各个模块的依赖路径 
@@ -25,8 +27,11 @@ def cmd_view():
     parser.add_argument('--check', nargs = 1, metavar = ('chainID'), help='check servers status')
     parser.add_argument('--build', nargs =2 ,metavar = ('./config.conf', 'fisco_path'), help='build all package')
     parser.add_argument('--publish', nargs = 2, metavar = ('chainID','version'), help='publish all package')
+
     parser.add_argument('--start', nargs = 1, metavar = ('chainID'), help='start all node')
     parser.add_argument('--stop', nargs = 1, metavar = ('chainID'), help='stop all node')
+    parser.add_argument('--monitor', nargs = 1, metavar = ('chainID'), help='monitor all node')
+    parser.add_argument('--envircheck', nargs = 1, metavar = ('chainID'), help='check build environment of all node')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -45,13 +50,23 @@ def cmd_view():
     elif args.stop:
         chain_id = args.stop[0]
         opr.stop_server(chain_id)
+    elif args.monitor:
+        chain_id = args.monitor[0]
+        opr.monitor_server(chain_id)
+    elif args.envircheck:
+        chain_id = args.envircheck[0]
+        check_environment.check_environment(chain_id)
     else:
         logger.error('unkown action.')
     return 0
 
 def main():
     init()
+    
     cmd_view()
+    readchain.mchain_conf('./conf/mchain.conf')
+    path = readchain.get_dir()
+    ansible.set_dir(path)
 
 if __name__ == '__main__':
     main()
