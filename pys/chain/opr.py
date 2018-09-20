@@ -87,6 +87,40 @@ def check_chain_resolve(chain):
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
 
+def monitor_chain_resolve(chain):
+    if chain[0] == 'all':
+        dir = data.meta_dir_base()
+        for chain_id in os.listdir(dir):
+            monitor_server(chain_id)
+    else:
+        for i in range(len(chain)):
+            chain_get = chain[i].split(':')
+            if len(chain_get) == 1:
+                if utils.valid_string(chain_get[0]):
+                    monitor_server(chain_get[0])
+                else:
+                    print('chain_resolve error')
+                    logger.error('error chain_resolve')
+            elif len(chain_get) == 2:
+                if utils.valid_string(chain_get[0]):
+                    monitor_node(chain_get[0], chain_get[1])
+                else:
+                    print('chain_resolve error')
+                    logger.error('error chain_resolve')
+
+            else:
+                print('chain_resolve error')
+                logger.error('error chain_resolve')
+
+
+
+def test_ansible(test_list):
+    if test_list[0] == 'all':
+        ansible.test_module('all')
+    else:
+        for i in range(len(test_list)):
+            ansible.test_module(test_list[i])
+
 def start_server(chain_id):
     mm = meta.Meta(chain_id)
     logger.info('start action, chain_id is ' + chain_id)
@@ -143,4 +177,11 @@ def check_node(chain_id, ip):
     check module
     '''
     ansible.check_module(ip, ansible.get_dir() + '/' + chain_id)
+    return 0
+
+def monitor_node(chain_id, ip):
+    '''
+    monitor module
+    '''
+    ansible.monitor_module(ip, ansible.get_dir() + '/' + chain_id)
     return 0

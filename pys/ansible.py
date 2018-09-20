@@ -95,12 +95,12 @@ def check_module(ip, dest):
     return 0
 
 
-def test_module(ip, dest):
+def test_module(ip):
     '''
     test module
     '''
     os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh ' + ip + ' ' + dest)
+              '/scripts/ansible.sh test ' + ip)
     return 0
 
 
