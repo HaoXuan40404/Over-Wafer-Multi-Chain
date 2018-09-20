@@ -23,6 +23,9 @@ class Data:
 def package_dir(chain_id, chain_version):
     return path.get_path() + ('/data/chain/pkg/' + chain_id + '/' + chain_version)
 
+def meta_dir_base():
+    return path.get_path() + ('/data/chain/meta/')
+    
 def meta_dir(chain_id):
     return path.get_path() + ('/data/chain/meta/' + chain_id)
 
