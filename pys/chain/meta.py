@@ -20,11 +20,14 @@ class MetaNode:
         self.channel_port = channel_port
 
     def __repr__(self):
-        return 'host %s, version %s, rpc_port %s, p2p_port %s, channel_port %s' % (self.host_ip, self.version, self.rpc_port, self.p2p_port, self.channel_port)
+        return 'host %s, version %s' % (self.host_ip, self.version)
 class Meta:
     def __init__(self, chain_id):
         self.chain_id = chain_id
         self.nodes = {}
+    
+    def get_chain_id(self):
+        return self.chain_id
 
     def append(self, m):
         self.nodes[m.host_ip] = m
@@ -56,6 +59,8 @@ class Meta:
 
     def load_from_file(self):
         self.clear()
+        if not os.path.exists(data.meta_dir(self.chain_id) + '/meta.json'):
+            logger.info('meta.json not exist, chain_id is ' + self.chain_id)
         with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
             jsondata = json.load(f)
             if jsondata.has_key('nodes'):
@@ -63,6 +68,32 @@ class Meta:
                     mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
                     logger.info('load from meta.json, meta node is %s', mn)
                     self.append(mn)
+
+def list(chains):
+
+    if len(chains) == 0:
+        print('chains empty!')
+    
+    logger.info('list begin, chains is %s', chains)
+    meta_list = []
+    if chains[0].trim() == 'all':
+        dir = data.meta_dir_base()
+        for chain_id in os.listdir(dir):
+            m = Meta(chain_id)
+            m.load_from_file()
+            meta_list.append(m)
+    else:
+        for chain_id in chains:
+            m = Meta(chain_id)
+            m.load_from_file()
+            meta_list.append(m)
+
+    for m in meta_list:
+        print('chain_id is %s', m.get_chain_id())
+        for index in range(len(m)):
+            print('\t => %s', m[index])
+
+    logger.info('list end.')
 
 def test_meta():
     m = Meta('12345')

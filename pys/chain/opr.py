@@ -4,6 +4,7 @@ from pys import ansible, utils
 from pys.chain import meta
 from pys.log import logger
 from pys.chain import data
+from pys.chain import package
 
 
 def start_chain_resolve(chain):
@@ -112,20 +113,25 @@ def monitor_chain_resolve(chain):
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
 
-
-
-def test_ansible(test_list):
-    if test_list[0] == 'all':
-        ansible.test_module('all')
+def list_chain_resolve(chain):
+    if chain[0] == 'publish':
+        chain = chain[1:]
+        meta.list(chain)
     else:
-        for i in range(len(test_list)):
-            ansible.test_module(test_list[i])
+        package.list(chain, False)
+
+def echo_ansible(server):
+    if server[0] == 'all':
+        ansible.echo_module('all')
+    else:
+        for i in range(len(server)):
+            ansible.echo_module(server[i])
 
 def start_server(chain_id):
     mm = meta.Meta(chain_id)
     logger.info('start action, chain_id is ' + chain_id)
     mm.load_from_file()
-    for k, v in mm.get_nodes().items():
+    for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.start_module(k, ansible.get_dir() + '/' + chain_id)
 
@@ -134,7 +140,7 @@ def stop_server(chain_id):
     mm = meta.Meta(chain_id)
     logger.info('stop action, chain_id is ' + chain_id)
     mm.load_from_file()
-    for k, v in mm.get_nodes().items():
+    for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.stop_module(k, ansible.get_dir() + '/' + chain_id)
 
@@ -152,7 +158,7 @@ def monitor_server(chain_id):
     mm = meta.Meta(chain_id)
     logger.info('monitor_server action, chain_id is ' + chain_id)
     mm.load_from_file()
-    for k, v in mm.get_nodes().items():
+    for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.monitor_module(k, ansible.get_dir() + '/' + chain_id)
 
