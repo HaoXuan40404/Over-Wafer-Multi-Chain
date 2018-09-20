@@ -8,9 +8,9 @@ from pys.chain import meta
 
 def publish_chain(list_chain_version):
     
-    list_chain = list_chain_version.split(' ')
+    list_chain = list_chain_version
 
-    if isinstance(list_chain_version,str):
+    if isinstance(list_chain_version,list):
         
         for i in range(0, len(list_chain)):
             chainaddversion = list_chain[i].split(':')
