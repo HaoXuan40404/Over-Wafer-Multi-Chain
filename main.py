@@ -30,6 +30,7 @@ def cmd_view():
     parser.add_argument('--stop', nargs = '*', metavar = ('"all" or "chainID" or "chainID:hostIP"'), help='stop all node')
     parser.add_argument('--monitor', nargs = '*', metavar = ('chainID'), help='monitor all node')
     parser.add_argument('--envircheck', nargs = '*', metavar = ('chainID'), help='check build environment of all node')
+    parser.add_argument('--test', nargs = '*', metavar = ('"all" or "hostIP" or "hostIP1 hostIP2"'), help='test servers ansible useful or not')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -53,6 +54,9 @@ def cmd_view():
     elif args.envircheck:
         chain_id = args.envircheck[0]
         check_environment.check_environment(chain_id)
+    elif args.test:
+        test_list = args.test
+        opr.test_ansible(test_list)
     else:
         logger.error('unkown action.')
     return 0

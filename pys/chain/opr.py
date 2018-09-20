@@ -87,6 +87,15 @@ def check_chain_resolve(chain):
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
 
+
+
+def test_ansible(test_list):
+    if test_list[0] == 'all':
+        ansible.test_module('all')
+    else:
+        for i in range(len(test_list)):
+            ansible.test_module(test_list[i])
+
 def start_server(chain_id):
     mm = meta.Meta(chain_id)
     logger.info('start action, chain_id is ' + chain_id)

@@ -72,6 +72,14 @@ function environment_module()
 }
 
 
+###test_module###
+function test_module()
+{
+    local package_config=$1
+    ansible ${package_config} -m shell -a "echo HelloWorld" 
+}
+
+
 
 case $1 in
     copy) copy_module $2 $3 $4;;
@@ -83,6 +91,7 @@ case $1 in
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;
     environment) environment_module $2 $3;;
+    test) test_module $2;;
 
     *) echo "others case";;
 esac
