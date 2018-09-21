@@ -92,9 +92,18 @@ def check_module(ip, dest):
 
 
 def echo_module(ip, msg='HelloWorld!'):
-    '''
-    echo test module
-    '''
+    """调用ansible.sh echo模块, 使用ansible远程调用进行echo测试
+    
+    Arguments:
+        ip {string} -- 服务器ip
+    
+    Keyword Arguments:
+        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
+    
+    Returns:
+        [int] -- ansible正确调用echo返回0, 否则返回其他值.
+    """ 
+
     os.system('bash ' + path.get_path() +
               '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     return 0

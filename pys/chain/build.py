@@ -7,6 +7,7 @@ import shutil
 from pys import path
 from pys import utils
 from pys.log import logger
+from pys.log import consoler
 from pys.chain import parser
 from pys.chain import data
 from pys.node import build
@@ -31,6 +32,8 @@ def chain_build(cfg, fisco_path):
 
     cc_dict = {}
     if os.path.exists(cfg) and os.path.isfile(cfg):
+
+        consoler.info('dir is %s, fisco bcos is %s' % (cfg, fisco_path))
         # 单个配置文件解析
         try:
             cc = parser.do_parser(cfg)
@@ -62,8 +65,7 @@ def chain_build(cfg, fisco_path):
 
     else:
         # 指定的参数即不是目录也不是配置
-        print('unkown cfg path, cfg is %s ', cfg)
-        logger.warn('unkown cfg path, cfg is %s', cfg)
+        consoler.info('invalid cfg, cfg is %s', cfg)
 
     logger.info('cc_dict is %s', cc_dict)
 

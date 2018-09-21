@@ -32,11 +32,12 @@ def start_chain_resolve(chain):
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
 
+
 def stop_chain_resolve(chain):
     if chain[0] == 'all':
         print('You want to stop all node,are you sure? yes or no? y/n')
         choice = raw_input('Your choice is: ')
-        if ( (choice == 'yes') | (choice == 'Yes') | (choice == 'Y') | (choice == 'y') ):
+        if ((choice == 'yes') | (choice == 'Yes') | (choice == 'Y') | (choice == 'y')):
             dir = data.meta_dir_base()
             for chain_id in os.listdir(dir):
                 stop_server(chain_id)
@@ -63,6 +64,7 @@ def stop_chain_resolve(chain):
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
 
+
 def check_chain_resolve(chain):
     if chain[0] == 'all':
         dir = data.meta_dir_base()
@@ -87,6 +89,7 @@ def check_chain_resolve(chain):
             else:
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
+
 
 def monitor_chain_resolve(chain):
     if chain[0] == 'all':
@@ -113,6 +116,7 @@ def monitor_chain_resolve(chain):
                 print('chain_resolve error')
                 logger.error('error chain_resolve')
 
+
 def list_chain_resolve(chain):
     if chain[0] == 'publish':
         chain = chain[1:]
@@ -120,12 +124,14 @@ def list_chain_resolve(chain):
     else:
         package.list(chain, False)
 
+
 def echo_ansible(server):
     if server[0] == 'all':
         ansible.echo_module('all')
     else:
         for i in range(len(server)):
             ansible.echo_module(server[i])
+
 
 def start_server(chain_id):
     mm = meta.Meta(chain_id)
@@ -162,6 +168,7 @@ def monitor_server(chain_id):
         logger.debug('host ip is ' + k)
         ansible.monitor_module(k, ansible.get_dir() + '/' + chain_id)
 
+
 def start_node(chain_id, ip):
     '''
     start module
@@ -184,6 +191,7 @@ def check_node(chain_id, ip):
     '''
     ansible.check_module(ip, ansible.get_dir() + '/' + chain_id)
     return 0
+
 
 def monitor_node(chain_id, ip):
     '''
