@@ -129,14 +129,15 @@ def echo_module(ip, msg='HelloWorld!'):
     '''
     (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
               '/scripts/ansible.sh echo ' + ip + ' ' + msg)
+    print(result)
     if status:
-        print('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible action, error status => %s',status)
         logger.error('ansible action, error status => %s, error result => %s',status, result)
     elif (result.find('success') + 1 ):
-        print('ansible action, warning status => %s, error result => %s',status, result)
+        print('ansible action, warn status => %s',status)
         logger.warn('ansible action, warning status => %s, error result => %s',status, result)
     else:
-        print(ansible action, info status => %s, error result => %s',status, result)
+        print('ansible action, info status => %s',status)
         logger.info('ansible action, info status => %s, error result => %s',status, result)
 
 
