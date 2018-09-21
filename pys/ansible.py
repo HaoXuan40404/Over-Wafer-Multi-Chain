@@ -100,6 +100,13 @@ def echo_module(ip, msg='HelloWorld!'):
     print(result,type(result))
     get_result = result.split('\n')
     print(get_result,type(get_result))
+    for i in range(len(get_result)):
+        ansible_ip = get_result[i].split('|')
+        print(ansible_ip,type(ansible_ip))
+        print(ansible_ip[1],type(ansible_ip[1]))
+        print(ansible_ip[1]==' SUCCESS ')
+
+
     return 0
 
 
