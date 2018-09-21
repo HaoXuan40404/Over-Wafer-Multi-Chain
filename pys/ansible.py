@@ -98,6 +98,8 @@ def echo_module(ip, msg='HelloWorld!'):
               '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     print(status,type(status))
     print(result,type(result))
+    get_result = result.split('\n')
+    print(get_result,type(get_result))
     return 0
 
 
