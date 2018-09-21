@@ -1,6 +1,6 @@
 #coding:utf-8
 
-import os,commands
+import os
 from pys import path
 
 class CA:
@@ -37,7 +37,7 @@ def generate_root_ca(dir):
 
     os.environ['scripts'] = path.get_path() + '/scripts/'
     os.environ['out'] = dir
-    (status, result)=commands.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out')
+    os.system('bash $scripts/generate_chain_cert.sh -o $out')
 
 def generator_agent_ca(dir, ca, agent):
 
@@ -45,7 +45,7 @@ def generator_agent_ca(dir, ca, agent):
     os.environ['out'] = dir
     os.environ['ca'] = ca
     os.environ['agent'] = agent
-    (status, result)=commands.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
+    os.system('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
 
 def generator_node_ca(dir, node, agent):
 
@@ -53,9 +53,9 @@ def generator_node_ca(dir, node, agent):
     os.environ['agent'] = agent
     os.environ['node'] = node
     os.environ['out']= dir
-    (status, result)=commands.getstatusoutput('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
+    os.system('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
 
 def generator_sdk_ca(dir):
     os.environ['out'] = dir
     os.environ['scripts'] = path.get_path() + '/scripts/'
-    (status, result)=commands.getstatusoutput('bash $scripts/generate_sdk_cert.sh -d $out')
+    os.system('bash $scripts/generate_sdk_cert.sh -d $out')
