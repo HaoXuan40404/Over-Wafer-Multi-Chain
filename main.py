@@ -27,30 +27,29 @@ def init():
     ca.set_agent('WB')
     ca.set_ca_path(pwd + '/data/ca')
 
-
 def cmd_view():
     parser = argparse.ArgumentParser(
         description='Description of multi-chain usage.')
     parser.add_argument('--version', action='store_true',
                         help='version of multi-chain')
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
-                                                     'fisco_path'), help='build all package by config.')
+                                                     'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('--list', nargs='+', metavar=('all or chain_id or',
-                                                      'chain_id_1 chain_id_2'), help='list all pkg info.')
+                                                      'chain_id_1 chain_id_2'), help='Output =>  list all pkg info.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
-                                                         'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='publish all package')
+                                                         'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
     parser.add_argument('--check', nargs='+', metavar=('all or chain_id or',
-                                                       'chain_id:host_ip'), help='check servers status')
+                                                       'chain_id:host_ip'), help='Output => check servers status')
     parser.add_argument('--stop', nargs='+', metavar=('all or chain_id or',
-                                                      'chain_id:host_ip'), help='stop all node')
+                                                      'chain_id:host_ip'), help='Output => stop node')
     parser.add_argument('--start', nargs='+', metavar=('all or chain_id or',
-                                                       'chain_id:host_ip'), help='start all node')
+                                                       'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('--monitor', nargs='+', metavar=('all or chain_id or',
-                                                         'chain_id:host_ip'), help='monitor all node')
+                                                         'chain_id:host_ip'), help='Output => monitor node')
     parser.add_argument('--envircheck', nargs='+', metavar=('all or chain_id or',
-                                                            'chain_id:host_ip'), help='check build environment of all server of the chain.')
+                                                            'chain_id:host_ip'), help='Output => check build environment of server of the chain.')
     parser.add_argument('--echo', nargs='+', metavar=('all or host_ip or',
-                                                      'host_ip1 host_ip2'), help='test servers ansible useful or not')
+                                                      'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
     args = parser.parse_args()
     if args.version:
         version.version()
