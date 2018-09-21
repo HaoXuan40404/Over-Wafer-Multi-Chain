@@ -1,33 +1,29 @@
-#coding:utf-8
+# coding:utf-8
 import os
 
 from pys import path
 
+
 class Ansible:
-    '''
-    ansible
-    '''
-    user = ''
+    """ansible配置
+    """
+
     dir = '/data'
-    src_dir = ''
 
     def __repr__(self):
-        return '[user] %s, [dir] %s' % (Ansible.user, Ansible.dir)
-
-
-def set_user(user):
-    Ansible.user = user
+        return '[dir] %s' % (Ansible.dir)
 
 
 def set_dir(dir):
     Ansible.dir = dir
 
+
 def get_dir():
     return Ansible.dir
 
+
 def ansible_test():
     ae = Ansible()
-    set_user('app')
     set_dir('dir')
     print(ae)
 
@@ -95,12 +91,12 @@ def check_module(ip, dest):
     return 0
 
 
-def test_module(ip):
+def echo_module(ip, msg='HelloWorld!'):
     '''
-    test module
+    echo test module
     '''
     os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh test ' + ip)
+              '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     return 0
 
 
@@ -112,6 +108,7 @@ def monitor_module(ip, dest):
     os.system('bash ' + path.get_path() +
               '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
     return 0
+
 
 def environment_module(ip, dest):
     '''monitor module
