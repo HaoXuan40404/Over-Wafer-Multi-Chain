@@ -89,9 +89,9 @@ def list(chains):
             meta_list.append(m)
 
     for m in meta_list:
-        print('chain_id is %s', m.get_chain_id())
+        print('chain_id is %s' % m.get_chain_id())
         for index in range(len(m)):
-            print('\t => %s', m[index])
+            print('\t => %s' % m[index])
 
     logger.info('list end.')
 

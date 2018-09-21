@@ -116,11 +116,11 @@ def list(chains, is_host):
             pkg_list.append(p)
 
     for p in pkg_list:
-        print('chain_id => %s', p.get_chain_id())
+        print('chain_id => %s' % p.get_chain_id())
         for v in p.get_version_list():
-            print('\t %s ', v.get_chain_version())
+            print('\t %s ' % v.get_chain_version())
             if isinstance(is_host, 'bool') and is_host:
                 for h in v.get_pkg_list():
-                    print('\t\t %s ', h)
+                    print('\t\t %s ' % h)
 
     logger.info('load end')
