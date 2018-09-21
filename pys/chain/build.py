@@ -37,7 +37,7 @@ def chain_build(cfg, fisco_path):
             key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
             cc_dict[key] = cc
         except Exception as e:
-            print('parser %s failed , skip ...', cfg)
+            print('parser %s failed , skip ...' % cfg)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
@@ -57,7 +57,7 @@ def chain_build(cfg, fisco_path):
                 else:
                     cc_dict[key] = cc
             except Exception as e:
-                print('parser %s failed, skip ...', c)
+                print('parser %s failed, skip ...' % c)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
 
     else:

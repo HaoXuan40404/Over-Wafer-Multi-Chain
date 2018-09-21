@@ -32,15 +32,15 @@ def publish_chain(list_chain_version):
                 logger.debug('chain_id is %s, chain_version is %s', chain_id, chain_version)
                 publish_server(chain_id, chain_version)
             except Exception as e:
-                print('chain_version %s failed, skip ...', e)
+                print('chain_version %s failed, skip ...' % e)
                 logger.warn(
                     'parser chain_version %s end exception, e %s ', chain_version,  e)
 
     else:
 
-        print('unkown chain_version path , chain_version is %s ', chain_version)
+        print('unkown chain_version path , chain_version is %s ' % chain_version)
         logger.warn(
-            'unkown chain_version path , chain_version is %s', chain_version)
+            'unkown chain_version path , chain_version is %s' % chain_version)
 
     logger.info('chain_version is %s', chain_version)
 
