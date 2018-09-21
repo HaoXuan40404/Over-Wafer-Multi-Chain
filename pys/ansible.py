@@ -35,9 +35,14 @@ def mkdir_module(ip, dest):
               '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible mkdir_module action, error status => %s',status)
+        logger.error('ansible mkdir_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible mkdir_module action, warn status => %s',status)
+        logger.warn('ansible mkdir_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible mkdir_module action, info status => %s',status)
+        logger.info('ansible mkdir_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -63,7 +68,14 @@ def unarchive_module(ip, src, dest):
               '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible unarchive_module action, error status => %s',status)
+        logger.error('ansible unarchive_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible unarchive_module action, warn status => %s',status)
+        logger.warn('ansible unarchive_module action, warning status => %s, warning result => %s',status, result)
+    else:
+        print('ansible unarchive_module action, info status => %s',status)
+        logger.info('ansible unarchive_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -75,9 +87,14 @@ def build_module(ip, dest):
               '/scripts/ansible.sh build ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible build_module action, error status => %s',status)
+        logger.error('ansible build_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible build_module action, warn status => %s',status)
+        logger.warn('ansible build_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible build_module action, info status => %s',status)
+        logger.info('ansible build_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -89,9 +106,14 @@ def start_module(ip, dest):
               '/scripts/ansible.sh start ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible start_module action, error status => %s',status)
+        logger.error('ansible start_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible start_module action, warn status => %s',status)
+        logger.warn('ansible start_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible start_module action, info status => %s',status)
+        logger.info('ansible start_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -103,9 +125,14 @@ def stop_module(ip, dest):
               '/scripts/ansible.sh stop ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible stop_module action, error status => %s',status)
+        logger.error('ansible stop_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible stop_module action, warn status => %s',status)
+        logger.warn('ansible stop_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible stop_module action, info status => %s',status)
+        logger.info('ansible stop_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -117,9 +144,14 @@ def check_module(ip, dest):
               '/scripts/ansible.sh check ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible check_module action, error status => %s',status)
+        logger.error('ansible check_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible check_module action, warn status => %s',status)
+        logger.warn('ansible check_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible check_module action, info status => %s',status)
+        logger.info('ansible check_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -131,16 +163,14 @@ def echo_module(ip, msg='HelloWorld!'):
               '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     print(result)
     if status:
-        print('ansible action, error status => %s',status)
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
-    elif (result.find('success') + 1 ):
-        print('ansible action, warn status => %s',status)
-        logger.warn('ansible action, warning status => %s, error result => %s',status, result)
+        print('ansible echo_module action, error status => %s',status)
+        logger.error('ansible echo_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible echo_module action, warn status => %s',status)
+        logger.warn('ansible echo_module action, warning status => %s, warning result => %s',status, result)
     else:
-        print('ansible action, info status => %s',status)
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
-
-
+        print('ansible echo_module action, info status => %s',status)
+        logger.info('ansible echo_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -153,9 +183,14 @@ def monitor_module(ip, dest):
               '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible monitor_module action, error status => %s',status)
+        logger.error('ansible monitor_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible monitor_module action, warn status => %s',status)
+        logger.warn('ansible monitor_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible monitor_module action, info status => %s',status)
+        logger.info('ansible monitor_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
@@ -168,9 +203,14 @@ def environment_module(ip, dest):
               '/scripts/ansible.sh environment ' + ip + ' ' + dest)
     print(result)
     if status:
-        logger.error('ansible action, error status => %s, error result => %s',status, result)
+        print('ansible environment_module action, error status => %s',status)
+        logger.error('ansible environment_module action, error status => %s, error result => %s',status, result)
+    elif not (result.find('SUCCESS') + 1 ):
+        print('ansible environment_module action, warn status => %s',status)
+        logger.warn('ansible environment_module action, warning status => %s, warning result => %s',status, result)
     else:
-        logger.info('ansible action, info status => %s, error result => %s',status, result)
+        print('ansible environment_module action, info status => %s',status)
+        logger.info('ansible environment_module action, info status => %s, info result => %s',status, result)
     return 0
 
 
