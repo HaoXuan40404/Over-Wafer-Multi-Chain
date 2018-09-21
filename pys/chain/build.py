@@ -68,8 +68,9 @@ def chain_build(cfg, fisco_path):
     logger.info('cc_dict is %s', cc_dict)
 
     # 构建所有链的安装包
-    for cc in cc_dict.itervalues():
-        build_cfg(cc)
+    if len(cc_dict) != 0:
+        for cc in cc_dict.itervalues():
+            build_cfg(cc)
 
     logger.debug('build cfg end.')
 
