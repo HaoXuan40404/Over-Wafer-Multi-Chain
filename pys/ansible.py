@@ -5,6 +5,7 @@ import re
 
 from pys import path
 from pys.log import logger
+from pys.log import consoler
 
 
 class Ansible:
@@ -45,8 +46,8 @@ def mkdir_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('mkdir action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 def copy_module(ip, src, dest):
@@ -62,8 +63,8 @@ def copy_module(ip, src, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('copy action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 def unarchive_module(ip, src, dest):
@@ -79,8 +80,8 @@ def unarchive_module(ip, src, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('unarchive action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 def build_module(ip, dest):
@@ -96,8 +97,8 @@ def build_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('build action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 def start_module(ip, dest):
@@ -113,8 +114,8 @@ def start_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('start action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 def stop_module(ip, dest):
@@ -130,8 +131,8 @@ def stop_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('stop action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 
@@ -143,7 +144,7 @@ def check_module(ip, dest):
         dest {string} -- 远程调用目录
     
     Returns:
-        int -- 成功返回0, 否则返回-1
+        bool -- 成功返回Ture, 否则返回False
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -155,12 +156,12 @@ def check_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('check action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
 
 
 def echo_module(ip, msg='HelloWorld!'):
-    """调用ansible.sh echo模块, 使用ansible远程调用进行echo测试
+    """调用ansible.sh echo模块, 进行echo测试, 判断ansible功能是否正常.
 
     Arguments:
         ip {string} -- 服务器ip
@@ -169,19 +170,20 @@ def echo_module(ip, msg='HelloWorld!'):
         msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
 
     Returns:
-        [int] -- ansible正确调用echo返回0, 否则返回其他值.
+        [bool] -- ansible正确调用echo返回True, 否则False.
     """
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     logger.debug('echo action , status %s, output %s' % (status, result))
    
     if status:
-        logger.warn('echo action failed, status %s' % (status))
+        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        logger.warn('echo action failed, output %s' % (result))
+        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     else:
-        return 0
-    return -1
+        consoler.info('\t ansible echo opr success, host is %s.', ip)
+        return True
+    return False
 
 
 def monitor_module(ip, dest):
@@ -194,12 +196,13 @@ def monitor_module(ip, dest):
     logger.debug('monitor action , status %s, output %s' % (status, result))
    
     if status:
-        logger.warn('monitor action failed, status %s' % (status))
+        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        logger.warn('monitor action failed, output %s' % (result))
+        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     else:
-        return 0
-    return -1
+        consoler.info('\t ansible echo opr success, host is %s.', ip)
+        return True
+    return False
 
 
 
@@ -217,5 +220,5 @@ def environment_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         logger.warn('environment action failed, output %s' % (result))
     else:
-        return 0
-    return -1
+        return True
+    return False
