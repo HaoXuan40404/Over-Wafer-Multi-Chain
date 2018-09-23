@@ -1,11 +1,13 @@
 # coding:utf-8
 import os
-
+import commands
+import re
+from pys.log import logger
 from pys import path
 
 
 class Ansible:
-    """ansible配置
+    """ansible配置, 用来配置推送的目标文件夹, default = '/data'
     """
 
     dir = '/data'
@@ -22,91 +24,156 @@ def get_dir():
     return Ansible.dir
 
 
-def ansible_test():
-    ae = Ansible()
-    set_dir('dir')
-    print(ae)
-
-
 def mkdir_module(ip, dest):
     '''
     mkdir module
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
+    logger.info('mkdir action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('mkdir action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('mkdir action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def copy_module(ip, src, dest):
     '''
     cpoy module
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
+    logger.info('copy action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('copy action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('copy action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def unarchive_module(ip, src, dest):
     '''
     unarchive module
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
+    logger.info('unarchive action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('unarchive action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('unarchive action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def build_module(ip, dest):
     '''
     build module
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh build ' + ip + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh build ' + ip + ' ' + dest)
+    logger.info('build action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('build action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('build action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def start_module(ip, dest):
     '''
     start module
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh start ' + ip + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh start ' + ip + ' ' + dest)
+    logger.info('start action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('start action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('start action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def stop_module(ip, dest):
     '''
     stop module
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh stop ' + ip + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh stop ' + ip + ' ' + dest)
+    logger.info('stop action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('stop action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('stop action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
+
 
 
 def check_module(ip, dest):
-    '''check module
-    check servers status
-    '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh check ' + ip + ' ' + dest)
-    return 0
+    """远程调用查看节点是否正常启动, 调用的是节点的check.sh
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 远程调用目录
+    
+    Returns:
+        int -- 成功返回0, 否则返回-1
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh check ' + ip + ' ' + dest)
+    logger.info('check action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('check action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('check action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def echo_module(ip, msg='HelloWorld!'):
     """调用ansible.sh echo模块, 使用ansible远程调用进行echo测试
-    
+
     Arguments:
         ip {string} -- 服务器ip
-    
+
     Keyword Arguments:
         msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
-    
+
     Returns:
         [int] -- ansible正确调用echo返回0, 否则返回其他值.
-    """ 
-
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh echo ' + ip + ' ' + msg)
-    return 0
+    """
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh echo ' + ip + ' ' + msg)
+    logger.info('echo action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('echo action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('echo action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
 
 
 def monitor_module(ip, dest):
@@ -114,9 +181,18 @@ def monitor_module(ip, dest):
         monitor chains status including' 
         node messenge, blk_number, viewchange, node live or not, node on which server, peers'
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
-    return 0
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
+    logger.info('monitor action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('monitor action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('monitor action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
+
 
 
 def environment_module(ip, dest):
@@ -124,10 +200,14 @@ def environment_module(ip, dest):
         monitor chains status including' 
         node messenge, blk_number, viewchange, node live or not, node on which server, peers'
     '''
-    os.system('bash ' + path.get_path() +
-              '/scripts/ansible.sh environment ' + ip + ' ' + dest)
-    return 0
-
-
-if __name__ == '__main__':
-    ansible_test()
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh environment ' + ip + ' ' + dest)
+    logger.info('environment action , status %s, output %s' % (status, result))
+   
+    if status:
+        logger.warn('environment action failed, status %s' % (status))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('environment action failed, output %s' % (result))
+    else:
+        return 0
+    return -1
