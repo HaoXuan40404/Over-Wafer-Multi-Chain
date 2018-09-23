@@ -8,9 +8,9 @@ alarm() {
 
 restart() {
         stopfile=${1/start/stop}
-        $stopfile
+        bash $stopfile
         sleep 3
-        $startfile
+        bash $startfile
 }
 
 dirpath="$(cd "$(dirname "$0")" && pwd)"
