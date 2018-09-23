@@ -1,4 +1,4 @@
-
+# coding:utf-8
 from pys.log import logger
 from pys.log import consoler
 
