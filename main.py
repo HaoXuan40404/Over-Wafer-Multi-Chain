@@ -10,6 +10,7 @@ from pys import ansible
 from pys import path
 from pys import version
 from pys.log import logger
+from pys.log import consoler
 from pys.chain import opr
 from pys.chain import build
 from pys.chain import publish
@@ -88,7 +89,7 @@ def cmd_view():
         echo_list = args.echo
         opr.echo_ansible(echo_list)
     else:
-        logger.error('unkown action.')
+        consoler.info('\t[ERROR] invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
     return 0
 
 
