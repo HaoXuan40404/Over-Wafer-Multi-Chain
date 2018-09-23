@@ -12,9 +12,19 @@ from pys.node import config
 from pys.log import logger
 
 def build_install_dir(dir, chain, port, node, temp):
-    '''
-    构建一个节点的安装包目录结构
-    '''
+    """构建一台服务器上的安装包, 创建目录结构, 拷贝需要的脚本, 生成节点的证书, 注册节点.
+    
+    Arguments:
+        dir {string} -- 路径
+        chain {Chain} -- 节点所属链的版本号与链id
+        port {Port} -- 节点需要的端口
+        node {Node} -- 节点信息
+        temp {Temp} -- 临时节点, 用来注册节点
+    
+    Raises:
+        Exception -- 异常描述
+    """
+
     logger.info('dir => %s, node => %s, port => %s', dir, node, port)
 
     node_dir = dir + ('/%s' % node.get_host_ip())
@@ -60,6 +70,7 @@ def build_install_dir(dir, chain, port, node, temp):
         os.makedirs(subdir + '/log')
         shutil.copy(dir + '/bootstrapnodes.json', subdir + '/data')
 
+        # 生成节点证书
         ca.generator_node_ca(subdir + '/data', node.get_p2p_ip() + '_' + str(index), ca.get_agent_ca_path())
         
         #注册节点到系统合约
