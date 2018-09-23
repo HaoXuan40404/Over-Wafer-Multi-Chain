@@ -38,7 +38,7 @@ def mkdir_module(ip, dest):
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
-    logger.info('mkdir action , status %s, output %s' % (status, result))
+    logger.debug('mkdir action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('mkdir action failed, status %s' % (status))
@@ -55,7 +55,7 @@ def copy_module(ip, src, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
-    logger.info('copy action , status %s, output %s' % (status, result))
+    logger.debug('copy action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('copy action failed, status %s' % (status))
@@ -72,7 +72,7 @@ def unarchive_module(ip, src, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
-    logger.info('unarchive action , status %s, output %s' % (status, result))
+    logger.debug('unarchive action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('unarchive action failed, status %s' % (status))
@@ -89,7 +89,7 @@ def build_module(ip, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh build ' + ip + ' ' + dest)
-    logger.info('build action , status %s, output %s' % (status, result))
+    logger.debug('build action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('build action failed, status %s' % (status))
@@ -106,7 +106,7 @@ def start_module(ip, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh start ' + ip + ' ' + dest)
-    logger.info('start action , status %s, output %s' % (status, result))
+    logger.debug('start action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('start action failed, status %s' % (status))
@@ -123,7 +123,7 @@ def stop_module(ip, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh stop ' + ip + ' ' + dest)
-    logger.info('stop action , status %s, output %s' % (status, result))
+    logger.debug('stop action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('stop action failed, status %s' % (status))
@@ -148,7 +148,7 @@ def check_module(ip, dest):
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh check ' + ip + ' ' + dest)
-    logger.info('check action , status %s, output %s' % (status, result))
+    logger.debug('check action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('check action failed, status %s' % (status))
@@ -173,7 +173,7 @@ def echo_module(ip, msg='HelloWorld!'):
     """
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh echo ' + ip + ' ' + msg)
-    logger.info('echo action , status %s, output %s' % (status, result))
+    logger.debug('echo action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('echo action failed, status %s' % (status))
@@ -191,7 +191,7 @@ def monitor_module(ip, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
-    logger.info('monitor action , status %s, output %s' % (status, result))
+    logger.debug('monitor action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('monitor action failed, status %s' % (status))
@@ -210,7 +210,7 @@ def environment_module(ip, dest):
     '''
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh environment ' + ip + ' ' + dest)
-    logger.info('environment action , status %s, output %s' % (status, result))
+    logger.debug('environment action , status %s, output %s' % (status, result))
    
     if status:
         logger.warn('environment action failed, status %s' % (status))
