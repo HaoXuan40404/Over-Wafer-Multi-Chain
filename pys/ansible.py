@@ -1,9 +1,10 @@
 # coding:utf-8
-import os
 import commands
+import os
 import re
-from pys.log import logger
+
 from pys import path
+from pys.log import logger
 
 
 class Ansible:
@@ -25,9 +26,16 @@ def get_dir():
 
 
 def mkdir_module(ip, dest):
-    '''
-    mkdir module
-    '''
+    """调用ansible在目标服务器创建文件夹
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 文件夹路径
+    
+    Returns:
+        int -- 成功返回0, 否则返回-1.
+    """
+
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
     logger.info('mkdir action , status %s, output %s' % (status, result))

@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 
+from pys import mconf
 from pys import ca
 from pys import ansible
 from pys import path
@@ -13,7 +14,6 @@ from pys.chain import opr
 from pys.chain import build
 from pys.chain import publish
 from pys.checktools import check_environment 
-from pys.checktools import readchain
 
 
 
@@ -23,9 +23,17 @@ def init():
     sys.path.append(pwd + '/pys')
     path.set_path(pwd)
 
+    logger.info('main init ,pwd is %s', pwd)
+
+    # 解析mchain.conf配置
+    mconf.parser(pwd + '/conf/mchain.conf')
+
     # 初始化证书(机构名称、证书路径)
-    ca.set_agent('WB')
+    ca.set_agent(mconf.get_agent())
     ca.set_ca_path(pwd + '/data/ca')
+
+    # ansible远程推送的根目录
+    ansible.set_dir(mconf.get_ansible_dir())
 
 def cmd_view():
     parser = argparse.ArgumentParser(
@@ -86,9 +94,6 @@ def cmd_view():
 
 def main():
     init()
-    readchain.mchain_conf('./conf/mchain.conf')
-    path = readchain.get_dir()
-    ansible.set_dir(path)
     cmd_view()
 
 
