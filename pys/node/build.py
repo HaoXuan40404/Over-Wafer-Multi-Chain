@@ -30,6 +30,7 @@ def build_install_dir(dir, chain, port, node, temp):
     shutil.copy(path.get_path() + '/scripts/node/register.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/unregister.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/monitor.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', node_dir)
 
     #拷贝fisco-bcos文件
     shutil.copy(path.get_fisco_path(), node_dir)
