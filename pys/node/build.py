@@ -24,12 +24,12 @@ def build_install_dir(dir, chain, port, node, temp):
     os.makedirs(node_dir)
 
     # 脚本
-    shutil.copy(path.get_path() + '/scripts/start.sh', node_dir)
-    shutil.copy(path.get_path() + '/scripts/stop.sh', node_dir)
-    shutil.copy(path.get_path() + '/scripts/check.sh', node_dir)
-    shutil.copy(path.get_path() + '/scripts/register.sh', node_dir)
-    shutil.copy(path.get_path() + '/scripts/unregister.sh', node_dir)
-    shutil.copy(path.get_path() + '/scripts/monitor.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/start.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/stop.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/check.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/register.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/unregister.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/monitor.sh', node_dir)
 
     #拷贝fisco-bcos文件
     shutil.copy(path.get_fisco_path(), node_dir)
@@ -46,9 +46,9 @@ def build_install_dir(dir, chain, port, node, temp):
         os.makedirs(subdir)
         
         shutil.copy(path.get_path() + '/tpl/log.conf', subdir)
-        shutil.copy(path.get_path() + '/scripts/node/start.sh', subdir + '/start.sh')
-        shutil.copy(path.get_path() + '/scripts/node/stop.sh', subdir + '/stop.sh')
-        shutil.copy(path.get_path() + '/scripts/node/check.sh', subdir + '/check.sh')
+        shutil.copy(path.get_path() + '/scripts/node/node_start.sh', subdir + '/start.sh')
+        shutil.copy(path.get_path() + '/scripts/node/node_stop.sh', subdir + '/stop.sh')
+        shutil.copy(path.get_path() + '/scripts/node/node_check.sh', subdir + '/check.sh')
 
         cfg_json = config.build_config_json(chain.get_id(), port.get_rpc_port() + index, port.get_p2p_port() + index, port.get_channel_port() + index)
         with open(subdir + '/config.json',"w+") as f:

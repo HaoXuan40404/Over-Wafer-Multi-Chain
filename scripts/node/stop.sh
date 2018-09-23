@@ -1,13 +1,31 @@
 #!/bin/bash
-    dirpath="$(cd "$(dirname "$0")" && pwd)"
-    cd $dirpath
-    curdir=$PWD
-    node=$(basename ${curdir})
-    weth_pid=`ps aux|grep "${curdir}/config.json"|grep -v grep|awk '{print $2}'`
-    kill_cmd="kill -9 ${weth_pid}"
-    if [ ! -z $weth_pid ];then
-        echo "stop ${node} ..."
-        eval ${kill_cmd}
-    else
-        echo "${node} is not running."
+
+# bash stop.sh      =>    stop all node 
+# bash stop.sh IDX  =>    stop the IDX node
+
+dirpath="$(cd "$(dirname "$0")" && pwd)"
+cd $dirpath
+
+index=$1;
+
+if [ -z $index ];then
+    total=999
+    index=0
+    echo "stop all node ... "
+    while [ $index -le $total ]
+    do
+    if [ -d node$index ];then
+        bash node$index/stop.sh
+    else	
+        break
     fi
+    index=$(($index+1))
+    done
+else
+    # echo "stop all node ... "
+	if [ -d node$index ];then
+		bash node$index/stop.sh
+	else
+		echo "node$index is not exist."
+	fi
+fi

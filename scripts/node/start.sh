@@ -1,14 +1,38 @@
 #!/bin/bash
-    dirpath="$(cd "$(dirname "$0")" && pwd)"
-    cd $dirpath
-    curdir=$PWD
-    node=$(basename ${curdir})
-    ulimit -c unlimited
-    weth_pid=`ps aux|grep "${curdir}/config.json"|grep -v grep|awk '{print $2}'`
-    if [ ! -z $weth_pid ];then
-        echo "${node} is running, pid is $weth_pid."
+
+# bash start.sh      =>    start all node 
+# bash start.sh IDX  =>    start the IDX node
+
+dirpath="$(cd "$(dirname "$0")" && pwd)"
+cd $dirpath
+
+index=$1;
+
+if [ -z $index ];then
+    total=999
+    index=0
+    echo "start all node ... "
+    while [ $index -le $total ]
+    do
+        if [ -d node$index ];then
+            bash node$index/start.sh
+        else	
+            break
+        fi
+	sleep 3
+        index=$(($index+1))
+    done
+
+    sleep 3
+
+    bash check.sh
+else
+    #echo "start node$index ... "
+    if [ -d node$index ];then
+        bash node$index/start.sh
+        sleep 3
+        bash check.sh $index
     else
-        echo "start ${node} ..."
-        chmod a+x ../fisco-bcos
-        nohup ../fisco-bcos  --genesis ${curdir}/genesis.json  --config ${curdir}/config.json  >> ${curdir}/log/log 2>&1 &
+        echo "node$index is not exist."
     fi
+fi
