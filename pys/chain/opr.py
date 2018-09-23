@@ -23,7 +23,7 @@ def start_chain_resolve(chain):
                     logger.error('error chain_resolve')
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
-                    start_node(chain_get[0], chain_get[1])
+                    ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     print('chain_resolve error')
                     logger.error('error chain_resolve')
@@ -55,7 +55,7 @@ def stop_chain_resolve(chain):
                     logger.error('error chain_resolve')
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
-                    stop_node(chain_get[0], chain_get[1])
+                    ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     print('chain_resolve error')
                     logger.error('error chain_resolve')
@@ -81,7 +81,7 @@ def check_chain_resolve(chain):
                     logger.error('error chain_resolve')
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
-                    check_node(chain_get[0], chain_get[1])
+                    ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     print('chain_resolve error')
                     logger.error('error chain_resolve')
@@ -107,7 +107,7 @@ def monitor_chain_resolve(chain):
                     logger.error('error chain_resolve')
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
-                    monitor_node(chain_get[0], chain_get[1])
+                    ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     print('chain_resolve error')
                     logger.error('error chain_resolve')
@@ -167,35 +167,3 @@ def monitor_server(chain_id):
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.monitor_module(k, ansible.get_dir() + '/' + chain_id)
-
-
-def start_node(chain_id, ip):
-    '''
-    start module
-    '''
-    ansible.start_module(ip, ansible.get_dir() + '/' + chain_id)
-    return 0
-
-
-def stop_node(chain_id, ip):
-    '''
-    stop module
-    '''
-    ansible.stop_module(ip, ansible.get_dir() + '/' + chain_id)
-    return 0
-
-
-def check_node(chain_id, ip):
-    '''
-    check module
-    '''
-    ansible.check_module(ip, ansible.get_dir() + '/' + chain_id)
-    return 0
-
-
-def monitor_node(chain_id, ip):
-    '''
-    monitor module
-    '''
-    ansible.monitor_module(ip, ansible.get_dir() + '/' + chain_id)
-    return 0
