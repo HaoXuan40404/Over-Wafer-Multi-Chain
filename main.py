@@ -57,6 +57,12 @@ def cmd_view():
                                                          'chain_id:host_ip'), help='Output => monitor node')
     parser.add_argument('--envircheck', nargs='+', metavar=('all or chain_id or',
                                                             'chain_id:host_ip'), help='Output => check build environment of server of the chain.')
+    parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',), 
+                                                        help='Output => the cert of chain that set on the SET directory')
+    parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
+                                                      './chain_ca_dir', 'The Agency Name'), help='Output => the cert of agency that set on the SET directory')
+    parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
+                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     parser.add_argument('--echo', nargs='+', metavar=('all or host_ip or',
                                                       'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
     args = parser.parse_args()
@@ -85,6 +91,19 @@ def cmd_view():
     elif args.envircheck:
         chain = args.envircheck
         check_environment.check_chain_resolve(chain)
+    elif args.chainca:
+        chain_dir = args.chainca[0]
+        ca.generate_root_ca(chain_dir)
+    elif args.agencyca:
+        agency_dir = args.agencyca[0]
+        chain_dir = args.agencyca[1]
+        agency_name = args.agencyca[2]
+        ca.generator_agent_ca(agency_dir, chain_dir, agency_name)
+    elif args.sdkca:
+        sdk_dir = args.sdkca[0]
+        agency_dir = args.sdkca[1]
+        ca.generator_sdk_ca(agency_dir)
+        os.system('mv ' + agency_dir + '/sdk ' + sdk_dir + '/sdk')
     elif args.echo:
         echo_list = args.echo
         opr.echo_ansible(echo_list)
