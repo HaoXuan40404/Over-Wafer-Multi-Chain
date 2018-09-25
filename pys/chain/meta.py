@@ -60,14 +60,15 @@ class Meta:
     def load_from_file(self):
         self.clear()
         if not os.path.exists(data.meta_dir(self.chain_id) + '/meta.json'):
-            logger.info('meta.json not exist, chain_id is ' + self.chain_id)
-        with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
-            jsondata = json.load(f)
-            if jsondata.has_key('nodes'):
-                for v in jsondata['nodes'].values():
-                    mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
-                    logger.info('load from meta.json, meta node is %s', mn)
-                    self.append(mn)
+            logger.warn('meta.json not exist, chain_id is ' + self.chain_id)
+        else:
+            with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
+                jsondata = json.load(f)
+                if jsondata.has_key('nodes'):
+                    for v in jsondata['nodes'].values():
+                        mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
+                        logger.info('load from meta.json, meta node is %s', mn)
+                        self.append(mn)
 
 def list(chains):
 
