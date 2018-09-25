@@ -1,3 +1,4 @@
+#coding:utf-8
 import os
 
 from pys import ansible, utils
@@ -10,7 +11,8 @@ from pys.chain import data
 from pys.chain import package
 
 
-def start_chain_resolve(chain):
+
+def start_chain(chain):
     """[解析命令行, 批量启动节点]
     
     Arguments:
@@ -25,28 +27,25 @@ def start_chain_resolve(chain):
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_chain_id(chain_get[0]):
                     try:
                         start_server(chain_get[0])
-                    except IOError as e: 
-                        consoler.error('Input is invalid, IOError %s', e)
-                        logger.error('Input is invalid, IOError %s', e)
-                else:
-                    consoler.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
+                    except Exception as e: 
+                        consoler.error('Input is invalid, Exception %s', e)
+                        logger.error('Input is invalid, Exception %s', e)
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
+                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
-                    consoler.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('start_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('start_chain_resolve error, %s is not a valid chain_id',chain_get[0])
 
             else:
                 consoler.error('start_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
                 logger.error('start_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
-def stop_chain_resolve(chain):
+def stop_chain(chain):
     """[解析命令行, 批量停止节点]
     
     Arguments:
@@ -67,27 +66,27 @@ def stop_chain_resolve(chain):
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_chain_id(chain_get[0]):
                     try:
                         stop_server(chain_get[0])
-                    except IOError as e: 
-                        consoler.error('Input is invalid, IOError %s', e)
-                        logger.error('Input is invalid, IOError %s', e)
+                    except Exception as e: 
+                        consoler.error('Input is invalid, Exception %s', e)
+                        logger.error('Input is invalid, Exception %s', e)
                 else:
-                    consoler.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
+                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
-                    consoler.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
             else:
                 consoler.error('stop_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
                 logger.error('stop_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
-def check_chain_resolve(chain):
+def check_chain(chain):
     """[解析命令行, 批量检查节点启动情况]
     
     Arguments:
@@ -102,28 +101,28 @@ def check_chain_resolve(chain):
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_chain_id(chain_get[0]):
                     try:
                         check_server(chain_get[0])
-                    except IOError as e: 
-                        consoler.error('Input is invalid, IOError %s', e)
-                        logger.error('Input is invalid, IOError %s', e)
+                    except Exception as e: 
+                        consoler.error('Input is invalid, Exception %s', e)
+                        logger.error('Input is invalid, Exception %s', e)
                 else:
-                    consoler.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
+                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
-                    consoler.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
 
             else:
                 consoler.error('check_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
                 logger.error('check_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
-def monitor_chain_resolve(chain):
+def monitor_chain(chain):
     """[解析命令行, 批量检查节点运行情况]
     
     Arguments:
@@ -137,27 +136,27 @@ def monitor_chain_resolve(chain):
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_chain_id(chain_get[0]):
                     try:
                         monitor_server(chain_get[0])
-                    except IOError as e: 
-                        consoler.error('Input is invalid, IOError %s', e)
-                        logger.error('Input is invalid, IOError %s', e)
+                    except Exception as e: 
+                        consoler.error('Input is invalid, Exception %s', e)
+                        logger.error('Input is invalid, Exception %s', e)
                 else:
-                    consoler.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
+                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
-                    consoler.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
+                    consoler.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    logger.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
 
             else:
                 consoler.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
                 logger.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
-def pub_list_resolve(chains):
+def pub_list(chains):
     
     logger.info('list begin, chains is %s', chains)
     consoler.info(' chains is %s' % chains)
@@ -183,7 +182,7 @@ def pub_list_resolve(chains):
 
     logger.info('list end.')
 
-def pkg_chain_resolve(chains, host_detail = True):
+def pkg_chain(chains, host_detail = True):
 
     logger.info('pkg_chain_resolve, chains is %s, host_detail is %s', chains, host_detail)
 

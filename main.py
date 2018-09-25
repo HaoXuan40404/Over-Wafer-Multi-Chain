@@ -76,7 +76,7 @@ def cmd_view():
     elif args.check:
         consoler.info(' check opr begin.')
         chain = args.check
-        opr.check_chain_resolve(chain)
+        opr.check_chain(chain)
         consoler.info(' check opr end.')
     elif args.publish:
         consoler.info(' publish opr begin.')
@@ -86,27 +86,27 @@ def cmd_view():
     elif args.start:
         consoler.info(' start opr begin.')
         chain = args.start
-        opr.start_chain_resolve(chain)
+        opr.start_chain(chain)
         consoler.info(' start opr end.')
     elif args.stop:
         consoler.info(' stop opr begin.')
         chain = args.stop
-        opr.stop_chain_resolve(chain)
+        opr.stop_chain(chain)
         consoler.info(' stop opr end.')
     elif args.monitor:
         consoler.info(' monitor opr begin.')
         chain = args.monitor
-        opr.monitor_chain_resolve(chain)
+        opr.monitor_chain(chain)
         consoler.info(' monitor opr end.')
     elif args.pub_list:
         consoler.info(' pub_list opr begin.')
         chain = args.pub_list
-        opr.pub_list_resolve(chain)
+        opr.pub_list(chain)
         consoler.info(' pub_list opr end.')
     elif args.pkg_list:
         consoler.info(' pkg_list opr begin.')
         chain = args.pkg_list
-        opr.pkg_chain_resolve(chain, True)
+        opr.pkg_chain(chain, True)
         consoler.info(' pkg_list opr end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
