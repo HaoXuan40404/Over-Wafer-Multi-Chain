@@ -50,6 +50,7 @@ def copy_module(ip, src, dest):
     '''
     cpoy module
     '''
+
     (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
               '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
     print(result)
@@ -174,7 +175,7 @@ def echo_module(ip, msg='HelloWorld!'):
         print('ansible echo_module action, warn status => %s'% (status))
         logger.warn('ansible echo_module action, warning status => %s, warning result => %s',status, result)
     else:
-        print('ansible echo_module action, info status => %s'% (status)s)
+        print('ansible echo_module action, info status => %s'% (status))
         logger.info('ansible echo_module action, info status => %s, info result => %s',status, result)
     return 0
 
