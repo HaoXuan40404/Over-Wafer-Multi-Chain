@@ -18,7 +18,7 @@ def publish_chain(chains):
     Returns:
         无返回
     """
-    chains = []
+    pchains = []
     for i in range(len(chains)):
         chain = chains[i].split(':')
         if len(chain) != 2:
@@ -28,12 +28,12 @@ def publish_chain(chains):
 
         chain_id = chain[0]
         chain_version = chain[1]
-        chains.append(Chain(chain_id, chain_version))
+        pchains.append(Chain(chain_id, chain_version))
         consoler.info('\t append publish chain, chain_id %s:chain_version %s', chain_id, chain_version)
         logger.debug('chain_id is %s, chain_version is %s', chain_id, chain_version)
             
-    if len(chains) != 0:
-        for chain in chains:
+    if len(pchains) != 0:
+        for chain in pchains:
             logger.info('publish, chain_id is %s, chain_version is %s', chain_id, chain_version)
             publish_server(chain.get_id(), chain.get_version())
 
