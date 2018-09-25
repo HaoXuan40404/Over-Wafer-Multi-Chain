@@ -28,7 +28,7 @@ def chain_build(cfg, fisco_path):
 
     logger.debug('build cfg is %s, fisco is %s ', cfg, fisco_path)
 
-    # 判断fisco-bcos路径是否正确
+    # 判断fisco-bcos文件是否存在
     if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
         consoler.info('\t [ERROR] fisco-bcos is not exist, path is %s', fisco_path)
         return 
@@ -70,11 +70,11 @@ def chain_build(cfg, fisco_path):
                     consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
                     cc_dict[key] = cc
             except Exception as e:
-                consoler.info('\t [ERROR] invalid config format parser failed, config is %s, exp is %s', c, e)
+                consoler.info('\t [ERROR] skip config %s, invalid config format parser failed, exp is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
 
     else:
-        consoler.info('\t [ERROR] invalid config, neither directory nor file, config is %s', c)
+        consoler.info('\t [ERROR] invalid config, neither directory nor file, config is %s', cfg)
 
     logger.info('cc_dict is %s', cc_dict)
 
@@ -110,7 +110,7 @@ def build_cfg(cc):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
         
-        consoler.info('\t\t [ERROR] chain of version already exist.')
+        consoler.info('\t\t [ERROR] build install package for chain %s version %s failed, data dir aleady exist', cc.get_chain().get_id(), cc.get_chain().get_version())
         
         return
     os.makedirs(dir)

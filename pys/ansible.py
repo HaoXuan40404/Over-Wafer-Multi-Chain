@@ -60,9 +60,12 @@ def copy_module(ip, src, dest):
    
     if status:
         logger.warn('copy action failed, status %s' % (status))
+        consoler.info('\t\t\t ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
+        consoler.info('\t\t\t ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
         logger.warn('copy action failed, output %s' % (result))
     else:
+        consoler.info('\t\t\t ansible copy opr success, host is %s, src is %s, dst is %s.', ip, src, dest)
         return True
     return False
 
@@ -177,11 +180,11 @@ def echo_module(ip, msg='HelloWorld!'):
     logger.debug('echo action , status %s, output %s' % (status, result))
    
     if status:
-        consoler.info('\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.info('\t\t\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.info('\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.info('\t\t\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info('\t ansible echo opr success, host is %s.', ip)
+        consoler.info('\t\t\t ansible echo opr success, host is %s.', ip)
         return True
     return False
 

@@ -6,6 +6,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.chain import meta
 from pys.chain import data
+from pys.chain.chain import Chain
 
 
 def publish_chain(chains):
@@ -17,28 +18,25 @@ def publish_chain(chains):
     Returns:
         无返回
     """
-
+    chains = []
     for i in range(len(chains)):
         chain = chains[i].split(':')
         if len(chain) != 2:
             logger.error('not chain_id:chain_version format, str is %s', chains[i])
-            consoler.info('\t\t skip, invalid publish format, chain_id:chain_version should require, now is %s', chain)
+            consoler.info('\t [ERROR] skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
             continue
-        try:
-            chain_id = chain[0]
-            chain_version = chain[1]
-            logger.debug('chain_id is %s, chain_version is %s', chain_id, chain_version)
-            consoler.info('\t\t publish %s:%s begin.', chain_id, chain_version)
-            publish_server(chain_id, chain_version)
-            consoler.info('\t\t publish  %s:%s end.', chain_id, chain_version)
-        except Exception as e:
-            print('chain_version %s failed, skip ...' % e)
-            logger.warn(
-                'parser chain_version %s end exception, e %s ', chain_version,  e)
+
+        chain_id = chain[0]
+        chain_version = chain[1]
+        chains.append(Chain(chain_id, chain_version))
+        consoler.info('\t append publish chain, chain_id %s:chain_version %s', chain_id, chain_version)
+        logger.debug('chain_id is %s, chain_version is %s', chain_id, chain_version)
+            
+    if len(chains) != 0:
+        for chain in chains:
+            publish_server(chain.get_id(), chain.get_version())
 
     logger.info('chain_version is %s', chain_version)
-
-    return 0
 
 
 def publish_server(chain_id, chain_version):
@@ -51,7 +49,7 @@ def publish_server(chain_id, chain_version):
 
     dir = data.package_dir(chain_id, chain_version)
     if not os.path.isdir(dir):
-        consoler.info('version of this chain package is not exist, chain_id is %s, chain_version is %s', chain_id, chain_version)
+        consoler.info('\t\t [ERROR] publish install package for chain %s version %s failed, data dir not exist', chain_id, chain_version)
         logger.warn(
             'version of this chain is not exist, chain is %s, version is %s', chain_id, chain_version)
         return
