@@ -60,9 +60,9 @@ def copy_module(ip, src, dest):
    
     if status:
         logger.warn('copy action failed, status %s' % (status))
-        consoler.info(' ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
+        consoler.warn(' ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.info(' ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
+        consoler.warn(' ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
         logger.warn('copy action failed, output %s' % (result))
     else:
         consoler.info(' ansible copy opr success, host is %s, src is %s, dst is %s.', ip, src, dest)
@@ -80,8 +80,10 @@ def unarchive_module(ip, src, dest):
    
     if status:
         logger.warn('unarchive action failed, status %s' % (status))
+        consoler.warn(' ansible unarchive opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('unarchive action failed, output %s' % (result))
+        consoler.warn(' ansible unarchive opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     else:
         return True
     return False
@@ -97,9 +99,11 @@ def build_module(ip, dest):
    
     if status:
         logger.warn('build action failed, status %s' % (status))
+        consoler.warn(' ansible build failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
 
     elif not (result.find('SUCCESS') + 1):
         logger.warn('build action failed, output %s' % (result))
+        consoler.warn(' ansible build failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
         return True
     return False
@@ -122,11 +126,12 @@ def start_module(ip, dest):
     
     if status:
         logger.warn('start action failed, status %s' % (status))
-        consoler.info(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+        consoler.warn(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('start action failed, output %s' % (result))
-        consoler.info(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+        consoler.warn(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
+        consoler.info(' ansible start opr success, host is %s.', ip)
         return True
     return False
 
@@ -148,11 +153,12 @@ def stop_module(ip, dest):
 
     if status:
         logger.warn('stop action failed, status %s' % (status))
-        consoler.info(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+        consoler.warn(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('stop action failed, output %s' % (result))
-        consoler.info(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+        consoler.warn(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
+        consoler.info(' ansible stop opr success, host is %s.', ip)
         return True
     return False
 
@@ -175,10 +181,10 @@ def check_module(ip, dest):
     
     if status:
         logger.warn('check action failed, status %s' % (status))
-        consoler.info(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+        consoler.warn(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('check action failed, output %s' % (result))
-        consoler.info(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+        consoler.warn(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
         consoler.info(' ansible check opr success, result is \n%s.', result)
         return True
@@ -203,9 +209,9 @@ def echo_module(ip, msg='HelloWorld!'):
                                                 '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     logger.debug('echo action , status %s, output %s' % (status, result))
     if status:
-        consoler.info(' [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.error(' ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.info(' [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.error(' ansible echo opr failed, host is %s, output is %s', ip, result)
     else:
         consoler.info(' ansible echo opr success, host is %s.', ip)
         return True
@@ -222,11 +228,11 @@ def monitor_module(ip, dest):
     logger.debug('monitor action , status %s, output %s' % (status, result))
     consoler.info(result)
     if status:
-        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.error(' ansible monitor opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.error(' ansible monitor opr failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info('\t ansible echo opr success, host is %s.', ip)
+        consoler.info(' ansible monitor opr success, host is %s.', ip)
         return True
     return False
 
@@ -242,9 +248,9 @@ def environment_module(ip, dest):
     logger.debug('environment action , status %s, output %s' % (status, result))
     consoler.info(result)
     if status:
-        logger.warn('environment action failed, status %s' % (status))
+        consoler.error(' ansible environment failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        logger.warn('environment action failed, output %s' % (result))
+        consoler.error(' ansible environment failed, host is %s, output is %s', ip, result)
     else:
         return True
     return False

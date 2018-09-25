@@ -133,7 +133,7 @@ def cmd_view():
         opr.echo_ansible(echo_list)
         consoler.info(' echo opr end.')
     else:
-        consoler.info('\t [ERROR] invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
+        consoler.error('invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
     return 0
 
 

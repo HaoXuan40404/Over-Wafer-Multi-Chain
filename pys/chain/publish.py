@@ -23,13 +23,13 @@ def publish_chain(chains):
         chain = chains[i].split(':')
         if len(chain) != 2:
             logger.error('not chain_id:chain_version format, str is %s', chains[i])
-            consoler.info('\t [ERROR] skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
+            consoler.error('skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
             continue
 
         chain_id = chain[0]
         chain_version = chain[1]
         chains.append(Chain(chain_id, chain_version))
-        consoler.info('\t append publish chain, chain_id %s:chain_version %s', chain_id, chain_version)
+        consoler.info('append publish chain, chain_id %s:chain_version %s', chain_id, chain_version)
         logger.debug('chain_id is %s, chain_version is %s', chain_id, chain_version)
             
     if len(chains) != 0:
@@ -49,7 +49,7 @@ def publish_server(chain_id, chain_version):
 
     dir = data.package_dir(chain_id, chain_version)
     if not os.path.isdir(dir):
-        consoler.info('\t\t [ERROR] publish install package for chain %s version %s failed, data dir not exist', chain_id, chain_version)
+        consoler.error('publish install package for chain %s version %s failed, data dir not exist', chain_id, chain_version)
         logger.warn(
             'version of this chain is not exist, chain is %s, version is %s', chain_id, chain_version)
         return
