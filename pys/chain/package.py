@@ -31,6 +31,10 @@ class Ver:
 
     def clear(self):
         self.pkg_list = []
+    
+    def exist(self):
+        dir = data.package_dir(self.chain_id, self.chain_version)
+        return os.path.exists(dir):
 
     def load(self):
 
@@ -76,6 +80,10 @@ class Package:
     
     def clear(self):
         self.ver_list = []
+    
+    def exist(self):
+        dir = data.package_chain_dir(self.chain_id)
+        return os.path.exists(dir)
 
     def load(self):
         self.clear()
