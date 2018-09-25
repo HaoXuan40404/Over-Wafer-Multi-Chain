@@ -34,9 +34,8 @@ def publish_chain(chains):
             
     if len(chains) != 0:
         for chain in chains:
+            logger.info('publish, chain_id is %s, chain_version is %s', chain_id, chain_version)
             publish_server(chain.get_id(), chain.get_version())
-
-    logger.info('chain_version is %s', chain_version)
 
 
 def publish_server(chain_id, chain_version):
