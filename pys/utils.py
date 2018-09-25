@@ -1,6 +1,8 @@
 #coding:utf-8
 
 import re
+from pys.log import logger
+from pys.log import consoler
 
 def valid_ip(ip):
     p = re.compile('^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$')
@@ -31,3 +33,12 @@ def replace(filepath, old, new):
         for line in all_lines:
             line = line.replace(old, new)
             f.write(line)
+
+def valid_chain_id(chain_id):
+    try: 
+        int(chain_id)
+        return True
+    except Exception as e: 
+        consoler.error('%s is not a valid chain_id', e)
+        logger.error('%s is not a valid chain_id', e)
+        return False
