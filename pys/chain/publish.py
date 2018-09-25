@@ -21,10 +21,11 @@ def publish_chain(chains):
     pchains = []
     for i in range(len(chains)):
         chain = chains[i].split(':')
-        if len(chain) != 2:
-            logger.error('not chain_id:chain_version format, str is %s', chains[i])
-            consoler.error('skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
-            continue
+        if utils.valid_chain_id(chain):
+            if len(chain) != 2:
+                logger.error('not chain_id:chain_version format, str is %s', chains[i])
+                consoler.error('skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
+                continue
 
         chain_id = chain[0]
         chain_version = chain[1]

@@ -18,6 +18,9 @@ from pys.checktools import check_environment
 
 
 def init():
+    """[init函数]
+    """
+
     # 获取当前目录, 用来初始化各个模块的依赖路径
     pwd = os.getcwd()
     sys.path.append(pwd + '/pys')
@@ -36,6 +39,12 @@ def init():
     ansible.set_dir(mconf.get_ansible_dir())
 
 def cmd_view():
+    """[解析cmd命令行]
+    
+    Returns:
+        [bool] -- [程序运行正常返回0，错误返回错误码]
+    """
+
     parser = argparse.ArgumentParser(
         description='Description of multi-chain usage.')
     parser.add_argument('--version', action='store_true',

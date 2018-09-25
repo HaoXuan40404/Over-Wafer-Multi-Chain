@@ -157,7 +157,12 @@ def monitor_chain(chain):
                 logger.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 def pub_list(chains):
+    """[列出部署后链的安装包对应的节点]
     
+    Arguments:
+        chains {[list]} -- [chain id]
+    """
+
     logger.info('list begin, chains is %s', chains)
     consoler.info(' chains is %s' % chains)
 
@@ -183,6 +188,15 @@ def pub_list(chains):
     logger.info('list end.')
 
 def pkg_chain(chains, host_detail = True):
+    """[列出生成链的安装包对应的节点]
+    
+    Arguments:
+        chains {[list]} -- [chain id]
+    
+    Keyword Arguments:
+        host_detail {bool} -- [description] (default: {True})
+    """
+
 
     logger.info('pkg_chain_resolve, chains is %s, host_detail is %s', chains, host_detail)
 
@@ -212,6 +226,12 @@ def pkg_chain(chains, host_detail = True):
     logger.info('load end')
 
 def echo_ansible(server):
+    """[测试托管服务器的ansible]
+    
+    Arguments:
+        server {[list]} -- [对应服务器的ip]
+    """
+
     if server[0] == 'all':
         ansible.echo_module('all')
     else:

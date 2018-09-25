@@ -105,6 +105,9 @@ class Package:
         logger.info('load end, len is %d', len(self.get_version_list()))
 
 def list(chains, is_host):
+    """列出一条链所有的安装包信息
+    """
+    
     if len(chains) == 0:
         consoler.info('chains empty.')
 
