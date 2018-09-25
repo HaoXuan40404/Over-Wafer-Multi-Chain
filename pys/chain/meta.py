@@ -12,6 +12,7 @@ from pys.log import logger, consoler
 
 class MetaNode:
 
+
     def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port):
         self.host_ip = host_ip
         self.version = version
