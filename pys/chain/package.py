@@ -40,10 +40,11 @@ class Ver:
 
         self.clear()
         if not self.exist():
-            logger.warn('dir not exist, chain_id is %s, chain_version is %s, dir is %s',
-                        self.chain_id, self.chain_version, dir)
+            logger.warn('dir not exist, chain_id is %s, chain_version is %s',
+                        self.chain_id, self.chain_version)
             return
-
+        
+        dir = data.package_dir(self.chain_id, self.chain_version)
         logger.debug('load begin, chain_id is %s, chain_version is %s, dir is %s',
                      self.chain_id, self.chain_version, dir)
 
@@ -88,10 +89,11 @@ class Package:
         self.clear()
 
         if not self.exist():
-            logger.warn('dir not exist, chain_id is %s, dir is %s',
-                        self.chain_id, dir)
+            logger.warn('dir not exist, chain_id is %s',
+                        self.chain_id)
             return
-        
+
+        dir = data.package_chain_dir(self.chain_id)
         logger.info('load begin, chain_id is %s, dir is %s',
                      self.chain_id, dir)
         
