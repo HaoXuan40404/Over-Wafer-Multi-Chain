@@ -29,7 +29,7 @@ def chain_build(cfg, fisco_path):
     logger.debug('build cfg is %s, fisco is %s ', cfg, fisco_path)
 
     # 判断fisco-bcos路径是否正确
-    if not (os.path.exists(cfg) and os.path.isfile(cfg)):
+    if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
         consoler.info('\t [ERROR] fisco-bcos is not exist, path is %s', fisco_path)
         return 
 
