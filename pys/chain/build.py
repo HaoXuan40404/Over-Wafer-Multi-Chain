@@ -110,7 +110,7 @@ def build_cfg(cc):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
         
-        consoler.info('\t\t [ERROR] chain of version already exist.')
+        consoler.info('\t\t [ERROR] build install package for chain %s version %s failed, data dir aleady exist', cc.get_chain().get_id(), cc.get_chain().get_version())
         
         return
     os.makedirs(dir)
