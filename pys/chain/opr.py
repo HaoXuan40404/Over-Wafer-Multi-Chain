@@ -2,6 +2,8 @@ import os
 
 from pys import ansible, utils
 from pys.chain import meta
+from pys.chain.meta import Meta
+from pys.chain.package import Package
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
@@ -155,20 +157,60 @@ def monitor_chain_resolve(chain):
                 consoler.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
                 logger.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
-
-def list_chain_resolve(chain):
-    """[解析命令行, 列出所有节点]
+def pub_list_resolve(chains):
     
-    Arguments:
-        chain {[list]} -- [命令行传入的chain_id]
-    """
+    logger.info('list begin, chains is %s', chains)
+    consoler.info(' chains is %s' % chains)
 
-    if chain[0] == 'publish':
-        chain = chain[1:]
-        meta.list(chain)
+    meta_list = []
+    if chains[0] == 'all':
+        dir = data.meta_dir_base()
+        for chain_id in os.listdir(dir):
+            m = Meta(chain_id)
+            m.load_from_file()
+            meta_list.append(m)
     else:
-        package.list(chain, False)
+        for chain_id in chains:
+            m = Meta(chain_id)
+            m.load_from_file()
+            meta_list.append(m)
 
+    for m in meta_list:
+        consoler.info(' => chain_id is %s' % m.get_chain_id())
+        nodes = m.get_nodes()
+        for node in nodes:
+            consoler.info('\t node => %s' % node)
+
+    logger.info('list end.')
+
+def pkg_chain_resolve(chains, host_detail = True):
+
+    logger.info('pkg_chain_resolve, chains is %s, host_detail is %s', chains, host_detail)
+
+    consoler.info(' chains is %s' % chains)
+
+    pkg_list = []
+    if chains[0] == "all":
+        dir = data.package_dir_base()
+        for chain_id in os.listdir(dir):
+            p = Package(chain_id)
+            p.load()
+            pkg_list.append(p)
+    else:
+        for chain_id in chains:
+            p = Package(chain_id)
+            p.load()
+            pkg_list.append(p)
+
+    for p in pkg_list:
+        consoler.info(' => chain is %s' % p.get_chain_id())
+        for v in p.get_version_list():
+            consoler.info(' \t version is %s' % v.get_chain_version())
+            if isinstance(host_detail, bool) and host_detail:
+                for h in v.get_pkg_list():
+                    consoler.info('\t\t package => %s' % h)
+
+    logger.info('load end')
 
 def echo_ansible(server):
     if server[0] == 'all':

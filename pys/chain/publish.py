@@ -57,7 +57,6 @@ def publish_server(chain_id, chain_version):
     mm = meta.Meta(chain_id)
     for host in os.listdir(dir):
         if utils.valid_ip(host):
-            # 后续要添加这里的推送是否成功的判断
             ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
             ret = ansible.copy_module(host, dir + '/' + host + '/',
                                 ansible.get_dir() + '/' + chain_id)
