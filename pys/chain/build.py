@@ -152,7 +152,7 @@ def build_cfg(cc):
 
     except Exception as e:
         logger.warn('build end exception, e is %s', e)
-        consoler.info('\t\t build install package for chain %s version %s failed, exp is ', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
+        consoler.info('\t\t build install package for chain %s version %s failed, exp is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
 
         temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):
