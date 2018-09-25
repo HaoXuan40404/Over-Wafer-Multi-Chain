@@ -177,9 +177,9 @@ def echo_module(ip, msg='HelloWorld!'):
     logger.debug('echo action , status %s, output %s' % (status, result))
    
     if status:
-        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.info('\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
+        consoler.info('\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     else:
         consoler.info('\t ansible echo opr success, host is %s.', ip)
         return True
