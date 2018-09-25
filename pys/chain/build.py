@@ -29,7 +29,7 @@ def chain_build(cfg, fisco_path):
     logger.debug('build cfg is %s, fisco is %s ', cfg, fisco_path)
 
     # 判断fisco-bcos路径是否正确
-    if not os.path.exists(fisco_path):
+    if not (os.path.exists(cfg) and os.path.isfile(cfg)):
         consoler.info('\t [ERROR] fisco-bcos is not exist, path is %s', fisco_path)
         return 
 
@@ -72,8 +72,6 @@ def chain_build(cfg, fisco_path):
             except Exception as e:
                 consoler.info('\t [ERROR] invalid config format parser failed, config is %s, exp is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
-                cc_dict = {}
-                break
 
     else:
         consoler.info('\t [ERROR] invalid config, neither directory nor file, config is %s', c)
