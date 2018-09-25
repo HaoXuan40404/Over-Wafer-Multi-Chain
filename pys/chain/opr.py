@@ -24,12 +24,16 @@ def start_chain_resolve(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_string(chain_get[0]):
-                    start_server(chain_get[0])
+                    try:
+                        start_server(chain_get[0])
+                    except IOError as e: 
+                        consoler.error('Input is invalid, IOError %s', e)
+                        logger.error('Input is invalid, IOError %s', e)
                 else:
                     consoler.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
                     logger.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
@@ -62,12 +66,16 @@ def stop_chain_resolve(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_string(chain_get[0]):
-                    stop_server(chain_get[0])
+                    try:
+                        stop_server(chain_get[0])
+                    except IOError as e: 
+                        consoler.error('Input is invalid, IOError %s', e)
+                        logger.error('Input is invalid, IOError %s', e)
                 else:
                     consoler.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
                     logger.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
@@ -93,12 +101,16 @@ def check_chain_resolve(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_string(chain_get[0]):
-                    check_server(chain_get[0])
+                    try:
+                        check_server(chain_get[0])
+                    except IOError as e: 
+                        consoler.error('Input is invalid, IOError %s', e)
+                        logger.error('Input is invalid, IOError %s', e)
                 else:
                     consoler.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
                     logger.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
@@ -124,12 +136,16 @@ def monitor_chain_resolve(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_string(chain_get[0]):
-                    monitor_server(chain_get[0])
+                    try:
+                        monitor_server(chain_get[0])
+                    except IOError as e: 
+                        consoler.error('Input is invalid, IOError %s', e)
+                        logger.error('Input is invalid, IOError %s', e)
                 else:
                     consoler.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
                     logger.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_string(chain_get[0]):
+                if utils.valid_string(chain_get[0]) and utils.valid_ip(chain_get[1]):
                     ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
@@ -216,7 +232,7 @@ def monitor_server(chain_id):
     Arguments:
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的monitor.sh]
     """
-    
+
     mm = meta.Meta(chain_id)
     logger.info('monitor_server action, chain_id is ' + chain_id)
     mm.load_from_file()
