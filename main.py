@@ -71,13 +71,15 @@ def cmd_view():
     elif args.build:
         consoler.info(' build opr begin.')
         build.chain_build(args.build[0], args.build[1])
-        consoler.info(' build opr begin.')
+        consoler.info(' build opr end.')
     elif args.check:
+        consoler.info(' check opr begin.')
         chain = args.check
         opr.check_chain_resolve(chain)
+        consoler.info(' check opr end.')
     elif args.publish:
-        chain = args.publish
         consoler.info(' publish opr begin.')
+        chain = args.publish
         publish.publish_chain(chain)
         consoler.info(' publish opr end.')
     elif args.start:
@@ -91,11 +93,15 @@ def cmd_view():
         opr.stop_chain_resolve(chain)
         consoler.info(' stop opr end.')
     elif args.monitor:
+        consoler.info(' monitor opr begin.')
         chain = args.monitor
         opr.monitor_chain_resolve(chain)
+        consoler.info(' monitor opr end.')
     elif args.list:
+        consoler.info(' list opr begin.')
         chain = args.list
         opr.list_chain_resolve(chain)
+
     elif args.chainca:
         chain_dir = args.chainca[0]
         ca.generate_root_ca(chain_dir)
@@ -109,6 +115,9 @@ def cmd_view():
         agency_dir = args.sdkca[1]
         ca.generator_sdk_ca(agency_dir)
         os.system('mv ' + agency_dir + '/sdk ' + sdk_dir + '/sdk')
+
+        consoler.info(' list opr end.')
+
     # elif args.envircheck:
     #    chain = args.envircheck
     #    check_environment.check_chain_resolve(chain)
@@ -118,7 +127,7 @@ def cmd_view():
         opr.echo_ansible(echo_list)
         consoler.info(' echo opr end.')
     else:
-        consoler.info('\t[ERROR] invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
+        consoler.info('\t [ERROR] invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
     return 0
 
 

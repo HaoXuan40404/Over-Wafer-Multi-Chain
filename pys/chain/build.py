@@ -28,23 +28,30 @@ def chain_build(cfg, fisco_path):
 
     logger.debug('build cfg is %s, fisco is %s ', cfg, fisco_path)
 
+    # 判断fisco-bcos路径是否正确
+    if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
+        consoler.info('\t [ERROR] fisco-bcos is not exist, path is %s', fisco_path)
+        return 
+
     path.set_fiso_path(fisco_path)
 
     cc_dict = {}
     if os.path.exists(cfg) and os.path.isfile(cfg):
 
-        consoler.info('config is %s, fisco bcos is %s' % (cfg, fisco_path))
+        consoler.info('\t config file is %s, fisco bcos path is %s' % (cfg, fisco_path))
         # 单个配置文件解析
         try:
             cc = parser.do_parser(cfg)
+            consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
             key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
             cc_dict[key] = cc
         except Exception as e:
-            print('parser %s failed , skip ...' % cfg)
+            consoler.info('\t [ERROR] invalid config format parser failed, config is %s, exp is %s', cfg, e)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
-        consoler.info('config dir is %s, fisco bcos is %s' % (cfg, fisco_path))
+
+        consoler.info('\t config dir is %s, fisco bcos path is %s' % (cfg, fisco_path))
         # 指定文件夹, 解析文件夹中的所有配置文件, 解析失败则跳过
         for c in os.listdir(cfg):
             try:
@@ -57,16 +64,17 @@ def chain_build(cfg, fisco_path):
                     logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
                     ).get_id(), cc.get_chain().get_version())
                     cc_dict = {}
+                    consoler.info('\t [ERROR] chain_id %s and chain_version %s config repeat.')
                     break
                 else:
+                    consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
                     cc_dict[key] = cc
             except Exception as e:
-                print('parser %s failed, skip ...' % c)
+                consoler.info('\t [ERROR] invalid config format parser failed, config is %s, exp is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
 
     else:
-        # 指定的参数即不是目录也不是配置
-        consoler.info('invalid cfg, cfg is %s', cfg)
+        consoler.info('\t [ERROR] invalid config, neither directory nor file, config is %s', c)
 
     logger.info('cc_dict is %s', cc_dict)
 
@@ -94,10 +102,16 @@ def build_cfg(cc):
                            cc.get_chain().get_version())
     port = cc.get_port()
     chain = cc.get_chain()
+
+    consoler.info('\t\t build install package for chain %s version %s', cc.get_chain().get_id(), cc.get_chain().get_version())
+
     # 创建文件夹
     if os.path.isdir(dir):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
+        
+        consoler.info('\t\t [ERROR] chain of version already exist.')
+        
         return
     os.makedirs(dir)
 
@@ -132,9 +146,12 @@ def build_cfg(cc):
                             ('/%s/node%d/' % (node.get_host_ip(), index)))
 
         logger.info('build end ok.')
+        consoler.info('\t\t build install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
 
     except Exception as e:
         logger.warn('build end exception, e is %s', e)
+        consoler.info('\t\t build install package for chain %s version %s failed, exp is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
+
         temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):
             shutil.rmtree(dir)
