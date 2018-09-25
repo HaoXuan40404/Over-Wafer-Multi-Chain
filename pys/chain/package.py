@@ -31,16 +31,20 @@ class Ver:
 
     def clear(self):
         self.pkg_list = []
+    
+    def exist(self):
+        dir = data.package_dir(self.chain_id, self.chain_version)
+        return os.path.exists(dir)
 
     def load(self):
 
         self.clear()
-        dir = data.package_dir(self.chain_id, self.chain_version)
-        if not os.path.exists(dir):
-            logger.info('dir not exist, chain_id is %s, chain_version is %s, dir is %s',
-                        self.chain_id, self.chain_version, dir)
+        if not self.exist():
+            logger.warn('dir not exist, chain_id is %s, chain_version is %s',
+                        self.chain_id, self.chain_version)
             return
-
+        
+        dir = data.package_dir(self.chain_id, self.chain_version)
         logger.debug('load begin, chain_id is %s, chain_version is %s, dir is %s',
                      self.chain_id, self.chain_version, dir)
 
@@ -76,16 +80,20 @@ class Package:
     
     def clear(self):
         self.ver_list = []
+    
+    def exist(self):
+        dir = data.package_chain_dir(self.chain_id)
+        return os.path.exists(dir)
 
     def load(self):
         self.clear()
 
-        dir = data.package_chain_dir(self.chain_id)
-        if not os.path.exists(dir):
-            logger.info('dir not exist, chain_id is %s, dir is %s',
-                        self.chain_id, dir)
+        if not self.exist():
+            logger.warn('dir not exist, chain_id is %s',
+                        self.chain_id)
             return
-        
+
+        dir = data.package_chain_dir(self.chain_id)
         logger.info('load begin, chain_id is %s, dir is %s',
                      self.chain_id, dir)
         

@@ -2,30 +2,6 @@
 
 module_name="install.sh"
 
-# uname -v > /dev/null 2>&1 || { echo >&2 "ERROR - ${myname} use 'uname' to identify the platform."; exit 1; }
-# case $(uname -s) in 
-#   Darwin)
-#       ;;
-#   Linux)
-#            if [ ! -f "/etc/os-release" ];then
-#                   { echo >&2 "ERROR - Unsupported or unidentified Linux distro."; exit 1; }
-#            fi
-#            DISTRO_NAME=$(. /etc/os-release; echo $NAME)
-#            case $DISTRO_NAME in
-#                    Ubuntu*)
-#                        ;;
-#                    CentOS*)
-#                        ;;
-#                    Oracle*) 
-#                        ;;
-#                     *)
-#                        ;;.
-#             esac
-#       ;;
-#   *)
-#       ;;
-#   esac
-
 function dependencies_install() 
 {
     local myname=$1
@@ -39,35 +15,12 @@ function dependencies_install()
     case $(uname -s) in 
 
     #------------------------------------------------------------------------------
-    # macOS
-    #------------------------------------------------------------------------------
-    Darwin)
-        case $(sw_vers -productVersion | awk -F . '{print $1"."$2}') in
-            *)
-                /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-                brew install dos2unix
-                brew install leveldb
-                brew install gettext
-                brew link --force gettext
-                brew install cmake
-                brew install libmicrohttpd 
-                brew install miniupnpc
-                brew install openssl
-                brew upgrade openssl
-                brew link --force openssl
-
-            ;;
-        esac #case $(sw_vers
-
-        ;; #Darwin)
-        
-    #------------------------------------------------------------------------------
     # Linux
     #------------------------------------------------------------------------------
     Linux)
 
         if [ ! -f "/etc/os-release" ];then
-            error_message "Unsupported or unidentified Linux distro."
+            { echo "ERROR - Unsupported or unidentified Linux distro."; exit 1; }
         fi
 
         DISTRO_NAME=$(. /etc/os-release; echo $NAME)
@@ -80,11 +33,8 @@ function dependencies_install()
             Ubuntu*)
 
                     sudo apt-get -y install lsof
-                    sudo apt-get -y install crudini
                     sudo apt-get -y install gettext
                     sudo apt-get -y install bc
-                    sudo apt-get -y install cmake
-                    sudo apt-get -y install git
                     sudo apt-get -y install openssl
                     sudo apt-get -y install build-essential
                     sudo apt-get -y install libcurl4-openssl-dev libgmp-dev
@@ -102,13 +52,10 @@ function dependencies_install()
 
                     sudo yum -y install bc
                     sudo yum -y install gettext
-                    sudo yum -y install cmake3
-                    sudo yum -y install git gcc-c++
                     sudo yum -y install openssl openssl-devel
                     sudo yum -y install leveldb-devel curl-devel 
                     sudo yum -y install libmicrohttpd-devel gmp-devel 
                     sudo yum -y install lsof
-                    sudo yum -y install crudini
                     sudo yum -y install libuuid-devel
                     sudo yum -y install  vim-common
 
@@ -121,12 +68,9 @@ function dependencies_install()
                     sudo yum -y install lsof
                     sudo yum -y install bc
                     sudo yum -y install gettext
-                    sudo yum -y install cmake3
-                    sudo yum -y install git gcc-c++
                     sudo yum -y install openssl openssl-devel
                     sudo yum -y install leveldb-devel curl-devel 
                     sudo yum -y install libmicrohttpd-devel gmp-devel 
-                    sudo yum -y install crudini
                     sudo yum -y install libuuid-devel
 
                 ;;
@@ -134,7 +78,7 @@ function dependencies_install()
     # Other Linux
     #------------------------------------------------------------------------------
             *)
-                error_message "Unsupported Linux distribution: $DISTRO_NAME."
+                { echo "ERROR - Unsupported Linux distribution: $DISTRO_NAME."; exit 1; }
                 ;;
         esac # case $DISTRO_NAME
 
@@ -145,7 +89,7 @@ function dependencies_install()
     #------------------------------------------------------------------------------
     *)
         #other
-        error_message "Unsupported or unidentified operating system."
+        { echo "ERROR - Unsupported or unidentified OS."; exit 1; }
         ;;
     esac
 }

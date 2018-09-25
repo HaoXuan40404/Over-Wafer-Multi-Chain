@@ -42,9 +42,9 @@ class Meta:
         return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
 
     def write_to_file(self):
-        if len(self.nodes) == 0:
-            logger.debug('nodes empty, write return')
-            return
+        #if len(self.nodes) == 0:
+        #    logger.debug('nodes empty, write return')
+        #    return
         if not data.meta_dir_exist(self.chain_id):
             data.create_meta_dir(self.chain_id)
         meta_file = data.meta_dir(self.chain_id) + '/meta.json'
@@ -60,14 +60,15 @@ class Meta:
     def load_from_file(self):
         self.clear()
         if not os.path.exists(data.meta_dir(self.chain_id) + '/meta.json'):
-            logger.info('meta.json not exist, chain_id is ' + self.chain_id)
-        with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
-            jsondata = json.load(f)
-            if jsondata.has_key('nodes'):
-                for v in jsondata['nodes'].values():
-                    mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
-                    logger.info('load from meta.json, meta node is %s', mn)
-                    self.append(mn)
+            logger.warn('meta.json not exist, chain_id is ' + self.chain_id)
+        else:
+            with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
+                jsondata = json.load(f)
+                if jsondata.has_key('nodes'):
+                    for v in jsondata['nodes'].values():
+                        mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
+                        logger.info('load from meta.json, meta node is %s', mn)
+                        self.append(mn)
 
 def list(chains):
 

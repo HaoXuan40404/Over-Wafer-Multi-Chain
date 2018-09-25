@@ -43,8 +43,10 @@ def cmd_view():
                         help='version of multi-chain')
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
-    parser.add_argument('--list', nargs='+', metavar=('all or chain_id or',
-                                                      'chain_id_1 chain_id_2'), help='Output =>  list all pkg info.')
+    parser.add_argument('--pkg_list', nargs='+', metavar=('all or chain_id or',
+                                                      'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
+    parser.add_argument('--pub_list', nargs='+', metavar=('all or chain_id or',
+                                                      'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
     parser.add_argument('--check', nargs='+', metavar=('all or chain_id or',
@@ -97,12 +99,16 @@ def cmd_view():
         chain = args.monitor
         opr.monitor_chain_resolve(chain)
         consoler.info(' monitor opr end.')
-    elif args.list:
-        consoler.info(' list opr begin.')
-        chain = args.list
-        opr.list_chain_resolve(chain)
-        consoler.info(' list opr end.')
-
+    elif args.pub_list:
+        consoler.info(' pub_list opr begin.')
+        chain = args.pub_list
+        opr.pub_list_resolve(chain)
+        consoler.info(' pub_list opr end.')
+    elif args.pkg_list:
+        consoler.info(' pkg_list opr begin.')
+        chain = args.pkg_list
+        opr.pkg_chain_resolve(chain, True)
+        consoler.info(' pkg_list opr end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
