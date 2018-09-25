@@ -9,6 +9,12 @@ from pys.chain import package
 
 
 def start_chain_resolve(chain):
+    """[解析命令行, 批量启动节点]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id:host_ip]
+    """
+
     if chain[0] == 'all':
         dir = data.meta_dir_base()
         for chain_id in os.listdir(dir):
@@ -21,20 +27,26 @@ def start_chain_resolve(chain):
                     start_server(chain_get[0])
                 else:
                     consoler.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('start_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
                     ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('start_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('start_chain_resolve error, %s is not a valid string',chain_get[0])
 
             else:
-                consoler.error('start_chain_resolve type error, chain[' + i + '] =>' + chain[i])
-                logger.error('start_chain_resolve type error, chain[' + i + '] =>' + chain[i])
+                consoler.error('start_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                logger.error('start_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
 def stop_chain_resolve(chain):
+    """[解析命令行, 批量停止节点]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id:host_ip]
+    """
+
     if chain[0] == 'all':
         consoler.info('You want to stop all node,are you sure? yes or no? y/n')
         choice = raw_input('Your choice is: ')
@@ -53,20 +65,25 @@ def stop_chain_resolve(chain):
                     stop_server(chain_get[0])
                 else:
                     consoler.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('stop_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
                     ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('stop_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
-
+                    logger.error('stop_chain_resolve error, %s is not a valid string',chain_get[0])
             else:
-                consoler.error('stop_chain_resolve type error, chain[' + i + '] =>' + chain[i])
-                logger.error('stop_chain_resolve type error, chain[' + i + '] =>' + chain[i])
+                consoler.error('stop_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                logger.error('stop_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
 def check_chain_resolve(chain):
+    """[解析命令行, 批量检查节点启动情况]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id:host_ip]
+    """
+    
     if chain[0] == 'all':
         dir = data.meta_dir_base()
         for chain_id in os.listdir(dir):
@@ -79,20 +96,25 @@ def check_chain_resolve(chain):
                     check_server(chain_get[0])
                 else:
                     consoler.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('check_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
                     ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('check_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('check_chain_resolve error, %s is not a valid string',chain_get[0])
 
             else:
-                consoler.error('check_chain_resolve type error, chain[' + i + '] =>' + chain[i])
-                logger.error('check_chain_resolve type error, chain[' + i + '] =>' + chain[i])
+                consoler.error('check_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                logger.error('check_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
 def monitor_chain_resolve(chain):
+    """[解析命令行, 批量检查节点运行情况]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id:host_ip]
+    """
     if chain[0] == 'all':
         dir = data.meta_dir_base()
         for chain_id in os.listdir(dir):
@@ -105,20 +127,26 @@ def monitor_chain_resolve(chain):
                     monitor_server(chain_get[0])
                 else:
                     consoler.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('monitor_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
                     ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
                     consoler.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
-                    logger.error('monitor_chain_resolve, %s:%s is not a valid string',chain_get[0],chain_get[1])
+                    logger.error('monitor_chain_resolve error, %s is not a valid string',chain_get[0])
 
             else:
-                consoler.error('monitor_chain_resolve type error, chain[' + i + '] =>' + chain[i])
-                logger.error('monitor_chain_resolve type error, chain[' + i + '] =>' + chain[i])
+                consoler.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                logger.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
 
 
 def list_chain_resolve(chain):
+    """[解析命令行, 列出所有节点]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id]
+    """
+
     if chain[0] == 'publish':
         chain = chain[1:]
         meta.list(chain)
@@ -138,6 +166,12 @@ def echo_ansible(server):
 
 
 def start_server(chain_id):
+    """[启动对应链的节点]
+    
+    Arguments:
+        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的start.sh]
+    """
+
     mm = meta.Meta(chain_id)
     logger.info('start action, chain_id is ' + chain_id)
     mm.load_from_file()
@@ -147,6 +181,12 @@ def start_server(chain_id):
 
 
 def stop_server(chain_id):
+    """[停止对应链的节点]
+    
+    Arguments:
+        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的stop.sh]
+    """
+
     mm = meta.Meta(chain_id)
     logger.info('stop action, chain_id is ' + chain_id)
     mm.load_from_file()
@@ -156,6 +196,12 @@ def stop_server(chain_id):
 
 
 def check_server(chain_id):
+    """[检查对应链的节点]
+    
+    Arguments:
+        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的check.sh]
+    """
+
     mm = meta.Meta(chain_id)
     logger.info('check action, chain_id is ' + chain_id)
     mm.load_from_file()
@@ -165,6 +211,12 @@ def check_server(chain_id):
 
 
 def monitor_server(chain_id):
+    """[检查对应链的节点的运行情况]
+    
+    Arguments:
+        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的monitor.sh]
+    """
+    
     mm = meta.Meta(chain_id)
     logger.info('monitor_server action, chain_id is ' + chain_id)
     mm.load_from_file()
