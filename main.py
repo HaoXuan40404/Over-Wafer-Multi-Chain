@@ -101,12 +101,12 @@ def cmd_view():
         consoler.info(' monitor opr end.')
     elif args.pub_list:
         consoler.info(' pub_list opr begin.')
-        chain = args.list
+        chain = args.pub_list
         opr.pub_list_resolve(chain)
         consoler.info(' pub_list opr end.')
     elif args.pkg_list:
         consoler.info(' pkg_list opr begin.')
-        chain = args.list
+        chain = args.pkg_list
         opr.pkg_chain_resolve(chain, True)
         consoler.info(' pkg_list opr end.')
     elif args.chainca:
