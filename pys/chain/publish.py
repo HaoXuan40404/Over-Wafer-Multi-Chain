@@ -29,7 +29,7 @@ def publish_chain(chains):
         chain_id = chain[0]
         chain_version = chain[1]
         pchains.append(Chain(chain_id, chain_version))
-        consoler.info('\t append publish chain, chain_id %s:chain_version %s', chain_id, chain_version)
+        # consoler.info('\t append publish chain, chain_id %s:chain_version %s', chain_id, chain_version)
         logger.debug('chain_id is %s, chain_version is %s', chain_id, chain_version)
             
     if len(pchains) != 0:
@@ -57,10 +57,12 @@ def publish_server(chain_id, chain_version):
         if utils.valid_ip(host):
             # 后续要添加这里的推送是否成功的判断
             ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
-            ansible.copy_module(host, dir + '/' + host + '/',
+            ret = ansible.copy_module(host, dir + '/' + host + '/',
                                 ansible.get_dir() + '/' + chain_id)
-            mm.append(meta.MetaNode(chain_version, host, 0, 0, 0))
+            if ret:
+                mm.append(meta.MetaNode(chain_version, host, 0, 0, 0))
         else:
             logger.debug('skip, not invalid host_ip ' + dir)
+    consoler.info('\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
     # 将部署信息保存
     mm.write_to_file()
