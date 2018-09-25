@@ -2,7 +2,7 @@
 
 import os
 from pys import utils
-from pys.log import logger
+from pys.log import logger, consoler
 from pys.chain import data
 
 class Ver:
@@ -98,7 +98,7 @@ class Package:
 
 def list(chains, is_host):
     if len(chains) == 0:
-        print('chains empty.')
+        consoler.info('chains empty.')
 
     logger.info('load, chains is %s, is_host is %s', chains, is_host)
 
@@ -116,11 +116,11 @@ def list(chains, is_host):
             pkg_list.append(p)
 
     for p in pkg_list:
-        print('chain_id => %s' % p.get_chain_id())
+        consoler.info('chain_id => %s' % p.get_chain_id())
         for v in p.get_version_list():
-            print('\t %s ' % v.get_chain_version())
+            consoler.info('\t %s ' % v.get_chain_version())
             if isinstance(is_host, 'bool') and is_host:
                 for h in v.get_pkg_list():
-                    print('\t\t %s ' % h)
+                    consoler.info('\t\t %s ' % h)
 
     logger.info('load end')

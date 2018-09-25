@@ -101,22 +101,28 @@ def cmd_view():
         consoler.info(' list opr begin.')
         chain = args.list
         opr.list_chain_resolve(chain)
+        consoler.info(' list opr end.')
 
     elif args.chainca:
+        consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
         ca.generate_root_ca(chain_dir)
+        consoler.info(' chain cert end.')
     elif args.agencyca:
+        consoler.info(' agency cert begin.')
         agency_dir = args.agencyca[0]
         chain_dir = args.agencyca[1]
         agency_name = args.agencyca[2]
         ca.generator_agent_ca(agency_dir, chain_dir, agency_name)
+        consoler.info(' agency cert end.')
     elif args.sdkca:
+        consoler.info(' sdk cert begin.')
         sdk_dir = args.sdkca[0]
         agency_dir = args.sdkca[1]
         ca.generator_sdk_ca(agency_dir)
         os.system('mv ' + agency_dir + '/sdk ' + sdk_dir + '/sdk')
 
-        consoler.info(' list opr end.')
+        consoler.info(' sdk cert end.')
 
     # elif args.envircheck:
     #    chain = args.envircheck
@@ -127,7 +133,7 @@ def cmd_view():
         opr.echo_ansible(echo_list)
         consoler.info(' echo opr end.')
     else:
-        consoler.info('\t [ERROR] invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
+        consoler.error('invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
     return 0
 
 

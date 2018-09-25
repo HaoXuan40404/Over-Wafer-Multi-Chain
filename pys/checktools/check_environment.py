@@ -3,7 +3,7 @@ import os
 from pys import ansible, utils
 from pys.chain import data
 from pys.chain import meta
-from pys.log import logger
+from pys.log import logger, consoler
 
 
 def check_chain_resolve(chain):
@@ -18,17 +18,17 @@ def check_chain_resolve(chain):
                 if utils.valid_string(chain_get[0]):
                     check_environment(chain_get[0])
                 else:
-                    print('chain_resolve error')
+                    consoler.info('chain_resolve error')
                     logger.error('error chain_resolve')
             elif len(chain_get) == 2:
                 if utils.valid_string(chain_get[0]):
                     ansible.environment_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                 else:
-                    print('chain_resolve error')
+                    consoler.info('chain_resolve error')
                     logger.error('error chain_resolve')
 
             else:
-                print('chain_resolve error')
+                consoler.info('chain_resolve error')
                 logger.error('error chain_resolve')
 
 
