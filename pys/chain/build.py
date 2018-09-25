@@ -30,7 +30,7 @@ def chain_build(cfg, fisco_path):
 
     # 判断fisco-bcos文件是否存在
     if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
-        consoler.info('\t [ERROR] fisco-bcos is not exist, path is %s', fisco_path)
+        consoler.error('fisco-bcos is not exist, path is %s', fisco_path)
         return 
 
     path.set_fiso_path(fisco_path)
@@ -38,15 +38,15 @@ def chain_build(cfg, fisco_path):
     cc_dict = {}
     if os.path.exists(cfg) and os.path.isfile(cfg):
 
-        consoler.info('\t config file is %s, fisco bcos path is %s' % (cfg, fisco_path))
+        consoler.info('config file is %s, fisco bcos path is %s' % (cfg, fisco_path))
         # 单个配置文件解析
         try:
             cc = parser.do_parser(cfg)
-            consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
+            consoler.info('parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
             key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
             cc_dict[key] = cc
         except Exception as e:
-            consoler.info('\t [ERROR] invalid config format parser failed, config is %s, exp is %s', cfg, e)
+            consoler.error('invalid config format parser failed, config is %s, exp is %s', cfg, e)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
@@ -64,17 +64,17 @@ def chain_build(cfg, fisco_path):
                     logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
                     ).get_id(), cc.get_chain().get_version())
                     cc_dict = {}
-                    consoler.info('\t [ERROR] chain_id %s and chain_version %s config repeat.')
+                    consoler.error('chain_id %s and chain_version %s config repeat.')
                     break
                 else:
                     consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
                     cc_dict[key] = cc
             except Exception as e:
-                consoler.info('\t [ERROR] skip config %s, invalid config format parser failed, exp is %s', c, e)
+                consoler.error('skip config %s, invalid config format parser failed, exp is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
 
     else:
-        consoler.info('\t [ERROR] invalid config, neither directory nor file, config is %s', cfg)
+        consoler.error('invalid config, neither directory nor file, config is %s', cfg)
 
     logger.info('cc_dict is %s', cc_dict)
 
@@ -110,7 +110,7 @@ def build_cfg(cc):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
         
-        consoler.info('\t\t [ERROR] build install package for chain %s version %s failed, data dir aleady exist', cc.get_chain().get_id(), cc.get_chain().get_version())
+        consoler.error(' build install package for chain %s version %s failed, data dir aleady exist', cc.get_chain().get_id(), cc.get_chain().get_version())
         
         return
     os.makedirs(dir)
