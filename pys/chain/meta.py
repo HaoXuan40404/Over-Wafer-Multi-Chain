@@ -20,7 +20,7 @@ class MetaNode:
         self.channel_port = channel_port
 
     def __repr__(self):
-        return 'host %s, versionk %s' % (self.host_ip, self.version)
+        return 'host %s, version %s' % (self.host_ip, self.version)
 class Meta:
     def __init__(self, chain_id):
         self.chain_id = chain_id

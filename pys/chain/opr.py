@@ -139,7 +139,7 @@ def pub_list_resolve(chains):
             meta_list.append(m)
 
     for m in meta_list:
-        consoler.info(' => chain_id is %s' % m.get_chain_id())
+        consoler.info(' => chain is %s' % m.get_chain_id())
         nodes = m.get_nodes()
         for node in nodes:
             consoler.info('\t node => %s' % node)
