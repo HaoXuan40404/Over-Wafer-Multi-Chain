@@ -17,7 +17,6 @@ from pys.chain import publish
 from pys.checktools import check_environment 
 
 
-
 def init():
     # 获取当前目录, 用来初始化各个模块的依赖路径
     pwd = os.getcwd()
@@ -57,8 +56,8 @@ def cmd_view():
                                                        'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
-    parser.add_argument('--envircheck', nargs='+', metavar=('all or chain_id or',
-                                                            'chain_id:host_ip'), help='Output => check build environment of server of the chain.')
+    # parser.add_argument('--envircheck', nargs='+', metavar=('all or chain_id or',
+    #                                                         'chain_id:host_ip'), help='Output => check build environment of server of the chain.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',), 
                                                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
