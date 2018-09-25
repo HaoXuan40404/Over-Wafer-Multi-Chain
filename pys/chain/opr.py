@@ -166,12 +166,12 @@ def pkg_chain_resolve(chains, host_detail = True):
             pkg_list.append(p)
 
     for p in pkg_list:
-        consoler.info(' => chain_id is %s' % p.get_chain_id())
+        consoler.info(' => chain is %s' % p.get_chain_id())
         for v in p.get_version_list():
-            consoler.info(' \t version : %s' % v.get_chain_version())
-            if isinstance(host_detail, 'bool') and host_detail:
+            consoler.info(' \t version is %s' % v.get_chain_version())
+            if isinstance(host_detail, bool) and host_detail:
                 for h in v.get_pkg_list():
-                    consoler.info('\t\t package ' % h)
+                    consoler.info('\t\t package => %s' % h)
 
     logger.info('load end')
 
