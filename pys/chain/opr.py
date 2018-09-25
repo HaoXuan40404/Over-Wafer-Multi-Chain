@@ -3,6 +3,7 @@ import os
 from pys import ansible, utils
 from pys.chain import meta
 from pys.log import logger
+from pys.log import consoler
 from pys.chain import data
 from pys.chain import package
 
@@ -130,7 +131,10 @@ def echo_ansible(server):
         ansible.echo_module('all')
     else:
         for i in range(len(server)):
-            ansible.echo_module(server[i])
+            if utils.valid_ip(server[i]):
+                ansible.echo_module(server[i])
+            else:
+                consoler.info('\t [ERROR] skip host %s, invalid ip format.', server[i])
 
 
 def start_server(chain_id):

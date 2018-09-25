@@ -33,7 +33,7 @@ def chain_build(cfg, fisco_path):
     cc_dict = {}
     if os.path.exists(cfg) and os.path.isfile(cfg):
 
-        consoler.info('dir is %s, fisco bcos is %s' % (cfg, fisco_path))
+        consoler.info('config is %s, fisco bcos is %s' % (cfg, fisco_path))
         # 单个配置文件解析
         try:
             cc = parser.do_parser(cfg)
@@ -44,6 +44,7 @@ def chain_build(cfg, fisco_path):
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
+        consoler.info('config dir is %s, fisco bcos is %s' % (cfg, fisco_path))
         # 指定文件夹, 解析文件夹中的所有配置文件, 解析失败则跳过
         for c in os.listdir(cfg):
             try:
