@@ -124,11 +124,11 @@ def do_parser(cfg):
 
     chain_id = cf.get('chain', 'chainid')
     if not utils.valid_string(chain_id):
-        raise Exception('invalid chain id, ', chain_id)
+        raise Exception('chain_id empty.')
 
     chain_version = cf.get('chain', 'version')
     if not utils.valid_string(chain_id):
-        raise Exception('invalid chain version, ', chain_version)
+        raise Exception('chain_version empty.')
     cc.set_chain(Chain(chain_id, chain_version))
 
     rpc_port = cf.getint('ports', 'rpc_port')
