@@ -8,7 +8,7 @@ import time
 
 from pys import path
 from pys.chain import data
-from pys.log import logger
+from pys.log import logger, consoler
 
 class MetaNode:
 
@@ -72,7 +72,7 @@ class Meta:
 def list(chains):
 
     if len(chains) == 0:
-        print('chains empty!')
+        consoler.info('chains empty!')
     
     logger.info('list begin, chains is %s', chains)
     meta_list = []
@@ -89,9 +89,9 @@ def list(chains):
             meta_list.append(m)
 
     for m in meta_list:
-        print('chain_id is %s' % m.get_chain_id())
+        consoler.info('chain_id is %s' % m.get_chain_id())
         for index in range(len(m)):
-            print('\t => %s' % m[index])
+            consoler.info('\t => %s' % m[index])
 
     logger.info('list end.')
 

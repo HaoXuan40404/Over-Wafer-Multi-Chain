@@ -42,7 +42,7 @@ def mkdir_module(ip, dest):
     logger.debug('mkdir action , status %s, output %s' % (status, result))
    
     if status:
-        logger.warn('mkdir action failed, status %s' % (status))
+        logger.warn('mkdir action failed, status %s, result %s ' % (status, result))
     elif not (result.find('SUCCESS') + 1):
         logger.warn('mkdir action failed, output %s' % (result))
     else:
@@ -97,6 +97,7 @@ def build_module(ip, dest):
    
     if status:
         logger.warn('build action failed, status %s' % (status))
+
     elif not (result.find('SUCCESS') + 1):
         logger.warn('build action failed, output %s' % (result))
     else:
@@ -105,34 +106,52 @@ def build_module(ip, dest):
 
 
 def start_module(ip, dest):
-    '''
-    start module
-    '''
+    """远程启动节点, 调用的是节点的start.sh
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 远程调用目录
+    
+    Returns:
+        bool -- 成功返回Ture, 否则返回False
+    """
+
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh start ' + ip + ' ' + dest)
     logger.debug('start action , status %s, output %s' % (status, result))
-   
+    
     if status:
         logger.warn('start action failed, status %s' % (status))
+        consoler.info('\t\t\t ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('start action failed, output %s' % (result))
+        consoler.info('\t\t\t ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
         return True
     return False
 
 
 def stop_module(ip, dest):
-    '''
-    stop module
-    '''
+    """远程停止节点, 调用的是节点的stop.sh
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 远程调用目录
+    
+    Returns:
+        bool -- 成功返回Ture, 否则返回False
+    """
+
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh stop ' + ip + ' ' + dest)
     logger.debug('stop action , status %s, output %s' % (status, result))
-   
+
     if status:
         logger.warn('stop action failed, status %s' % (status))
+        consoler.info('\t\t\t ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('stop action failed, output %s' % (result))
+        consoler.info('\t\t\t ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
         return True
     return False
@@ -153,13 +172,17 @@ def check_module(ip, dest):
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh check ' + ip + ' ' + dest)
     logger.debug('check action , status %s, output %s' % (status, result))
-   
+    
     if status:
         logger.warn('check action failed, status %s' % (status))
+        consoler.info('\t\t\t ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         logger.warn('check action failed, output %s' % (result))
+        consoler.info('\t\t\t ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
+        consoler.info('\t\t\t ansible check opr success, result is \n%s.', result)
         return True
+    
     return False
 
 
@@ -175,10 +198,10 @@ def echo_module(ip, msg='HelloWorld!'):
     Returns:
         [bool] -- ansible正确调用echo返回True, 否则False.
     """
+    
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh echo ' + ip + ' ' + msg)
     logger.debug('echo action , status %s, output %s' % (status, result))
-   
     if status:
         consoler.info('\t\t\t [ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
@@ -197,7 +220,7 @@ def monitor_module(ip, dest):
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
     logger.debug('monitor action , status %s, output %s' % (status, result))
-   
+    consoler.info(result)
     if status:
         consoler.info('\t[ERROR] ansible echo opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
@@ -217,7 +240,7 @@ def environment_module(ip, dest):
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh environment ' + ip + ' ' + dest)
     logger.debug('environment action , status %s, output %s' % (status, result))
-   
+    consoler.info(result)
     if status:
         logger.warn('environment action failed, status %s' % (status))
     elif not (result.find('SUCCESS') + 1):
