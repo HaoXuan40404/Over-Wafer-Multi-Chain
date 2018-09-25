@@ -178,7 +178,7 @@ def pub_list_resolve(chains):
     for m in meta_list:
         consoler.info(' => chain is %s' % m.get_chain_id())
         nodes = m.get_nodes()
-        for node in nodes:
+        for node in nodes.itervalues():
             consoler.info('\t node => %s' % node)
 
     logger.info('list end.')
