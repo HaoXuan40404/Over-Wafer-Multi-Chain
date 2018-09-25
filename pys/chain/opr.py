@@ -126,7 +126,7 @@ def pub_list_resolve(chains):
     consoler.info(' chains is %s' % chains)
 
     meta_list = []
-    if chains[0].trim() == 'all':
+    if chains[0] == 'all':
         dir = data.meta_dir_base()
         for chain_id in os.listdir(dir):
             m = Meta(chain_id)
