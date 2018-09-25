@@ -125,7 +125,6 @@ def list_chain_resolve(chain):
         package.list(chain, False)
 
 
-
 def echo_ansible(server):
     if server[0] == 'all':
         ansible.echo_module('all')

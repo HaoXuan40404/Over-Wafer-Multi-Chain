@@ -35,13 +35,13 @@ def agent_ca_exist():
 
 def generate_root_ca(dir):
 
-    os.environ['scripts'] = path.get_path() + '/scripts/'
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['out'] = dir
     os.system('bash $scripts/generate_chain_cert.sh -o $out')
 
 def generator_agent_ca(dir, ca, agent):
 
-    os.environ['scripts'] = path.get_path() + '/scripts/'
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['out'] = dir
     os.environ['ca'] = ca
     os.environ['agent'] = agent
@@ -49,7 +49,7 @@ def generator_agent_ca(dir, ca, agent):
 
 def generator_node_ca(dir, node, agent):
 
-    os.environ['scripts'] = path.get_path() + '/scripts/'
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['agent'] = agent
     os.environ['node'] = node
     os.environ['out']= dir
@@ -57,5 +57,5 @@ def generator_node_ca(dir, node, agent):
 
 def generator_sdk_ca(dir):
     os.environ['out'] = dir
-    os.environ['scripts'] = path.get_path() + '/scripts/'
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.system('bash $scripts/generate_sdk_cert.sh -d $out')
