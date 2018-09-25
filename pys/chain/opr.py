@@ -120,7 +120,7 @@ def list_chain_resolve(chain):
     else:
         package.list(chain, False)
 
-def echo_ansible(server):
+def (server):
     if server[0] == 'all':
         ansible.echo_module('all')
     else:
