@@ -34,14 +34,13 @@ class Ver:
     
     def exist(self):
         dir = data.package_dir(self.chain_id, self.chain_version)
-        return os.path.exists(dir):
+        return os.path.exists(dir)
 
     def load(self):
 
         self.clear()
-        dir = data.package_dir(self.chain_id, self.chain_version)
-        if not os.path.exists(dir):
-            logger.info('dir not exist, chain_id is %s, chain_version is %s, dir is %s',
+        if not self.exist():
+            logger.warn('dir not exist, chain_id is %s, chain_version is %s, dir is %s',
                         self.chain_id, self.chain_version, dir)
             return
 
@@ -88,9 +87,8 @@ class Package:
     def load(self):
         self.clear()
 
-        dir = data.package_chain_dir(self.chain_id)
-        if not os.path.exists(dir):
-            logger.info('dir not exist, chain_id is %s, dir is %s',
+        if not self.exist():
+            logger.warn('dir not exist, chain_id is %s, dir is %s',
                         self.chain_id, dir)
             return
         
