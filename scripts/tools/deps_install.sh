@@ -1,16 +1,9 @@
 #!/bin/bash
 
-module_name="install.sh"
-
-function dependencies_install() 
+function deps_install() 
 {
-    local myname=$1
-    if [ -z $myname ];then
-        myname=$module_name
-    fi
-
     # Check for 'uname' and abort if it is not available.
-    uname -v > /dev/null 2>&1 || { echo "ERROR - ${myname} use 'uname' to identify the platform."; exit 1; }
+    uname -v > /dev/null 2>&1 || { echo "ERROR - use 'uname' to identify the platform."; exit 1; }
 
     case $(uname -s) in 
 
@@ -28,7 +21,7 @@ function dependencies_install()
 
         case $DISTRO_NAME in
     #------------------------------------------------------------------------------
-    # Ubuntu  # At least 16.04
+    # Ubuntu 16.04
     #------------------------------------------------------------------------------
             Ubuntu*)
 
