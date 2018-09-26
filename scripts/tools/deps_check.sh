@@ -59,7 +59,7 @@ function openssl_version_check()
     OPENSSL_VER=$(openssl version 2>&1 | sed -n ';s/.*OpenSSL \(.*\)\.\(.*\)\.\([0-9]*\).*/\1\2\3/p;')
 
     if [ -z "$OPENSSL_VER" ];then
-        { echo  "failed to get openssl version, version is `openssl version`" ; exit 1}
+        { echo  "failed to get openssl version, version is `openssl version`" ; exit 1; }
     fi
 
     #openssl 1.0.2
