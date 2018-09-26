@@ -17,8 +17,7 @@ def valid_chain_id(chain_id):
     try: 
         int(chain_id)
         return True
-    except Exception as e: 
-        consoler.error('%s is not a valid chain_id', e)
+    except Exception as e:
         logger.error('%s is not a valid chain_id', e)
         return False
 

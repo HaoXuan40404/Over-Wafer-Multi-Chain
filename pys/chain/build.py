@@ -30,7 +30,7 @@ def chain_build(cfg, fisco_path):
 
     # 判断fisco-bcos文件是否存在
     if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
-        consoler.error('fisco-bcos is not exist, path is %s', fisco_path)
+        consoler.error(' fisco-bcos is not exist, path is %s', fisco_path)
         return 
 
     path.set_fiso_path(fisco_path)
@@ -43,9 +43,10 @@ def chain_build(cfg, fisco_path):
         try:
             cc = parser.do_parser(cfg)
             consoler.info('parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
-            if utils.valid_chain_id(cc.get_chain().get_id()):
-                key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
-                cc_dict[key] = cc
+            
+            key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
+            cc_dict[key] = cc
+
         except Exception as e:
             consoler.error('invalid config format parser failed, config is %s, exp is %s', cfg, e)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
@@ -58,18 +59,17 @@ def chain_build(cfg, fisco_path):
             try:
                 logger.debug('dir is %s, cfg is %s', cfg, c)
                 cc = parser.do_parser(cfg + '/' + c)
-                if utils.valid_chain_id(cc.get_chain().get_id()):
-                    key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
-                    # 配置重复
-                    if key in cc_dict:
-                        logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
-                        ).get_id(), cc.get_chain().get_version())
-                        cc_dict = {}
-                        consoler.error('chain_id %s and chain_version %s config repeat.')
-                        break
-                    else:
-                        consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
-                        cc_dict[key] = cc
+                key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
+                # 配置重复
+                if key in cc_dict:
+                    logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
+                    ).get_id(), cc.get_chain().get_version())
+                    cc_dict = {}
+                    consoler.error('chain_id %s and chain_version %s config repeat.')
+                    break
+                else:
+                    consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
+                    cc_dict[key] = cc
             except Exception as e:
                 consoler.error('skip config %s, invalid config format parser failed, exp is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
@@ -111,7 +111,7 @@ def build_cfg(cc):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
         
-        consoler.error(' build install package for chain %s version %s failed, data dir aleady exist', cc.get_chain().get_id(), cc.get_chain().get_version())
+        consoler.error(' build install package for chain %s version %s failed, data dir aleady exist.', cc.get_chain().get_id(), cc.get_chain().get_version())
         
         return
     os.makedirs(dir)

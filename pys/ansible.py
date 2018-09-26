@@ -51,9 +51,14 @@ def mkdir_module(ip, dest):
 
 
 def copy_module(ip, src, dest):
-    '''
-    cpoy module
-    '''
+    """使用ansible推送文件
+    
+    Arguments:
+        ip {string} -- 目录服务器
+        src {string} -- 推送的文件
+        dest {string} -- 目标服务器的目录
+    """
+
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
     logger.debug('copy action , status %s, output %s' % (status, result))
@@ -85,29 +90,9 @@ def unarchive_module(ip, src, dest):
         logger.warn('unarchive action failed, output %s' % (result))
         consoler.warn(' ansible unarchive opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     else:
+        consoler.info(' ansible unarchive opr success, host is %s, src is %s, dst is %s.', ip, src, dest)
         return True
     return False
-
-
-def build_module(ip, dest):
-    '''
-    build module
-    '''
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh build ' + ip + ' ' + dest)
-    logger.debug('build action , status %s, output %s' % (status, result))
-   
-    if status:
-        logger.warn('build action failed, status %s' % (status))
-        consoler.warn(' ansible build failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
-
-    elif not (result.find('SUCCESS') + 1):
-        logger.warn('build action failed, output %s' % (result))
-        consoler.warn(' ansible build failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
-    else:
-        return True
-    return False
-
 
 def start_module(ip, dest):
     """远程启动节点, 调用的是节点的start.sh
@@ -131,7 +116,7 @@ def start_module(ip, dest):
         logger.warn('start action failed, output %s' % (result))
         consoler.warn(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible start opr success, host is %s.', ip)
+        consoler.info(' ansible start opr success, host is %s, output is \n%s.', ip, result)
         return True
     return False
 
@@ -158,7 +143,7 @@ def stop_module(ip, dest):
         logger.warn('stop action failed, output %s' % (result))
         consoler.warn(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible stop opr success, host is %s.', ip)
+        consoler.info(' ansible stop opr success, host is %s, output is \n%s.', ip, result)
         return True
     return False
 
@@ -186,7 +171,7 @@ def check_module(ip, dest):
         logger.warn('check action failed, output %s' % (result))
         consoler.warn(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible check opr success, result is \n%s.', result)
+        consoler.info(' ansible check opr success, host is %s, output is \n%s.', ip, result)
         return True
     
     return False
@@ -213,26 +198,27 @@ def echo_module(ip, msg='HelloWorld!'):
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible echo opr failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible echo opr success, host is %s.', ip)
+        consoler.info(' ansible echo opr success, host is %s, output is \n%s', ip, result)
         return True
     return False
 
 
 def monitor_module(ip, dest):
-    '''monitor module
-        monitor chains status including' 
-        node messenge, blk_number, viewchange, node live or not, node on which server, peers'
-    '''
+    """调用ansible.sh monitor模块, 远程调用节点的monotor.sh脚本, 测试节点的运行情况.
+    Arguments:
+        ip {string} -- host ip
+        dest {string} -- 目录
+    """
+
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
     logger.debug('monitor action , status %s, output %s' % (status, result))
-    consoler.info(result)
     if status:
         consoler.error(' ansible monitor opr failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible monitor opr failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible monitor opr success, host is %s.', ip)
+        consoler.info(' ansible monitor opr success, host is %s, result is \n%s.', ip, result)
         return True
     return False
 

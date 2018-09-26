@@ -187,7 +187,7 @@ def pub_list(chains):
 
     logger.info('list end.')
 
-def pkg_chain(chains, host_detail = True):
+def pkg_list(chains, host_detail = True):
     """[列出生成链的安装包对应的节点]
     
     Arguments:
@@ -221,7 +221,7 @@ def pkg_chain(chains, host_detail = True):
             consoler.info(' \t version is %s' % v.get_chain_version())
             if isinstance(host_detail, bool) and host_detail:
                 for h in v.get_pkg_list():
-                    consoler.info('\t\t package => %s' % h)
+                    consoler.info(' \t\t pkg => %s' % h)
 
     logger.info('load end')
 
@@ -288,7 +288,7 @@ def check_server(chain_id):
 
 
 def monitor_server(chain_id):
-    """[检查对应链的节点的运行情况]
+    """[检查对应链的节点的运行情况, 调用monitor.sh脚本]
     
     Arguments:
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的monitor.sh]

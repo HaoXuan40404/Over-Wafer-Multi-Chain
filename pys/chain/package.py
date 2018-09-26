@@ -103,35 +103,3 @@ class Package:
             self.append(ver)
 
         logger.info('load end, len is %d', len(self.get_version_list()))
-
-def list(chains, is_host):
-    """列出一条链所有的安装包信息
-    """
-    
-    if len(chains) == 0:
-        consoler.info('chains empty.')
-
-    logger.info('load, chains is %s, is_host is %s', chains, is_host)
-
-    pkg_list = []
-    if chains[0] == "all":
-        dir = data.package_dir_base()
-        for chain_id in os.listdir(dir):
-            p = Package(chain_id)
-            p.load()
-            pkg_list.append(p)
-    else:
-        for chain_id in chains:
-            p = Package(chain_id)
-            p.load()
-            pkg_list.append(p)
-
-    for p in pkg_list:
-        consoler.info('chain_id => %s' % p.get_chain_id())
-        for v in p.get_version_list():
-            consoler.info('\t %s ' % v.get_chain_version())
-            if isinstance(is_host, 'bool') and is_host:
-                for h in v.get_pkg_list():
-                    consoler.info('\t\t %s ' % h)
-
-    logger.info('load end')
