@@ -115,3 +115,5 @@ function os_check()
         ;;
     esac
 }
+
+os_check

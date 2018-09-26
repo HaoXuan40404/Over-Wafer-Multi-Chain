@@ -79,3 +79,5 @@ function deps_check()
 
     # add more check here
 }
+
+deps_check

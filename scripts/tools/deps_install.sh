@@ -99,3 +99,5 @@ function deps_install()
         ;;
     esac
 }
+
+deps_install
