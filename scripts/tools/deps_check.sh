@@ -1,15 +1,5 @@
 #!/bin/bash
 
-# check user has sudo permission
-function request_sudo_permission() 
-{
-    sudo echo -n " "
-
-    if [ $? -ne 0 ]; then
-        { echo "ERROR - no sudo permission, please add youself in the sudoers."; exit 1; }
-    fi
-}
-
 #check if $1 is install
 function check_if_install()
 {

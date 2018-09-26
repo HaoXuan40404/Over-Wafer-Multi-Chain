@@ -1,7 +1,20 @@
 #!/bin/bash
 
+# check user has sudo permission
+function request_sudo_permission() 
+{
+    sudo echo -n " "
+
+    if [ $? -ne 0 ]; then
+        { echo "ERROR - no sudo permission, please add youself in the sudoers."; exit 1; }
+    fi
+}
+
 function deps_install() 
 {
+    # sudo permission check
+    request_sudo_permission
+	
     # Check for 'uname' and abort if it is not available.
     uname -v > /dev/null 2>&1 || { echo "ERROR - use 'uname' to identify the platform."; exit 1; }
 
