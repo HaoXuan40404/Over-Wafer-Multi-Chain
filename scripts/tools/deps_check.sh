@@ -18,7 +18,7 @@ function java_version_check()
 
     #JAVA version
     JAVA_VER=$(java -version 2>&1 | sed -n ';s/.* version "\(.*\)\.\(.*\)\..*".*/\1\2/p;')
-    echo $JAVA_VER
+   
     if [ -z "$JAVA_VER" ];then
         { echo "ERROR - failed to get java version, version is `java -version 2>&1 | grep java`."; exit 1; }
     fi    

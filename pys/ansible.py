@@ -223,6 +223,16 @@ def monitor_module(ip, dest):
     return False
 
 
+def env_check(ip = 'all'):
+    """检查目标服务器的运行环境
+    
+    Keyword Arguments:
+        ip {string} -- [目标服务器的ip, 'all'表示所有的服务器] (default: {'all'})
+    """
+
+
+    pass
+
 
 def environment_module(ip, dest):
     '''monitor module

@@ -73,7 +73,13 @@ function echo_module()
     ansible ${package_config} -m shell -a "echo $msg" 
 }
 
-
+###env_check### ansible远程调用检查目标服务器的操作系统版本;依赖项
+function env_check_module()
+{
+    local package_config=$1
+    local check_path=$2
+    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_check.sh"
+}
 
 case $1 in
     copy) copy_module $2 $3 $4;;
@@ -84,6 +90,7 @@ case $1 in
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;
     environment) environment_module $2 $3;;
+    env_check) env_check_module $2 $3;;
     echo) echo_module $2 $3;;
 
     *) echo "others case";;

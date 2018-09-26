@@ -65,8 +65,7 @@ def cmd_view():
                                                        'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
-    # parser.add_argument('--envircheck', nargs='+', metavar=('all or chain_id or',
-    #                                                         'chain_id:host_ip'), help='Output => check build environment of server of the chain.')
+    parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'), help='Output => check build environment of server of the chain.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',), 
                                                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
@@ -115,7 +114,7 @@ def cmd_view():
     elif args.pkg_list:
         consoler.info(' pkg_list opr begin.')
         chain = args.pkg_list
-        opr.pkg_chain(chain, True)
+        opr.pkg_list(chain, True)
         consoler.info(' pkg_list opr end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
@@ -138,9 +137,9 @@ def cmd_view():
 
         consoler.info(' sdk cert end.')
 
-    # elif args.envircheck:
-    #    chain = args.envircheck
-    #    check_environment.check_chain_resolve(chain)
+    elif args.env_check:
+       hosts = args.env_check
+       check_environment.check_chain_resolve(chain)
     elif args.echo:
         consoler.info(' echo opr begin.')
         echo_list = args.echo
