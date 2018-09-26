@@ -18,14 +18,6 @@ function unarchive_module()
 
 }
 
-###build_module###
-function build_module()
-{
-    local package_config=$1
-    local make_dir=$2
-    ansible ${package_config} -m shell -a "bash ${make_dirt}/make.sh" -B 200 -P 5
-}
-
 ###start_module###
 function start_module()
 {
@@ -86,7 +78,6 @@ function echo_module()
 case $1 in
     copy) copy_module $2 $3 $4;;
     unarchive) unarchive_module $2 $3 $4;;
-    build) build_module $2 $3;;
     start) start_module $2 $3;;
     stop) stop_module $2 $3;;
     mkdir) mkdir_module $2 $3;;
