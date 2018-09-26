@@ -67,7 +67,7 @@ function openssl_version_check()
         return 
     fi
 
-    { echo "OpenSSL 1.0.2 be requied , now OpenSSL version is `openssl version`" ; exit 1}
+    { echo "OpenSSL 1.0.2 be requied , now OpenSSL version is `openssl version`" ; exit 1; }
 }
 
 # version check
