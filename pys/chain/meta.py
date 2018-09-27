@@ -58,9 +58,12 @@ class Meta:
             f.write(self.to_json())
             logger.info('write info meta.json, content is ' + self.to_json())
 
+    def exist(self):
+        return os.path.exists(data.meta_dir(self.chain_id) + '/meta.json')
+
     def load_from_file(self):
         self.clear()
-        if not os.path.exists(data.meta_dir(self.chain_id) + '/meta.json'):
+        if not self.exist():
             logger.warn('meta.json not exist, chain_id is ' + self.chain_id)
         else:
             with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
