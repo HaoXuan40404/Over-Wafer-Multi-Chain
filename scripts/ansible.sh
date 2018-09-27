@@ -61,7 +61,7 @@ function monitor_module()
 {
     local package_config=$1
     local check_path=$2
-    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/monitor.sh"
+    ansible ${package_config} -m shell -a "bash  ${check_path}/monitor.sh"
 }
 
 ###environment_module###

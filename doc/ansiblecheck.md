@@ -36,7 +36,7 @@ user 127.0.0.3 36000 123
 第一项为用户名，第二项为ip 第三项为端口号，第四项为密码
 
 ```
-$ bash ssh-copy-id.sh
+$ bash scripts/ssh-copy-id.sh
 $ ssh-agent bash
 $ ssh-add ~/.ssh/id_rsa
 ```
