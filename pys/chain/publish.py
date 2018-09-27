@@ -82,7 +82,7 @@ def push_package(dir, host, chain_id, version):
         logger.warn('fisco-bcos is not exist, dir is ' + dir)
         return False
 
-    if os.path.isdir(dir + '/web3sdk'):
+    if not os.path.isdir(dir + '/web3sdk'):
         logger.warn('web3sdk is not exist, dir is ' + dir)
         return False
 
