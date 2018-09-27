@@ -6,6 +6,7 @@ import shutil
 
 from pys import path
 from pys import utils
+from pys import ca
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import parser
@@ -111,9 +112,10 @@ def build_cfg(cc):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
         
-        consoler.error(' build install package for chain %s version %s failed, data dir aleady exist.', cc.get_chain().get_id(), cc.get_chain().get_version())
+        consoler.error(' build install package for chain %s version %s failed, version data aleady exist, please change the version of the chain!!!.', cc.get_chain().get_id(), cc.get_chain().get_version())
         
         return
+
     os.makedirs(dir)
 
     try:
@@ -128,16 +130,18 @@ def build_cfg(cc):
 
         temp_node.temp_node_build(dir, port)
 
-        if not temp_node.start_temp_node(dir):
-            logger.warn('start temp node failed.')
-            raise Exception('temp node start failed')
+        if not temp_node.start_temp_node(dir, port):
+            raise Exception('temp node start failed.')
 
         # 构建各个安装包
         for node in cc.get_nodes():
             build.build_install_dir(dir, chain, port, node, temp_node)
 
         temp_node.stop_temp_node(dir)
-        temp_node.export_genesis(dir)
+
+        if not temp_node.export_genesis(dir):
+            raise Exception('export genesis.json failed.')
+        
         temp_node.clean_temp_node(dir)
 
         # 拷贝genesis.json文件到各个文件夹
@@ -146,12 +150,20 @@ def build_cfg(cc):
                 shutil.copy(dir + '/genesis.json', dir +
                             ('/%s/node%d/' % (node.get_host_ip(), index)))
 
-        logger.info('build end ok.')
+        # 拷贝fisco-bcos文件
+        shutil.copy(path.get_fisco_path(), dir)
+        
+        # web3sdk
+        shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/web3sdk')
+        shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt', dir + '/web3sdk/conf')
+        shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore', dir + '/web3sdk/conf')
+        utils.replace(dir + '/web3sdk/conf/applicationContext.xml', 'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
+
+        logger.info('build end ok, chain is %s', chain)
         consoler.info('\t\t build install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
 
     except Exception as e:
-        logger.warn('build end exception, e is %s', e)
-        consoler.info('\t\t build install package for chain %s version %s failed, exp is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
+        consoler.error('\t\t build install package for chain %s version %s failed, exp is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
 
         temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):

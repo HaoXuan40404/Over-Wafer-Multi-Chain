@@ -39,10 +39,7 @@ def init():
     ansible.set_dir(mconf.get_ansible_dir())
 
 def cmd_view():
-    """[解析cmd命令行]
-    
-    Returns:
-        [bool] -- [程序运行正常返回0，错误返回错误码]
+    """[执行命令行对应操作]
     """
 
     parser = argparse.ArgumentParser(
@@ -72,50 +69,50 @@ def cmd_view():
                                                       './chain_ca_dir', 'The Agency Name'), help='Output => the cert of agency that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                       './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
-    parser.add_argument('--echo', nargs='+', metavar=('all or host_ip or',
+    parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
                                                       'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
     args = parser.parse_args()
     if args.version:
         version.version()
     elif args.build:
-        consoler.info(' build opr begin.')
+        consoler.info(' build operation begin.')
         build.chain_build(args.build[0], args.build[1])
-        consoler.info(' build opr end.')
+        consoler.info(' build operation end.')
     elif args.check:
-        consoler.info(' check opr begin.')
+        consoler.info(' check operation begin.')
         chain = args.check
         opr.check_chain(chain)
-        consoler.info(' check opr end.')
+        consoler.info(' check operation end.')
     elif args.publish:
-        consoler.info(' publish opr begin.')
+        consoler.info(' publish operation begin.')
         chain = args.publish
         publish.publish_chain(chain)
-        consoler.info(' publish opr end.')
+        consoler.info(' publish operation end.')
     elif args.start:
-        consoler.info(' start opr begin.')
+        consoler.info(' start operation begin.')
         chain = args.start
         opr.start_chain(chain)
-        consoler.info(' start opr end.')
+        consoler.info(' start operation end.')
     elif args.stop:
-        consoler.info(' stop opr begin.')
+        consoler.info(' stop operation begin.')
         chain = args.stop
         opr.stop_chain(chain)
-        consoler.info(' stop opr end.')
+        consoler.info(' stop operation end.')
     elif args.monitor:
-        consoler.info(' monitor opr begin.')
+        consoler.info(' monitor operation begin.')
         chain = args.monitor
         opr.monitor_chain(chain)
-        consoler.info(' monitor opr end.')
+        consoler.info(' monitor operation end.')
     elif args.pub_list:
-        consoler.info(' pub_list opr begin.')
+        consoler.info(' pub_list operation begin.')
         chain = args.pub_list
         opr.pub_list(chain)
-        consoler.info(' pub_list opr end.')
+        consoler.info(' pub_list operation end.')
     elif args.pkg_list:
-        consoler.info(' pkg_list opr begin.')
+        consoler.info(' pkg_list operation begin.')
         chain = args.pkg_list
         opr.pkg_list(chain, True)
-        consoler.info(' pkg_list opr end.')
+        consoler.info(' pkg_list operation end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
@@ -138,15 +135,17 @@ def cmd_view():
         consoler.info(' sdk cert end.')
 
     elif args.env_check:
-       hosts = args.env_check
-       check_environment.check_chain_resolve(chain)
-    elif args.echo:
-        consoler.info(' echo opr begin.')
-        echo_list = args.echo
-        opr.echo_ansible(echo_list)
-        consoler.info(' echo opr end.')
+        consoler.info(' env_check operation begin.')
+        hosts = args.env_check
+        check_environment.check_chain_resolve(chain)
+        consoler.info(' env_check operation end.')
+    elif args.telnet:
+        consoler.info(' telnet operation begin.')
+        telnet_list = args.telnet
+        opr.telnet_ansible(telnet_list)
+        consoler.info(' telnet operation end.')
     else:
-        consoler.error('invalid opr,  \"python main.py -h\" can be used to show detailed usage.')
+        consoler.error('invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
     return 0
 
 

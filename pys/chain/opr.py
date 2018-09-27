@@ -225,7 +225,7 @@ def pkg_list(chains, host_detail = True):
 
     logger.info('load end')
 
-def echo_ansible(server):
+def telnet_ansible(server):
     """[测试托管服务器的ansible]
     
     Arguments:
@@ -233,11 +233,11 @@ def echo_ansible(server):
     """
 
     if server[0] == 'all':
-        ansible.echo_module('all')
+        ansible.telnet_module('all')
     else:
         for i in range(len(server)):
             if utils.valid_ip(server[i]):
-                ansible.echo_module(server[i])
+                ansible.telnet_module(server[i])
             else:
                 consoler.error('skip host %s, invalid ip format.', server[i])
 

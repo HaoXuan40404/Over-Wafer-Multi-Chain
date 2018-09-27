@@ -65,8 +65,8 @@ function environment_module()
 }
 
 
-###echo_module###
-function echo_module()
+###telnet_module###
+function telnet_module()
 {
     local package_config=$1
     local msg=$2
@@ -91,7 +91,7 @@ case $1 in
     monitor) monitor_module $2 $3;;
     environment) environment_module $2 $3;;
     env_check) env_check_module $2 $3;;
-    echo) echo_module $2 $3;;
+    telnet) telnet_module $2 $3;;
 
     *) echo "others case";;
 esac
