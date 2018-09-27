@@ -127,7 +127,7 @@ def do_parser(cfg):
         raise Exception('chain_id empty.')
     
     if not utils.valid_chain_id(chain_id):
-        raise Exception('%s invalid chain_id.',)
+        raise Exception('invalid chain_id, ', chain_id)
 
     chain_version = cf.get('chain', 'version')
     if not utils.valid_string(chain_id):

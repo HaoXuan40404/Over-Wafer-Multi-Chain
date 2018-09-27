@@ -31,7 +31,7 @@ def chain_build(cfg, fisco_path):
 
     # 判断fisco-bcos文件是否存在
     if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
-        consoler.error(' fisco-bcos is not exist, path is %s', fisco_path)
+        consoler.error(' fisco-bcos is not exist, input path is %s', fisco_path)
         return 
 
     path.set_fiso_path(fisco_path)
@@ -49,7 +49,7 @@ def chain_build(cfg, fisco_path):
             cc_dict[key] = cc
 
         except Exception as e:
-            consoler.error('invalid config format parser failed, config is %s, exp is %s', cfg, e)
+            consoler.error('invalid config format parser failed, config is %s, excption is %s', cfg, e)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
@@ -66,13 +66,13 @@ def chain_build(cfg, fisco_path):
                     logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
                     ).get_id(), cc.get_chain().get_version())
                     cc_dict = {}
-                    consoler.error('chain_id %s and chain_version %s config repeat.')
+                    consoler.error('chain_id %s and chain_version %s config repeat, please update the chain_version.')
                     break
                 else:
                     consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
                     cc_dict[key] = cc
             except Exception as e:
-                consoler.error('skip config %s, invalid config format parser failed, exp is %s', c, e)
+                consoler.error('skip config %s, invalid config format parser failed, exception is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
 
     else:
@@ -84,6 +84,8 @@ def chain_build(cfg, fisco_path):
     if len(cc_dict) != 0:
         for cc in cc_dict.itervalues():
             build_cfg(cc)
+    else:
+        consoler.info(' build operation will do nothing.')
 
     logger.debug('build cfg end.')
 
@@ -163,7 +165,7 @@ def build_cfg(cc):
         consoler.info('\t\t build install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
 
     except Exception as e:
-        consoler.error('\t\t build install package for chain %s version %s failed, exp is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
+        consoler.error('\t\t build install package for chain %s version %s failed, exception is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
 
         temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):

@@ -55,7 +55,7 @@ def build_install_dir(dir, chain, port, node, temp):
     # shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore', node_dir + '/web3sdk/conf')
     # utils.replace(node_dir + '/web3sdk/conf/applicationContext.xml', 'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
-    for index in range(len(node.get_node_num())):
+    for index in range(node.get_node_num()):
         subdir = node_dir + ('/node%d' % index)
         os.makedirs(subdir)
         

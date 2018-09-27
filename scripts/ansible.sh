@@ -64,7 +64,7 @@ function telnet_module()
     ansible ${package_config} -m shell -a "echo $msg" 
 }
 
-###env_check### ansible远程调用检查目标服务器的操作系统版本;依赖项
+###env_check### ansible远程调用检查目标服务器的操作系统版本;依赖项;
 function env_check_module()
 {
     local package_config=$1

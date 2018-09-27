@@ -223,12 +223,21 @@ def monitor_module(ip, dest):
     return False
 
 
-def env_check(ip = 'all'):
+def env_check(ip, src):
     """检查目标服务器的运行环境
     
     Keyword Arguments:
         ip {string} -- [目标服务器的ip, 'all'表示所有的服务器] (default: {'all'})
     """
 
-
-    pass
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh env_check ' + ip + ' ' + src)
+    logger.debug('env_check action , status %s, output %s' % (status, result))
+    if status:
+        consoler.error(' ansible env_check opr failed, host is %s, output is %s', ip, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.error(' ansible env_check opr failed, host is %s, output is %s', ip, result)
+    else:
+        consoler.info(' ansible env_check opr success, host is %s, output is \n%s', ip, result)
+        return True
+    return False
