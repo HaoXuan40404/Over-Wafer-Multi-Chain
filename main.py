@@ -137,7 +137,7 @@ def cmd_view():
     elif args.env_check:
         consoler.info(' env_check operation begin.')
         hosts = args.env_check
-        check_environment.check_chain_resolve(chain)
+        opr.env_check(hosts)
         consoler.info(' env_check operation end.')
     elif args.telnet:
         consoler.info(' telnet operation begin.')

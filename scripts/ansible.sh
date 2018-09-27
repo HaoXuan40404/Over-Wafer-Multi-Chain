@@ -56,15 +56,6 @@ function monitor_module()
     ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/monitor.sh"
 }
 
-###environment_module###
-function environment_module()
-{
-    local package_config=$1
-    local check_path=$2
-    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/buildcheck.sh"
-}
-
-
 ###telnet_module###
 function telnet_module()
 {
@@ -89,7 +80,6 @@ case $1 in
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;
-    environment) environment_module $2 $3;;
     env_check) env_check_module $2 $3;;
     telnet) telnet_module $2 $3;;
 

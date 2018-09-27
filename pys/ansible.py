@@ -232,21 +232,3 @@ def env_check(ip = 'all'):
 
 
     pass
-
-
-def environment_module(ip, dest):
-    '''monitor module
-        monitor chains status including' 
-        node messenge, blk_number, viewchange, node live or not, node on which server, peers'
-    '''
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh environment ' + ip + ' ' + dest)
-    logger.debug('environment action , status %s, output %s' % (status, result))
-    consoler.info(result)
-    if status:
-        consoler.error(' ansible environment failed, host is %s, output is %s', ip, result)
-    elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible environment failed, host is %s, output is %s', ip, result)
-    else:
-        return True
-    return False
