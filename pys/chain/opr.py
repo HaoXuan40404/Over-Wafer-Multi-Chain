@@ -118,6 +118,21 @@ def check_chain(chain):
             else:
                 consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
+def env_check(hosts):
+    """依赖检查
+    
+    Arguments:
+        hosts {string} -- host列表
+    """
+    if hosts[0] == 'all':
+        ansible.env_check('all', ansible.get_dir())
+    else:
+        for host in hosts:
+            if utils.valid_ip(host):
+                ansible.env_check(host, ansible.get_dir())
+            else:
+                consoler.log(' skip, not invalid host, host is %s', host)
+
 def monitor_chain(chain):
     """[解析命令行, 批量检查节点运行情况]
     
