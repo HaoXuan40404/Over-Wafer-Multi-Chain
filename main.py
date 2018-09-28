@@ -13,7 +13,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.chain import opr
 from pys.chain import build
-from pys.chain import publish 
+from pys.chain import publish
 
 
 def init():
@@ -37,6 +37,7 @@ def init():
     # ansible远程推送的根目录
     ansible.set_dir(mconf.get_ansible_dir())
 
+
 def cmd_view():
     """[执行命令行对应操作]
     """
@@ -47,10 +48,6 @@ def cmd_view():
                         help='version of multi-chain')
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
-    parser.add_argument('--pkg_list', nargs='+', metavar=('all or chain_id or',
-                                                      'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
-    parser.add_argument('--pub_list', nargs='+', metavar=('all or chain_id or',
-                                                      'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
     parser.add_argument('--check', nargs='+', metavar=('all or chain_id or',
@@ -61,15 +58,20 @@ def cmd_view():
                                                        'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
-    parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'), help='Output => check build environment of server of the chain.')
-    parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',), 
-                                                        help='Output => the cert of chain that set on the SET directory')
-    parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                      './chain_ca_dir', 'The Agency Name'), help='Output => the cert of agency that set on the SET directory')
-    parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
-                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
+    parser.add_argument('--pkg_list', nargs='+', metavar=('all or chain_id or',
+                                                          'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
+    parser.add_argument('--pub_list', nargs='+', metavar=('all or chain_id or',
+                                                          'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
     parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
-                                                      'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
+                                                        'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
+    parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
+                        help='Output => check build environment of server of the chain.')
+    parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
+                        help='Output => the cert of chain that set on the SET directory')
+    parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
+                                                        './chain_ca_dir', 'The Agency Name'), help='Output => the cert of agency that set on the SET directory')
+    parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
+                                                     './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -144,7 +146,8 @@ def cmd_view():
         opr.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
     else:
-        consoler.error('invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
+        consoler.error(
+            'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
     return 0
 
 
