@@ -78,7 +78,6 @@ def stop_chain(chain):
             else:
                 consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
-
 def check_chain(chain):
     """[解析命令行, 批量检查节点启动情况]
     
@@ -95,25 +94,20 @@ def check_chain(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_chain_id(chain_get[0]):
-                    try:
-                        check_server(chain_get[0])
-                    except Exception as e: 
-                        consoler.error('Input is invalid, Exception %s', e)
-                        logger.error('Input is invalid, Exception %s', e)
+                    check_server(chain_get[0])
                 else:
-                    consoler.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
-                    ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                if utils.valid_chain_id(chain_get[0]):
+                    if utils.valid_ip(chain_get[1]):
+                        ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                    else:
+                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('check_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
 
             else:
-                consoler.error('check_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
-                logger.error('check_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
-
+                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def monitor_chain(chain):
     """[解析命令行, 批量检查节点运行情况]
@@ -130,24 +124,20 @@ def monitor_chain(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_chain_id(chain_get[0]):
-                    try:
-                        monitor_server(chain_get[0])
-                    except Exception as e: 
-                        consoler.error('Input is invalid, Exception %s', e)
-                        logger.error('Input is invalid, Exception %s', e)
+                    monitor_server(chain_get[0])
                 else:
-                    consoler.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
-                    ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                if utils.valid_chain_id(chain_get[0]):
+                    if utils.valid_ip(chain_get[1]):
+                        ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                    else:
+                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('monitor_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
 
             else:
-                consoler.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
-                logger.error('monitor_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def pub_list(chains):
     """[列出部署后链的安装包对应的节点]
