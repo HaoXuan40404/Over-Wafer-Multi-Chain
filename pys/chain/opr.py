@@ -32,17 +32,17 @@ def start_chain(chain):
                 if utils.valid_chain_id(chain_get[0]):
                     start_server(chain_get[0])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_chain_id(chain_get[0]):
                     if utils.valid_ip(chain_get[1]):
                         ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                     else:
-                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                        consoler.info(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
             else:
-                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
+                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 
 def stop_chain(chain):
@@ -72,17 +72,17 @@ def stop_chain(chain):
                 if utils.valid_chain_id(chain_get[0]):
                     stop_server(chain_get[0])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_chain_id(chain_get[0]):
                     if utils.valid_ip(chain_get[1]):
                         ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                     else:
-                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                        consoler.info(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
             else:
-                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
+                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def check_chain(chain):
     """[解析命令行, 批量检查节点启动情况]
@@ -105,18 +105,18 @@ def check_chain(chain):
                 if utils.valid_chain_id(chain_get[0]):
                     check_server(chain_get[0])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_chain_id(chain_get[0]):
                     if utils.valid_ip(chain_get[1]):
                         ansible.check_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                     else:
-                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                        consoler.info(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
 
             else:
-                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
+                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def monitor_chain(chain):
     """[解析命令行, 批量检查节点运行情况]
@@ -138,17 +138,17 @@ def monitor_chain(chain):
                 if utils.valid_chain_id(chain_get[0]):
                     monitor_server(chain_get[0])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
                 if utils.valid_chain_id(chain_get[0]):
                     if utils.valid_ip(chain_get[1]):
                         ansible.monitor_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
                     else:
-                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                        consoler.info(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                    consoler.info(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
             else:
-                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
+                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def pub_list(chains):
     """[列出部署后链的安装包对应的节点]
