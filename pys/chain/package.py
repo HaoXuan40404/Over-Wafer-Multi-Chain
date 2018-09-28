@@ -2,7 +2,7 @@
 
 import os
 from pys import utils
-from pys.log import logger
+from pys.log import logger, consoler
 from pys.chain import data
 
 class Ver:
@@ -31,16 +31,20 @@ class Ver:
 
     def clear(self):
         self.pkg_list = []
+    
+    def exist(self):
+        dir = data.package_dir(self.chain_id, self.chain_version)
+        return os.path.exists(dir)
 
     def load(self):
 
         self.clear()
-        dir = data.package_dir(self.chain_id, self.chain_version)
-        if not os.path.exists(dir):
-            logger.info('dir not exist, chain_id is %s, chain_version is %s, dir is %s',
-                        self.chain_id, self.chain_version, dir)
+        if not self.exist():
+            logger.warn('dir not exist, chain_id is %s, chain_version is %s',
+                        self.chain_id, self.chain_version)
             return
-
+        
+        dir = data.package_dir(self.chain_id, self.chain_version)
         logger.debug('load begin, chain_id is %s, chain_version is %s, dir is %s',
                      self.chain_id, self.chain_version, dir)
 
@@ -76,16 +80,20 @@ class Package:
     
     def clear(self):
         self.ver_list = []
+    
+    def exist(self):
+        dir = data.package_chain_dir(self.chain_id)
+        return os.path.exists(dir)
 
     def load(self):
         self.clear()
 
-        dir = data.package_chain_dir(self.chain_id)
-        if not os.path.exists(dir):
-            logger.info('dir not exist, chain_id is %s, dir is %s',
-                        self.chain_id, dir)
+        if not self.exist():
+            logger.warn('dir not exist, chain_id is %s',
+                        self.chain_id)
             return
-        
+
+        dir = data.package_chain_dir(self.chain_id)
         logger.info('load begin, chain_id is %s, dir is %s',
                      self.chain_id, dir)
         
@@ -95,32 +103,3 @@ class Package:
             self.append(ver)
 
         logger.info('load end, len is %d', len(self.get_version_list()))
-
-def list(chains, is_host):
-    if len(chains) == 0:
-        print('chains empty.')
-
-    logger.info('load, chains is %s, is_host is %s', chains, is_host)
-
-    pkg_list = []
-    if chains[0] == "all":
-        dir = data.package_dir_base()
-        for chain_id in os.listdir(dir):
-            p = Package(chain_id)
-            p.load()
-            pkg_list.append(p)
-    else:
-        for chain_id in chains:
-            p = Package(chain_id)
-            p.load()
-            pkg_list.append(p)
-
-    for p in pkg_list:
-        print('chain_id => %s' % p.get_chain_id())
-        for v in p.get_version_list():
-            print('\t %s ' % v.get_chain_version())
-            if isinstance(is_host, 'bool') and is_host:
-                for h in v.get_pkg_list():
-                    print('\t\t %s ' % h)
-
-    logger.info('load end')

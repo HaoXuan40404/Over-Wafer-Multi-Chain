@@ -8,12 +8,13 @@ import os
 
 from chain import Chain
 from pys import utils
+from pys import exp
 from pys.log import logger
 
 class Port:
-    '''
-    一组端口描述
-    '''
+    """rpc port, p2p port, channel port的一组值.
+    """
+
     def __init__(self, rpc_port, p2p_port, channel_port):
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
@@ -80,9 +81,8 @@ class NodeEle:
         return 'Node [host_ip %s, p2p_ip %s, node_num %d]' % (self.host_ip, self.p2p_ip, self.node_num)
 
 class ConfigConf:
-    '''
-    构建一条新链的配置文件
-    '''
+    """搭建一条新链的配置文件对应的对象
+    """
     def __init__(self):
         self.chain = None
         self.port = None
@@ -113,9 +113,6 @@ def do_parser(cfg):
     '''
     解析config.conf配置文件, 返回Config.conf对象
     '''
-    if not utils.valid_string(cfg):
-            raise Exception('config not string ', cfg)
-
     logger.info('cfg parser %s', cfg)
 
      # read and parser config file
@@ -127,11 +124,14 @@ def do_parser(cfg):
 
     chain_id = cf.get('chain', 'chainid')
     if not utils.valid_string(chain_id):
-        raise Exception('invalid chain id, ', chain_id)
+        raise Exception('chain_id empty.')
+    
+    if not utils.valid_chain_id(chain_id):
+        raise Exception('invalid chain_id, ', chain_id)
 
     chain_version = cf.get('chain', 'version')
     if not utils.valid_string(chain_id):
-        raise Exception('invalid chain version, ', chain_version)
+        raise Exception('chain_version empty.')
     cc.set_chain(Chain(chain_id, chain_version))
 
     rpc_port = cf.getint('ports', 'rpc_port')

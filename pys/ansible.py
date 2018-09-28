@@ -1,10 +1,15 @@
 # coding:utf-8
-import os, commands, re
-from pys.log import logger
+import commands
+import os
+import re
+
 from pys import path
+from pys.log import logger
+from pys.log import consoler
+
 
 class Ansible:
-    """ansible配置
+    """ansible配置, 用来配置推送的目标文件夹, default = '/data'
     """
 
     dir = '/data'
@@ -21,204 +26,218 @@ def get_dir():
     return Ansible.dir
 
 
-def ansible_test():
-    ae = Ansible()
-    set_dir('dir')
-    print(ae)
-
-
 def mkdir_module(ip, dest):
-    '''
-    mkdir module
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
-    print(result)
+    """调用ansible在目标服务器创建文件夹
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 文件夹路径
+    
+    Returns:
+        int -- 成功返回0, 否则返回-1.
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
+    logger.debug('mkdir action , status %s, output %s' % (status, result))
+   
     if status:
-        print('ansible mkdir_module action, error status => %s'% (status))
-        logger.error('ansible mkdir_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible mkdir_module action, warn status => %s'% (status))
-        logger.warn('ansible mkdir_module action, warning status => %s, warning result => %s',status, result)
+        logger.warn('mkdir action failed, status %s, result %s ' % (status, result))
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('mkdir action failed, output %s' % (result))
     else:
-        print('ansible mkdir_module action, info status => %s'% (status))
-        logger.info('ansible mkdir_module action, info status => %s, info result => %s',status, result)
-    return 0
+        return True
+    return False
 
 
 def copy_module(ip, src, dest):
-    '''
-    cpoy module
-    '''
+    """使用ansible推送文件
+    
+    Arguments:
+        ip {string} -- 目录服务器
+        src {string} -- 推送的文件
+        dest {string} -- 目标服务器的目录
+    """
 
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
-    print(result)
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
+    logger.debug('copy action , status %s, output %s' % (status, result))
+   
     if status:
-        print('ansible copy_module action, error status => %s'% (status))
-        logger.error('ansible copy_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible copy_module action, warn status => %s'% (status))
-        logger.warn('ansible copy_module action, warning status => %s, warning result => %s',status, result)
+        logger.warn('copy action failed, status %s' % (status))
+        consoler.warn(' ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.warn(' ansible copy opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
+        logger.warn('copy action failed, output %s' % (result))
     else:
-        print('ansible copy_module action, info status => %s'% (status))
-        logger.info('ansible copy_module action, info status => %s, info result => %s',status, result)
-    return 0
+        consoler.info(' ansible copy opr success, host is %s, src is %s, dst is %s.', ip, src, dest)
+        return True
+    return False
 
 
 def unarchive_module(ip, src, dest):
     '''
     unarchive module
     '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
-    print(result)
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
+    logger.debug('unarchive action , status %s, output %s' % (status, result))
+   
     if status:
-        print('ansible unarchive_module action, error status => %s'% (status))
-        logger.error('ansible unarchive_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible unarchive_module action, warn status => %s'% (status))
-        logger.warn('ansible unarchive_module action, warning status => %s, warning result => %s',status, result)
+        logger.warn('unarchive action failed, status %s' % (status))
+        consoler.warn(' ansible unarchive opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('unarchive action failed, output %s' % (result))
+        consoler.warn(' ansible unarchive opr failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     else:
-        print('ansible unarchive_module action, info status => %s'% (status))
-        logger.info('ansible unarchive_module action, info status => %s, info result => %s',status, result)
-    return 0
-
-
-def build_module(ip, dest):
-    '''
-    build module
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh build ' + ip + ' ' + dest)
-    print(result)
-    if status:
-        print('ansible build_module action, error status => %s'% (status))
-        logger.error('ansible build_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible build_module action, warn status => %s'% (status))
-        logger.warn('ansible build_module action, warning status => %s, warning result => %s',status, result)
-    else:
-        print('ansible build_module action, info status => %s'% (status))
-        logger.info('ansible build_module action, info status => %s, info result => %s',status, result)
-    return 0
-
+        consoler.info(' ansible unarchive opr success, host is %s, src is %s, dst is %s.', ip, src, dest)
+        return True
+    return False
 
 def start_module(ip, dest):
-    '''
-    start module
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh start ' + ip + ' ' + dest)
-    print(result)
+    """远程启动节点, 调用的是节点的start.sh
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 远程调用目录
+    
+    Returns:
+        bool -- 成功返回Ture, 否则返回False
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh start ' + ip + ' ' + dest)
+    logger.debug('start action , status %s, output %s' % (status, result))
+    
     if status:
-        print('ansible start_module action, error status => %s'% (status))
-        logger.error('ansible start_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible start_module action, warn status => %s'% (status))
-        logger.warn('ansible start_module action, warning status => %s, warning result => %s',status, result)
+        logger.warn('start action failed, status %s' % (status))
+        consoler.warn(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('start action failed, output %s' % (result))
+        consoler.warn(' ansible start opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        print('ansible start_module action, info status => %s'% (status))
-        logger.info('ansible start_module action, info status => %s, info result => %s',status, result)
-    return 0
+        consoler.info(' ansible start opr success, host is %s, output is \n%s.', ip, result)
+        return True
+    return False
 
 
 def stop_module(ip, dest):
-    '''
-    stop module
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh stop ' + ip + ' ' + dest)
-    print(result)
+    """远程停止节点, 调用的是节点的stop.sh
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 远程调用目录
+    
+    Returns:
+        bool -- 成功返回Ture, 否则返回False
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh stop ' + ip + ' ' + dest)
+    logger.debug('stop action , status %s, output %s' % (status, result))
+
     if status:
-        print('ansible stop_module action, error status => %s'% (status))
-        logger.error('ansible stop_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible stop_module action, warn status => %s'% (status))
-        logger.warn('ansible stop_module action, warning status => %s, warning result => %s',status, result)
+        logger.warn('stop action failed, status %s' % (status))
+        consoler.warn(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('stop action failed, output %s' % (result))
+        consoler.warn(' ansible stop opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        print('ansible stop_module action, info status => %s'% (status))
-        logger.info('ansible stop_module action, info status => %s, info result => %s',status, result)
-    return 0
+        consoler.info(' ansible stop opr success, host is %s, output is \n%s.', ip, result)
+        return True
+    return False
+
 
 
 def check_module(ip, dest):
-    '''check module
-    check servers status
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh check ' + ip + ' ' + dest)
-    print(result)
+    """远程调用查看节点是否正常启动, 调用的是节点的check.sh
+    
+    Arguments:
+        ip {string} -- 目标服务器
+        dest {string} -- 远程调用目录
+    
+    Returns:
+        bool -- 成功返回Ture, 否则返回False
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh check ' + ip + ' ' + dest)
+    logger.debug('check action , status %s, output %s' % (status, result))
+    
     if status:
-        print('ansible check_module action, error status => %s'% (status))
-        logger.error('ansible check_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible check_module action, warn status => %s'% (status))
-        logger.warn('ansible check_module action, warning status => %s, warning result => %s',status, result)
+        logger.warn('check action failed, status %s' % (status))
+        consoler.warn(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        logger.warn('check action failed, output %s' % (result))
+        consoler.warn(' ansible check opr failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        print('ansible check_module action, info status => %s'% (status))
-        logger.info('ansible check_module action, info status => %s, info result => %s',status, result)
-    return 0
+        consoler.info(' ansible check opr success, host is %s, output is \n%s.', ip, result)
+        return True
+    
+    return False
 
 
-def echo_module(ip, msg='HelloWorld!'):
-    '''
-    echo test module
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh echo ' + ip + ' ' + msg)
-    print(result)
+def telnet_module(ip, msg='HelloWorld!'):
+    """调用ansible.sh telnet模块, 进行echo测试, 判断ansible功能是否正常.
+
+    Arguments:
+        ip {string} -- 服务器ip
+
+    Keyword Arguments:
+        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
+
+    Returns:
+        [bool] -- ansible正确调用echo返回True, 否则False.
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh telnet ' + ip + ' ' + msg)
+    logger.debug('telnet action , status %s, output %s' % (status, result))
     if status:
-        print('ansible echo_module action, error status => %s'% (status))
-        logger.error('ansible echo_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible echo_module action, warn status => %s'% (status))
-        logger.warn('ansible echo_module action, warning status => %s, warning result => %s',status, result)
+        consoler.error(' ansible telnet opr failed, host is %s, output is %s', ip, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.error(' ansible telnet opr failed, host is %s, output is %s', ip, result)
     else:
-        print('ansible echo_module action, info status => %s'% (status))
-        logger.info('ansible echo_module action, info status => %s, info result => %s',status, result)
-    return 0
+        consoler.info(' ansible telnet opr success, host is %s, output is \n%s', ip, result)
+        return True
+    return False
 
 
 def monitor_module(ip, dest):
-    '''monitor module
-        monitor chains status including' 
-        node messenge, blk_number, viewchange, node live or not, node on which server, peers'
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
-    print(result)
+    """调用ansible.sh monitor模块, 远程调用节点的monotor.sh脚本, 测试节点的运行情况.
+    Arguments:
+        ip {string} -- host ip
+        dest {string} -- 目录
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
+    logger.debug('monitor action , status %s, output %s' % (status, result))
     if status:
-        print('ansible monitor_module action, error status => %s'% (status))
-        logger.error('ansible monitor_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible monitor_module action, warn status => %s'% (status))
-        logger.warn('ansible monitor_module action, warning status => %s, warning result => %s',status, result)
+        consoler.error(' ansible monitor opr failed, host is %s, output is %s', ip, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.error(' ansible monitor opr failed, host is %s, output is %s', ip, result)
     else:
-        print('ansible monitor_module action, info status => %s'% (status))
-        logger.info('ansible monitor_module action, info status => %s, info result => %s',status, result)
-    return 0
+        consoler.info(' ansible monitor opr success, host is %s, result is \n%s.', ip, result)
+        return True
+    return False
 
 
-def environment_module(ip, dest):
-    '''monitor module
-        monitor chains status including' 
-        node messenge, blk_number, viewchange, node live or not, node on which server, peers'
-    '''
-    (status, result)=commands.getstatusoutput('bash ' + path.get_path() +
-              '/scripts/ansible.sh environment ' + ip + ' ' + dest)
-    print(result)
+def env_check(ip, src):
+    """检查目标服务器的运行环境
+    
+    Keyword Arguments:
+        ip {string} -- [目标服务器的ip, 'all'表示所有的服务器] (default: {'all'})
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh env_check ' + ip + ' ' + src)
+    logger.debug('env_check action , status %s, output %s' % (status, result))
     if status:
-        print('ansible environment_module action, error status => %s' % (status))
-        logger.error('ansible environment_module action, error status => %s, error result => %s',status, result)
-    elif not (result.find('SUCCESS') + 1 ):
-        print('ansible environment_module action, warn status => %s' %(status))
-        logger.warn('ansible environment_module action, warning status => %s, warning result => %s',status, result)
+        consoler.error(' ansible env_check opr failed, host is %s, output is %s', ip, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.error(' ansible env_check opr failed, host is %s, output is %s', ip, result)
     else:
-        print('ansible environment_module action, info status => %s'% (status))
-        logger.info('ansible environment_module action, info status => %s, info result => %s' ,status, result)
-    return 0
-
-
-if __name__ == '__main__':
-    ansible_test()
+        consoler.info(' ansible env_check opr success, host is %s, output is \n%s', ip, result)
+        return True
+    return False
