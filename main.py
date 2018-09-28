@@ -13,8 +13,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.chain import opr
 from pys.chain import build
-from pys.chain import publish
-from pys.checktools import check_environment 
+from pys.chain import publish 
 
 
 def init():
