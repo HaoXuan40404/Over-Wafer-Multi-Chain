@@ -223,6 +223,23 @@ def cmd_module(ip, msg):
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
 
 
+def cmd_shell_module(ip, msg):
+    """调用ansible.sh cmd模块, 在服务器上批量执行本地脚本.
+
+    Arguments:
+        ip {string} -- 服务器ip
+
+    Keyword Arguments:
+        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
+
+    Returns:
+        [bool] -- ansible正确调用echo返回True, 否则False.
+    """
+    msg = '"' + msg + '"'
+    os.system('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh cmd_shell ' + ip + ' ' + msg)
+
+
 
 def monitor_module(ip, dest):
     """调用ansible.sh monitor模块, 远程调用节点的monotor.sh脚本, 测试节点的运行情况.
