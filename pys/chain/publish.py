@@ -50,7 +50,7 @@ def publish_server(chain_id, chain_version):
 
     dir = data.package_dir(chain_id, chain_version)
     if not os.path.isdir(dir):
-        consoler.error('publish install package for chain %s version %s failed, data dir not exist', chain_id, chain_version)
+        consoler.error('publish install package for chain %s version %s failed, no package build for the chain.', chain_id, chain_version)
         logger.warn(
             'version of this chain is not exist, chain is %s, version is %s', chain_id, chain_version)
         return

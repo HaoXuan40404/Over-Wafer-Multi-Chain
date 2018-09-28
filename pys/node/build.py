@@ -33,7 +33,7 @@ def build_install_dir(dir, chain, port, node, temp):
 
     os.makedirs(node_dir)
 
-    # 脚本
+    # 脚本相关
     shutil.copy(path.get_path() + '/scripts/node/start.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/stop.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/check.sh', node_dir)
@@ -42,6 +42,9 @@ def build_install_dir(dir, chain, port, node, temp):
     shutil.copy(path.get_path() + '/scripts/node/monitor.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/node_manager.sh', node_dir)
+
+    # 脚本目录单独拷贝一份
+    shutil.copytree(path.get_path() + '/scripts', node_dir + '/scripts')
 
     """
     fisco-bcos文件, web3sdk提取到上级目录
