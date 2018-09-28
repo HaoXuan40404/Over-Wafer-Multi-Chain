@@ -76,9 +76,7 @@ function env_check_module()
 function cmd_module()
 {
     local package_config=$1
-    local msg=$2
-    echo "ansible.sh"
-    echo $1 $2 $3 $4
+    local msg=$2' '$3
     ansible ${package_config} -m shell -a "$msg"
 }
 

@@ -315,8 +315,6 @@ def cmd_push(chain):
                     cmd_server(chain_get[0],chain_get[1])
                 elif utils.valid_ip(chain_get[0]):
                     ansible.cmd_module(chain_get[0],chain_get[1])
-                    print("opr.py")
-                    print(chain_get[0], chain_get[1])
                 else:
                     consoler.info(' skip, invalid cmd, cmd is %s %s', chain_get[0], chain_get[1])
             else:
