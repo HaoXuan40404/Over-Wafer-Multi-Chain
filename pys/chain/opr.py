@@ -314,7 +314,7 @@ def cmd_push(chain):
                 if utils.valid_chain_id(chain_get[0]):
                     cmd_server(chain_get[0],chain_get[1])
                 elif utils.valid_ip(chain_get[0]):
-                    cmd_server(chain_get[0],chain_get[1])
+                    ansible.cmd_module(chain_get[0],chain_get[1])
                 else:
                     consoler.info(' skip, invalid cmd, cmd is %s %s', chain_get[0], chain_get[1])
             else:
@@ -362,7 +362,7 @@ def file_push(chain):
                 if utils.valid_chain_id(chain_get[0]):
                     file_server(chain_get[0],chain_get[1],chain_get[2])
                 elif utils.valid_ip(chain_get[0]):
-                    file_server(chain_get[0],chain_get[1],chain_get[2])
+                    ansible.copy_module(chain_get[0],chain_get[1],chain_get[2])
                 else:
                     consoler.info(' skip, invalid file_push, file_push is %s %s %s ', chain_get[0], chain_get[1], chain_get[2])
             else:
