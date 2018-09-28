@@ -77,7 +77,7 @@ function cmd_module()
 {
     local package_config=$1
     local msg=$2
-    ansible ${package_config} -m shell -a $msg
+    ansible ${package_config} -m shell -a "$msg"
 }
 
 ###file_module####

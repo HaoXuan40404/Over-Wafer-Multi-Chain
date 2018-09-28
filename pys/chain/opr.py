@@ -338,7 +338,7 @@ def cmd_server(chain_id, cmd):
     mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
-        ansible.cmd_module(k,cmd)
+        ansible.cmd_module(k, cmd)
 
 
 def file_push(chain):
