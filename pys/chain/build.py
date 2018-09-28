@@ -31,30 +31,35 @@ def chain_build(cfg, fisco_path):
 
     # 判断fisco-bcos文件是否存在
     if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
-        consoler.error(' fisco-bcos is not exist, input path is %s', fisco_path)
-        return 
+        consoler.error(
+            ' fisco-bcos is not exist, input path is %s', fisco_path)
+        return
 
     path.set_fiso_path(fisco_path)
 
     cc_dict = {}
     if os.path.exists(cfg) and os.path.isfile(cfg):
 
-        consoler.info('config file is %s, fisco bcos path is %s' % (cfg, fisco_path))
+        consoler.info('config file is %s, fisco bcos path is %s' %
+                      (cfg, fisco_path))
         # 单个配置文件解析
         try:
             cc = parser.do_parser(cfg)
-            consoler.info('parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
-            
+            consoler.info('parser config %s successs, chain_id is %s, chain_version is %s' % (
+                cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
+
             key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
             cc_dict[key] = cc
 
         except Exception as e:
-            consoler.error('invalid config format parser failed, config is %s, excption is %s', cfg, e)
+            consoler.error(
+                'invalid config format parser failed, config is %s, excption is %s', cfg, e)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
 
-        consoler.info('\t config dir is %s, fisco bcos path is %s' % (cfg, fisco_path))
+        consoler.info('\t config dir is %s, fisco bcos path is %s' %
+                      (cfg, fisco_path))
         # 指定文件夹, 解析文件夹中的所有配置文件, 解析失败则跳过
         for c in os.listdir(cfg):
             try:
@@ -66,17 +71,21 @@ def chain_build(cfg, fisco_path):
                     logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
                     ).get_id(), cc.get_chain().get_version())
                     cc_dict = {}
-                    consoler.error('chain_id %s and chain_version %s config repeat, please update the chain_version.')
+                    consoler.error(
+                        'chain_id %s and chain_version %s config repeat, please update the chain_version.')
                     break
                 else:
-                    consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
+                    consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (
+                        cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
                     cc_dict[key] = cc
             except Exception as e:
-                consoler.error('skip config %s, invalid config format parser failed, exception is %s', c, e)
+                consoler.error(
+                    'skip config %s, invalid config format parser failed, exception is %s', c, e)
                 logger.warn('parser cfg %s end exception, e %s ', c, e)
 
     else:
-        consoler.error('invalid config, neither directory nor file, config is %s', cfg)
+        consoler.error(
+            'invalid config, neither directory nor file, config is %s', cfg)
 
     logger.info('cc_dict is %s', cc_dict)
 
@@ -107,15 +116,17 @@ def build_cfg(cc):
     port = cc.get_port()
     chain = cc.get_chain()
 
-    consoler.info('\t\t build install package for chain %s version %s', cc.get_chain().get_id(), cc.get_chain().get_version())
+    consoler.info('\t\t build install package for chain %s version %s',
+                  cc.get_chain().get_id(), cc.get_chain().get_version())
 
     # 创建文件夹
     if os.path.isdir(dir):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
-        
-        consoler.error(' build install package for chain %s version %s failed, version data aleady exist, please change the version of the chain!!!.', cc.get_chain().get_id(), cc.get_chain().get_version())
-        
+
+        consoler.error(' build install package for chain %s version %s failed, version data aleady exist, please change the version of the chain!!!.',
+                       cc.get_chain().get_id(), cc.get_chain().get_version())
+
         return
 
     os.makedirs(dir)
@@ -143,7 +154,7 @@ def build_cfg(cc):
 
         if not temp_node.export_genesis(dir):
             raise Exception('export genesis.json failed.')
-        
+
         temp_node.clean_temp_node(dir)
 
         # 拷贝genesis.json文件到各个文件夹
@@ -154,18 +165,23 @@ def build_cfg(cc):
 
         # 拷贝fisco-bcos文件
         shutil.copy(path.get_fisco_path(), dir)
-        
+
         # web3sdk
         shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/web3sdk')
-        shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt', dir + '/web3sdk/conf')
-        shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore', dir + '/web3sdk/conf')
-        utils.replace(dir + '/web3sdk/conf/applicationContext.xml', 'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
+        shutil.copy(ca.get_agent_ca_path() +
+                    '/sdk/ca.crt', dir + '/web3sdk/conf')
+        shutil.copy(ca.get_agent_ca_path() +
+                    '/sdk/client.keystore', dir + '/web3sdk/conf')
+        utils.replace(dir + '/web3sdk/conf/applicationContext.xml',
+                      'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
         logger.info('build end ok, chain is %s', chain)
-        consoler.info('\t\t build install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
+        consoler.info('\t\t build install package for chain %s version %s success.',
+                      cc.get_chain().get_id(), cc.get_chain().get_version())
 
     except Exception as e:
-        consoler.error('\t\t build install package for chain %s version %s failed, exception is %s', cc.get_chain().get_id(), cc.get_chain().get_version(), e)
+        consoler.error('\t\t build install package for chain %s version %s failed, exception is %s',
+                       cc.get_chain().get_id(), cc.get_chain().get_version(), e)
 
         temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):
