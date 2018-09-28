@@ -1,6 +1,7 @@
 #coding:utf-8
 import os
 
+from pys import path
 from pys import ansible, utils
 from pys.chain import meta
 from pys.chain.meta import Meta
@@ -125,11 +126,11 @@ def env_check(hosts):
         hosts {string} -- host列表
     """
     if hosts[0] == 'all':
-        ansible.env_check('all', ansible.get_dir())
+        ansible.env_check('all', path.get_path())
     else:
         for host in hosts:
             if utils.valid_ip(host):
-                ansible.env_check(host, ansible.get_dir())
+                ansible.env_check(host, path.get_path())
             else:
                 consoler.log(' skip, not invalid host, host is %s', host)
 
