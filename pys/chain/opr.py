@@ -11,7 +11,6 @@ from pys.chain import data
 from pys.chain import package
 
 
-
 def start_chain(chain):
     """[解析命令行, 批量启动节点]
     
@@ -28,21 +27,19 @@ def start_chain(chain):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_chain_id(chain_get[0]):
-                    try:
-                        start_server(chain_get[0])
-                    except Exception as e: 
-                        consoler.error('Input is invalid, Exception %s', e)
-                        logger.error('Input is invalid, Exception %s', e)
-            elif len(chain_get) == 2:
-                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
-                    ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                    start_server(chain_get[0])
                 else:
-                    consoler.error('start_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('start_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-
+                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
+            elif len(chain_get) == 2:
+                if utils.valid_chain_id(chain_get[0]):
+                    if utils.valid_ip(chain_get[1]):
+                        ansible.start_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                    else:
+                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
+                else:
+                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
             else:
-                consoler.error('start_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
-                logger.error('start_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 
 def stop_chain(chain):
@@ -60,30 +57,26 @@ def stop_chain(chain):
             for chain_id in os.listdir(dir):
                 stop_server(chain_id)
         else:
+            consoler.info(' input No, and will do nothing.')
             logger.info('refuse stop all node')
-            return 0
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
             if len(chain_get) == 1:
                 if utils.valid_chain_id(chain_get[0]):
-                    try:
-                        stop_server(chain_get[0])
-                    except Exception as e: 
-                        consoler.error('Input is invalid, Exception %s', e)
-                        logger.error('Input is invalid, Exception %s', e)
+                    stop_server(chain_get[0])
                 else:
-                    consoler.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    consoler.log(' skip, invalid chain_id, chain_id is %s', chain_get[0])
             elif len(chain_get) == 2:
-                if utils.valid_chain_id(chain_get[0]) and utils.valid_ip(chain_get[1]):
-                    ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                if utils.valid_chain_id(chain_get[0]):
+                    if utils.valid_ip(chain_get[1]):
+                        ansible.stop_module(chain_get[1], ansible.get_dir() + '/' + chain_get[0])
+                    else:
+                        consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
-                    consoler.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
-                    logger.error('stop_chain_resolve error, %s is not a valid chain_id',chain_get[0])
+                    consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
             else:
-                consoler.error('stop_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
-                logger.error('stop_chain_resolve type error, chain[' + str(i) + '] =>' + chain[i])
+                consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 
 def check_chain(chain):
@@ -187,7 +180,7 @@ def pub_list(chains):
 
     logger.info('list end.')
 
-def pkg_chain(chains, host_detail = True):
+def pkg_list(chains, host_detail = True):
     """[列出生成链的安装包对应的节点]
     
     Arguments:
@@ -221,11 +214,11 @@ def pkg_chain(chains, host_detail = True):
             consoler.info(' \t version is %s' % v.get_chain_version())
             if isinstance(host_detail, bool) and host_detail:
                 for h in v.get_pkg_list():
-                    consoler.info('\t\t package => %s' % h)
+                    consoler.info(' \t\t pkg => %s' % h)
 
     logger.info('load end')
 
-def echo_ansible(server):
+def telnet_ansible(server):
     """[测试托管服务器的ansible]
     
     Arguments:
@@ -233,13 +226,13 @@ def echo_ansible(server):
     """
 
     if server[0] == 'all':
-        ansible.echo_module('all')
+        ansible.telnet_module('all')
     else:
         for i in range(len(server)):
             if utils.valid_ip(server[i]):
-                ansible.echo_module(server[i])
+                ansible.telnet_module(server[i])
             else:
-                consoler.error('skip host %s, invalid ip format.', server[i])
+                consoler.error('skip host %s, invalid host format.', server[i])
 
 
 def start_server(chain_id):
@@ -250,6 +243,11 @@ def start_server(chain_id):
     """
 
     mm = meta.Meta(chain_id)
+    if not mm.exist():
+        logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
+        consoler.warn('chain is not published, can not start action, chain_id is %s', chain_id)
+        return 
+
     logger.info('start action, chain_id is ' + chain_id)
     mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
@@ -265,6 +263,12 @@ def stop_server(chain_id):
     """
 
     mm = meta.Meta(chain_id)
+
+    if not mm.exist():
+        logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
+        consoler.warn('chain is not published, can not stop action, chain_id is %s', chain_id)
+        return 
+
     logger.info('stop action, chain_id is ' + chain_id)
     mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
@@ -280,21 +284,31 @@ def check_server(chain_id):
     """
 
     mm = meta.Meta(chain_id)
+    if not mm.exist():
+        logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
+        consoler.warn('chain is not published, can not check action, chain_id is %s', chain_id)
+        return 
+
     logger.info('check action, chain_id is ' + chain_id)
     mm.load_from_file()
-    for k, v in mm.get_nodes().items():
+    for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.check_module(k, ansible.get_dir() + '/' + chain_id)
 
 
 def monitor_server(chain_id):
-    """[检查对应链的节点的运行情况]
+    """[检查对应链的节点的运行情况, 调用monitor.sh脚本]
     
     Arguments:
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的monitor.sh]
     """
 
     mm = meta.Meta(chain_id)
+    if not mm.exist():
+        logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
+        consoler.warn('chain is not published, can not monitor action, chain_id is %s', chain_id)
+        return 
+
     logger.info('monitor_server action, chain_id is ' + chain_id)
     mm.load_from_file()
     for k in mm.get_nodes().iterkeys():

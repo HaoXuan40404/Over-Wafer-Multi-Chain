@@ -43,17 +43,19 @@ def build_install_dir(dir, chain, port, node, temp):
     shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', node_dir)
     shutil.copy(path.get_path() + '/scripts/node/node_manager.sh', node_dir)
 
+    """
+    fisco-bcos文件, web3sdk提取到上级目录
+    """
     #拷贝fisco-bcos文件
-    shutil.copy(path.get_fisco_path(), node_dir)
+    # shutil.copy(path.get_fisco_path(), node_dir)
 
     # web3sdk
-    shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
-    shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt', node_dir + '/web3sdk/conf')
-    shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore', node_dir + '/web3sdk/conf')
-    utils.replace(node_dir + '/web3sdk/conf/applicationContext.xml', 'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
+    # shutil.copytree(path.get_path() + '/tpl/web3sdk', node_dir + '/web3sdk')
+    # shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt', node_dir + '/web3sdk/conf')
+    # shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore', node_dir + '/web3sdk/conf')
+    # utils.replace(node_dir + '/web3sdk/conf/applicationContext.xml', 'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
-    index = 0
-    while index < node.get_node_num():
+    for index in range(node.get_node_num()):
         subdir = node_dir + ('/node%d' % index)
         os.makedirs(subdir)
         
@@ -76,7 +78,5 @@ def build_install_dir(dir, chain, port, node, temp):
         #注册节点到系统合约
         if  not temp is None:
             temp.registerNode(dir, subdir + '/data/node.json')
-
-        index += 1
 
     logger.info('build_install_dir end.')

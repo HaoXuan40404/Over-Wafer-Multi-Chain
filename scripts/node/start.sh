@@ -19,19 +19,12 @@ if [ -z $index ];then
         else	
             break
         fi
-	sleep 3
         index=$(($index+1))
     done
-
-    sleep 3
-
-    bash check.sh
 else
     #echo "start node$index ... "
     if [ -d node$index ];then
         bash node$index/start.sh
-        sleep 3
-        bash check.sh $index
     else
         echo "node$index is not exist."
     fi

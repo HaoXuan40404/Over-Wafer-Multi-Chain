@@ -1,16 +1,22 @@
 #!/bin/bash
 
-module_name="install.sh"
-
-function dependencies_install() 
+# check user has sudo permission
+function request_sudo_permission() 
 {
-    local myname=$1
-    if [ -z $myname ];then
-        myname=$module_name
-    fi
+    sudo echo -n " "
 
+    if [ $? -ne 0 ]; then
+        { echo "ERROR - no sudo permission, please add youself in the sudoers."; exit 1; }
+    fi
+}
+
+function deps_install() 
+{
+    # sudo permission check
+    request_sudo_permission
+	
     # Check for 'uname' and abort if it is not available.
-    uname -v > /dev/null 2>&1 || { echo "ERROR - ${myname} use 'uname' to identify the platform."; exit 1; }
+    uname -v > /dev/null 2>&1 || { echo "ERROR - use 'uname' to identify the platform."; exit 1; }
 
     case $(uname -s) in 
 
@@ -28,7 +34,7 @@ function dependencies_install()
 
         case $DISTRO_NAME in
     #------------------------------------------------------------------------------
-    # Ubuntu  # At least 16.04
+    # Ubuntu 16.04
     #------------------------------------------------------------------------------
             Ubuntu*)
 
@@ -93,3 +99,5 @@ function dependencies_install()
         ;;
     esac
 }
+
+deps_install

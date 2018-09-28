@@ -18,14 +18,6 @@ function unarchive_module()
 
 }
 
-###build_module###
-function build_module()
-{
-    local package_config=$1
-    local make_dir=$2
-    ansible ${package_config} -m shell -a "bash ${make_dirt}/make.sh" -B 200 -P 5
-}
-
 ###start_module###
 function start_module()
 {
@@ -64,36 +56,32 @@ function monitor_module()
     ansible ${package_config} -m shell -a "bash  ${check_path}/monitor.sh"
 }
 
-###environment_module###
-function environment_module()
-{
-    local package_config=$1
-    local check_path=$2
-    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/buildcheck.sh"
-}
-
-
-###echo_module###
-function echo_module()
+###telnet_module###
+function telnet_module()
 {
     local package_config=$1
     local msg=$2
     ansible ${package_config} -m shell -a "echo $msg" 
 }
 
-
+###env_check### ansible远程调用检查目标服务器的操作系统版本;依赖项;
+function env_check_module()
+{
+    local package_config=$1
+    local check_path=$2
+    ansible ${package_config} -m shell -a "bash  ${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_check.sh"
+}
 
 case $1 in
     copy) copy_module $2 $3 $4;;
     unarchive) unarchive_module $2 $3 $4;;
-    build) build_module $2 $3;;
     start) start_module $2 $3;;
     stop) stop_module $2 $3;;
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;
-    environment) environment_module $2 $3;;
-    echo) echo_module $2 $3;;
+    env_check) env_check_module $2 $3;;
+    telnet) telnet_module $2 $3;;
 
     *) echo "others case";;
 esac

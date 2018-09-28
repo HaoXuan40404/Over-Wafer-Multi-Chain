@@ -21,11 +21,10 @@ def publish_chain(chains):
     pchains = []
     for i in range(len(chains)):
         chain = chains[i].split(':')
-        if utils.valid_chain_id(chain):
-            if len(chain) != 2:
-                logger.error('not chain_id:chain_version format, str is %s', chains[i])
-                consoler.error('skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
-                continue
+        if len(chain) != 2:
+            logger.error('not chain_id:chain_version format, str is %s', chains[i])
+            consoler.error('skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
+            continue
 
         chain_id = chain[0]
         chain_version = chain[1]
@@ -58,9 +57,7 @@ def publish_server(chain_id, chain_version):
     mm = meta.Meta(chain_id)
     for host in os.listdir(dir):
         if utils.valid_ip(host):
-            ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
-            ret = ansible.copy_module(host, dir + '/' + host + '/',
-                                ansible.get_dir() + '/' + chain_id)
+            ret = push_package(dir, host, chain_id, chain_version)
             if ret:
                 mm.append(meta.MetaNode(chain_version, host, 0, 0, 0))
         else:
@@ -68,3 +65,50 @@ def publish_server(chain_id, chain_version):
     consoler.info('\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
     # 将部署信息保存
     mm.write_to_file()
+
+def push_package(dir, host, chain_id, version):
+    """推送单个安装包到指定服务器
+    
+    Arguments:
+        dir {string} -- 本地安装包目录        
+        pkg {string} -- 安装包名称
+    
+    Returns:
+        [bool] -- 成功返回True,失败返回False
+    """
+
+    # 检查fisco-bcos文件是否存在
+    if not os.path.exists(dir + '/fisco-bcos'):
+        logger.warn('fisco-bcos is not exist, dir is ' + dir)
+        return False
+
+    if not os.path.isdir(dir + '/web3sdk'):
+        logger.warn('web3sdk is not exist, dir is ' + dir)
+        return False
+
+    # create dir on the target server
+    ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        return ret
+    
+    # push package
+    ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        return ret
+
+    # push fisco-bcos file
+    ret = ansible.copy_module(host, dir + '/fisco-bcos', ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        return ret
+    
+    # push web3sdk dir
+    ret = ansible.copy_module(host, dir + '/web3sdk', ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        return ret
+
+    logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)
+    
+    return True
+
+
+

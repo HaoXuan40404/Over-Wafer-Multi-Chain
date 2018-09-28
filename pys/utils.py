@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import re
+import commands
 from pys.log import logger
 from pys.log import consoler
 
@@ -17,8 +18,7 @@ def valid_chain_id(chain_id):
     try: 
         int(chain_id)
         return True
-    except Exception as e: 
-        consoler.error('%s is not a valid chain_id', e)
+    except Exception as e:
         logger.error('%s is not a valid chain_id', e)
         return False
 
@@ -84,5 +84,24 @@ def replace(filepath, old, new):
         for line in all_lines:
             line = line.replace(old, new)
             f.write(line)
+
+def port_in_use(port):
+    """检查端口是否占用, 使用nc命令
+    
+    Arguments:
+        port {string} -- 端口
+    
+    Returns:
+        bool -- 端口被占用返回True, 否则返回False.
+    """
+
+    cmd = 'nc -z 127.0.0.1' + (' %d' % port)
+
+    status,output = commands.getstatusoutput(cmd)
+
+    logger.debug('port is %s, status is %s, output is %s', port, status, output)
+
+    return status == 0
+
 
 
