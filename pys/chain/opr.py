@@ -23,6 +23,8 @@ def start_chain(chain):
         if os.path.exists(dir):
             for chain_id in os.listdir(dir):
                 start_server(chain_id)
+        else:
+            consoler.info(' No published chain exist, do nothing.')
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
@@ -58,6 +60,8 @@ def stop_chain(chain):
             if os.path.exists(dir):
                 for chain_id in os.listdir(dir):
                     stop_server(chain_id)
+            else:
+                consoler.info(' No published chain exist, do nothing.')
         else:
             consoler.info(' input No, and will do nothing.')
             logger.info('refuse stop all node')
@@ -92,6 +96,8 @@ def check_chain(chain):
         if os.path.exists(dir):
             for chain_id in os.listdir(dir):
                 check_server(chain_id)
+        else:
+            consoler.info(' No published chain exist, do nothing.')
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
@@ -123,6 +129,8 @@ def monitor_chain(chain):
         if os.path.exists(dir):
             for chain_id in os.listdir(dir):
                 monitor_server(chain_id)
+        else:
+            consoler.info(' No published chain exist, do nothing.')
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
@@ -160,6 +168,8 @@ def pub_list(chains):
                 m = Meta(chain_id)
                 m.load_from_file()
                 meta_list.append(m)
+        else:
+            consoler.info(' No published chain pkg exist, do nothing.')
     else:
         for chain_id in chains:
             m = Meta(chain_id)
@@ -185,7 +195,7 @@ def pkg_list(chains, host_detail = True):
     """
 
 
-    logger.info('pkg_chain_resolve, chains is %s, host_detail is %s', chains, host_detail)
+    logger.info('chains is %s, host_detail is %s', chains, host_detail)
 
     consoler.info(' chains is %s' % chains)
 
@@ -197,6 +207,8 @@ def pkg_list(chains, host_detail = True):
                 p = Package(chain_id)
                 p.load()
                 pkg_list.append(p)
+        else:
+            consoler.info(' No build chain pkg exist, do nothing.')
     else:
         for chain_id in chains:
             p = Package(chain_id)
