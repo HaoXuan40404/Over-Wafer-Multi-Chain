@@ -257,6 +257,98 @@ def telnet_ansible(server):
             else:
                 consoler.error('skip host %s, invalid host format.', server[i])
 
+def valid_cmd(chain):
+    """[判断chain是否有效]
+    
+    Arguments:
+        chain {[string]} -- [chain cmd]
+    
+    Returns:
+        [chain] -- [如果为是有效返回分割后的chainlist，否则返回false]
+    """
+
+    try: 
+        chain_get = chain.split(':')
+        chain_get[1]
+        return chain_get
+    except Exception as e:
+        logger.error('%s is not a valid cmd', e)
+        return False
+
+def valid_file(chain):
+    """[判断chain是否有效]
+    
+    Arguments:
+        chain {[string]} -- [chain cmd]
+    
+    Returns:
+        [chain] -- [如果为是有效返回分割后的chainlist，否则返回false]
+    """
+
+    try: 
+        chain_get = chain.split(':')
+        chain_get[2]
+        return chain_get
+    except Exception as e:
+        logger.error('%s is not a valid cmd', e)
+        return False
+
+def cmd_push(chain):
+    """[解析命令行, 批量执行命令]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id:"cmd_1 cmd_2 用":"隔开，用引号包含"cmd1 cmd2"]
+    """
+
+    if valid_cmd(chain[0])[0] == 'all':
+        dir = data.meta_dir_base()
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                ansible.cmd_module(chain_id,valid_cmd(chain[0])[1])
+        else:
+            consoler.info(' No input chain exist, do nothing.')
+    else:
+        for i in range(len(chain)):
+            chain_get = valid_cmd(chain[i])
+            if len(chain_get) == 2:
+                if utils.valid_chain_id(chain_get[0]):
+                    ansible.cmd_module(chain_get[0],chain_get[1])
+                elif utils.valid_ip(chain_get[0]):
+                    ansible.cmd_module(chain_get[0],chain_get[1])
+                else:
+                    consoler.info(' skip, invalid cmd, cmd is %s %s', chain_get[0], chain_get[1])
+            else:
+                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
+
+def file_push(chain):
+    """[解析命令行, 批量推文件]
+    
+    Arguments:
+        chain {[list]} -- [命令行传入的chain_id:src:dest 用":"隔开]
+    """
+
+    if valid_file(chain[0])[0] == 'all':
+        dir = data.meta_dir_base()
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                ansible.copy_module(chain_id,valid_file(chain[0])[1], valid_file(chain[0])[2])
+        else:
+            consoler.info(' No input chain exist, do nothing.')
+    else:
+        for i in range(len(chain)):
+            chain_get = valid_file(chain[i])
+            if len(chain_get) == 3:
+                if utils.valid_chain_id(chain_get[0]):
+                    ansible.copy_module(chain_get[0],chain_get[1],chain_get[2])
+                elif utils.valid_ip(chain_get[0]):
+                    ansible.copy_module(chain_get[0],chain_get[1],chain_get[2])
+                else:
+                    consoler.info(' skip, invalid file_push, file_push is %s %s %s ', chain_get[0], chain_get[1], chain_get[2])
+            else:
+                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
+
+
+
 
 def start_server(chain_id):
     """[启动对应链的节点]

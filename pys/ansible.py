@@ -177,6 +177,8 @@ def check_module(ip, dest):
     return False
 
 
+
+
 def telnet_module(ip, msg='HelloWorld!'):
     """调用ansible.sh telnet模块, 进行echo测试, 判断ansible功能是否正常.
 
@@ -201,6 +203,34 @@ def telnet_module(ip, msg='HelloWorld!'):
         consoler.info(' ansible telnet opr success, host is %s, output is \n%s', ip, result)
         return True
     return False
+
+
+
+def cmd_module(ip, msg):
+    """调用ansible.sh cmd模块, 在服务器上批量执行命令.
+
+    Arguments:
+        ip {string} -- 服务器ip
+
+    Keyword Arguments:
+        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
+
+    Returns:
+        [bool] -- ansible正确调用echo返回True, 否则False.
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
+    logger.debug('cmd action , status %s, output %s' % (status, result))
+    if status:
+        consoler.error(' ansible cmd opr failed, host is %s, output is %s', ip, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.error(' ansible cmd opr failed, host is %s, output is %s', ip, result)
+    else:
+        consoler.info(' ansible cmd opr success, host is %s, output is \n%s', ip, result)
+        return True
+    return False
+
 
 
 def monitor_module(ip, dest):

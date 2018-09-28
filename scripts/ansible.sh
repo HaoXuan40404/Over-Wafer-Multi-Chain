@@ -72,6 +72,23 @@ function env_check_module()
     ansible ${package_config} -m script -a "${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_check.sh && bash  ${check_path}/scripts/tools/deps_install.sh"
 }
 
+###cmd_module###
+function cmd_module()
+{
+    local package_config=$1
+    local msg=$2
+    ansible ${package_config} -m shell -a $msg
+}
+
+###file_module####
+function file_module()
+{
+    local package_config=$1
+    local ansible_src=$2
+    local ansible_dest=$3
+    ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}"
+}
+
 case $1 in
     copy) copy_module $2 $3 $4;;
     unarchive) unarchive_module $2 $3 $4;;
@@ -82,6 +99,9 @@ case $1 in
     monitor) monitor_module $2 $3;;
     env_check) env_check_module $2 $3;;
     telnet) telnet_module $2 $3;;
+    cmd) cmd_module $2 $3;;
+    file) file_module $2 $3;;
+
 
     *) echo "others case";;
 esac

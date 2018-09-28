@@ -66,6 +66,10 @@ def cmd_view():
                                                         'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='Output => check build environment of server of the chain.')
+    parser.add_argument('--cmd_push', nargs='+', metavar=('all:"cmd_1 cmd_2" or chain_id:"cmd_1 cmd_2" or',
+                                                          'hostip:"cmd_1 cmd_2"'), help='Output =>  execute commands to Input.')
+    parser.add_argument('--file_push', nargs='+', metavar=('all:scr_path:dest_path or chain_id:scr_path:dest_path or',
+                                                          'chain_id:scr_path:dest_path or host_ip:scr_path:dest_path'), help='Output =>  push a file to Input.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
@@ -114,6 +118,16 @@ def cmd_view():
         chain = args.pkg_list
         opr.pkg_list(chain, True)
         consoler.info(' pkg_list operation end.')
+    elif args.cmd_push:
+        consoler.info(' cmd_push operation begin.')
+        chain = args.cmd_push
+        opr.cmd_push(chain)
+        consoler.info(' cmd_push operation end.')
+    elif args.file_push:
+        consoler.info(' file_push operation begin.')
+        chain = args.file_push
+        opr.file_push(chain)
+        consoler.info(' file_push operation end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
