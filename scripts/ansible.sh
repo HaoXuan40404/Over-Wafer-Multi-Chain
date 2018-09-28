@@ -69,7 +69,7 @@ function env_check_module()
 {
     local package_config=$1
     local check_path=$2
-    ansible ${package_config} -m script -a "${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_check.sh"
+    ansible ${package_config} -m script -a "${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_check.sh && bash  ${check_path}/scripts/tools/deps_install.sh"
 }
 
 case $1 in
