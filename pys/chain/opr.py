@@ -20,8 +20,9 @@ def start_chain(chain):
 
     if chain[0] == 'all':
         dir = data.meta_dir_base()
-        for chain_id in os.listdir(dir):
-            start_server(chain_id)
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                start_server(chain_id)
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
@@ -54,8 +55,9 @@ def stop_chain(chain):
         choice = raw_input('Your choice is: ')
         if ((choice == 'yes') | (choice == 'Yes') | (choice == 'Y') | (choice == 'y')):
             dir = data.meta_dir_base()
-            for chain_id in os.listdir(dir):
-                stop_server(chain_id)
+            if os.path.exists(dir):
+                for chain_id in os.listdir(dir):
+                    stop_server(chain_id)
         else:
             consoler.info(' input No, and will do nothing.')
             logger.info('refuse stop all node')
@@ -87,8 +89,9 @@ def check_chain(chain):
     
     if chain[0] == 'all':
         dir = data.meta_dir_base()
-        for chain_id in os.listdir(dir):
-            check_server(chain_id)
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                check_server(chain_id)
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
@@ -117,8 +120,9 @@ def monitor_chain(chain):
     """
     if chain[0] == 'all':
         dir = data.meta_dir_base()
-        for chain_id in os.listdir(dir):
-            monitor_server(chain_id)
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                monitor_server(chain_id)
     else:
         for i in range(len(chain)):
             chain_get = chain[i].split(':')
@@ -135,7 +139,6 @@ def monitor_chain(chain):
                         consoler.log(' skip, invalid host, chain_id is %s, host is %s', chain_get[0], chain_get[1])
                 else:
                     consoler.log(' skip, invalid chain_id, chain_id is %s, host is %s', chain_get[0], chain_get[1])
-
             else:
                 consoler.log(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
@@ -152,10 +155,11 @@ def pub_list(chains):
     meta_list = []
     if chains[0] == 'all':
         dir = data.meta_dir_base()
-        for chain_id in os.listdir(dir):
-            m = Meta(chain_id)
-            m.load_from_file()
-            meta_list.append(m)
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                m = Meta(chain_id)
+                m.load_from_file()
+                meta_list.append(m)
     else:
         for chain_id in chains:
             m = Meta(chain_id)
@@ -188,10 +192,11 @@ def pkg_list(chains, host_detail = True):
     pkg_list = []
     if chains[0] == "all":
         dir = data.package_dir_base()
-        for chain_id in os.listdir(dir):
-            p = Package(chain_id)
-            p.load()
-            pkg_list.append(p)
+        if os.path.exists(dir):
+            for chain_id in os.listdir(dir):
+                p = Package(chain_id)
+                p.load()
+                pkg_list.append(p)
     else:
         for chain_id in chains:
             p = Package(chain_id)
