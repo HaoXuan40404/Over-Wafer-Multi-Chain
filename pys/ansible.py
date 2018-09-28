@@ -219,17 +219,8 @@ def cmd_module(ip, msg):
         [bool] -- ansible正确调用echo返回True, 否则False.
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    os.system('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
-    logger.debug('cmd action , status %s, output %s' % (status, result))
-    if status:
-        consoler.error(' ansible cmd opr failed, host is %s, output is %s', ip, result)
-    elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible cmd opr failed, host is %s, output is %s', ip, result)
-    else:
-        consoler.info(' ansible cmd opr success, host is %s, output is \n%s', ip, result)
-        return True
-    return False
 
 
 
