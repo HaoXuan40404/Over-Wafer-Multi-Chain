@@ -220,7 +220,7 @@ def cmd_module(ip, msg):
     """
     print("ansible.py")
     print(msg)
-    msg = '"' + msg + '"'
+    msg = '\'"' + msg + '"\''
     print msg
     os.system('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
