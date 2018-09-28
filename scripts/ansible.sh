@@ -77,7 +77,7 @@ function cmd_module()
 {
     for arg in $@
     do 
-        if [ ${arg} -eq $1 ];then
+        if [ "${arg}" = "$1" ];then
             msg=$msg
         else
             msg=$msg' '${arg}
