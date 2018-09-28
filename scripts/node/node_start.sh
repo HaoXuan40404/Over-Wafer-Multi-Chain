@@ -1,9 +1,10 @@
 #!/bin/bash
-source ../scripts/tools/port_check.sh
+
 
     dirpath="$(cd "$(dirname "$0")" && pwd)"
     cd $dirpath
     curdir=$PWD
+    source ${curdir}/../scripts/tools/port_check.sh
     node=$(basename ${curdir})
     channelPort=`cat ${curdir}/config.json | grep channelPort |grep -v grep|awk '{print $2}' | tr -cd "[0-9]"`
     rpcport=`cat ${curdir}/config.json | grep rpcport |grep -v grep|awk '{print $2}' | tr -cd "[0-9]"`
