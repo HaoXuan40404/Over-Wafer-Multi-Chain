@@ -75,8 +75,16 @@ function env_check_module()
 ###cmd_module###
 function cmd_module()
 {
+    for arg in $@
+    do 
+        if [ ${arg} -eq $1 ];then
+            msg=$msg
+        else
+            msg=$msg' '${arg}
+    fi
+    done
     local package_config=$1
-    local msg=$2' '$3
+
     ansible ${package_config} -m shell -a "$msg"
 }
 

@@ -218,7 +218,7 @@ def cmd_module(ip, msg):
     Returns:
         [bool] -- ansible正确调用echo返回True, 否则False.
     """
-
+    msg = '"' + msg + '"'
     os.system('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
 
