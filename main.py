@@ -164,7 +164,7 @@ def cmd_view():
     elif args.init_ansible:
         # 解析hosts.conf配置
         os.system('sudo bash ./scripts/hostsname.sh')
-        os.system('sudo bash ./scripts/ssh_copy_add.sh')
+        os.system('bash ./scripts/ssh_copy_add.sh')
         consoler.info(' ansible init success.')
     else:
         consoler.error(
