@@ -34,6 +34,7 @@ def init():
     ca.set_agent(mconf.get_agent())
     ca.set_ca_path(pwd + '/data/ca')
 
+
     # ansible远程推送的根目录
     ansible.set_dir(mconf.get_ansible_dir())
 
@@ -46,6 +47,7 @@ def cmd_view():
         description='Description of multi-chain usage.')
     parser.add_argument('--version', action='store_true',
                         help='version of multi-chain')
+    parser.add_argument('--init_ansible', nargs=0, help='Output => Init ansible hosts need sudo.')                   
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
@@ -159,6 +161,9 @@ def cmd_view():
         telnet_list = args.telnet
         opr.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
+    elif args.init_ansible:
+        # 解析hosts.conf配置
+        os.system('sudo bash ./scripts/hostsname.sh')
     else:
         consoler.error(
             'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
@@ -168,6 +173,7 @@ def cmd_view():
 def main():
     init()
     cmd_view()
+
 
 
 if __name__ == '__main__':
