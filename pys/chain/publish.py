@@ -89,24 +89,28 @@ def push_package(dir, host, chain_id, version):
     # create dir on the target server
     ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
     if not ret:
+        consoler.error('chain %s host %s, publish install package failed, result is %s .', chain_id, host, ret)
         return ret
     
     # push package
     ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
 
     if not ret:
+        consoler.error('chain %s host %s, publish install package failed, result is %s .', chain_id, host, ret)
         return ret
 
     # push fisco-bcos file
     ret = ansible.copy_module(host, dir + '/fisco-bcos', ansible.get_dir() + '/' + chain_id)
     if not ret:
+        consoler.error('chain %s host %s, publish install package failed, result is %s .', chain_id, host, ret)
         return ret
     
     # push web3sdk dir
     ret = ansible.copy_module(host, dir + '/web3sdk', ansible.get_dir() + '/' + chain_id)
     if not ret:
+        consoler.error('chain %s host %s, publish install package failed, result is %s .', chain_id, host, ret)
         return ret
-    consoler.info('chain %s host %s, publish install package result is %s .', chain_id, host, ret)
+    
     logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)
     
     return True
