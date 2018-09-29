@@ -93,6 +93,7 @@ def push_package(dir, host, chain_id, version):
     
     # push package
     ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
+
     if not ret:
         return ret
 
@@ -105,7 +106,7 @@ def push_package(dir, host, chain_id, version):
     ret = ansible.copy_module(host, dir + '/web3sdk', ansible.get_dir() + '/' + chain_id)
     if not ret:
         return ret
-
+    consoler.info('chain %s host %s, publish install package result is %s .', chain_id, host, ret)
     logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)
     
     return True
