@@ -69,7 +69,7 @@ def cmd_view():
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='Output => check build environment of server of the chain.')
     parser.add_argument('--cmd_push', nargs='+', metavar=('all:"cmd_1 cmd_2" or chain_id:"cmd_1 cmd_2" or',
-                                                          'hostip:"cmd_1 cmd_2"'), help='Output =>  execute commands to Input.')
+                                                          'hostip:"cmd_1 cmd_2" or "chain:"./test.sh""'), help='Output =>  execute commands to Input.')
     parser.add_argument('--file_push', nargs='+', metavar=('all:scr_path:dest_path or chain_id:scr_path:dest_path or',
                                                           'chain_id:scr_path:dest_path or host_ip:scr_path:dest_path'), help='Output =>  push a file to Input.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
