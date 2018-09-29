@@ -47,7 +47,7 @@ def cmd_view():
         description='Description of multi-chain usage.')
     parser.add_argument('--version', action='store_true',
                         help='version of multi-chain')
-    parser.add_argument('--init_ansible', nargs=0, help='Output => Init ansible hosts need sudo.')                   
+    parser.add_argument('--init_ansible', action='store_true', help='Output => Init ansible hosts need sudo.')                   
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
