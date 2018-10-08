@@ -72,7 +72,8 @@ def chain_build(cfg, fisco_path):
                     ).get_id(), cc.get_chain().get_version())
                     cc_dict = {}
                     consoler.error(
-                        'chain_id %s and chain_version %s config repeat, please update the chain_version.')
+                        'chain_id %s and chain_version %s config repeat, please update the chain_version.',cc.get_chain(
+                    ).get_id(), cc.get_chain().get_version())
                     break
                 else:
                     consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (
