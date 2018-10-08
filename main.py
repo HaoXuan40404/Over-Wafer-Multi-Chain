@@ -148,9 +148,7 @@ def cmd_view():
         agency_dir = args.sdkca[1]
         ca.generator_sdk_ca(agency_dir)
         os.system('mv ' + agency_dir + '/sdk ' + sdk_dir + '/sdk')
-
         consoler.info(' sdk cert end.')
-
     elif args.env_check:
         consoler.info(' env_check operation begin.')
         hosts = args.env_check
