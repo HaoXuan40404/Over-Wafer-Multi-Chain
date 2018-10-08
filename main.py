@@ -75,7 +75,7 @@ def cmd_view():
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                        './chain_ca_dir', 'The Agency Name'), help='Output => the cert of agency that set on the SET directory')
+                                                        './chain_ca_dir', 'Agency_Name'), help='Output => the cert of agency that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     args = parser.parse_args()
