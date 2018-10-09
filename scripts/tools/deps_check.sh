@@ -5,7 +5,9 @@ function check_if_install()
 {
     type $1 >/dev/null 2>&1
     if [ $? -ne 0 ];then
-        { echo "ERROR - $1 is not installed."; exit 1; }
+        { echo "ERROR - $1 is not installed."; }
+    else
+        echo "$1 is installed.";
     fi
 }
 
@@ -34,10 +36,10 @@ function java_version_check()
             return
         fi
 
-        { echo "Oracle JDK 1.8 be requied, now JDK is `java -version 2>&1 | grep java`"; exit 1;}
+        { echo "Oracle JDK 1.8 be requied, now JDK is `java -version 2>&1 | grep java`"; }
     fi
     
-    { echo "Oracle JDK 1.8 be requied, now JDK is `java -version 2>&1 | grep java`"; exit 1; }
+    { echo "Oracle JDK 1.8 be requied, now JDK is `java -version 2>&1 | grep java`"; }
 } 
 
 #openssl 1.0.2 be requied.
@@ -49,7 +51,7 @@ function openssl_version_check()
     OPENSSL_VER=$(openssl version 2>&1 | sed -n ';s/.*OpenSSL \(.*\)\.\(.*\)\.\([0-9]*\).*/\1\2\3/p;')
 
     if [ -z "$OPENSSL_VER" ];then
-        { echo  "failed to get openssl version, version is `openssl version`" ; exit 1; }
+        { echo  "failed to get openssl version, version is `openssl version`" ; }
     fi
 
     #openssl 1.0.2
@@ -57,7 +59,7 @@ function openssl_version_check()
         return 
     fi
 
-    { echo "OpenSSL 1.0.2 be requied , now OpenSSL version is `openssl version`" ; exit 1; }
+    { echo "OpenSSL 1.0.2 be requied , now OpenSSL version is `openssl version`" ; }
 }
 
 # version check
