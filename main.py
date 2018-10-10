@@ -161,8 +161,7 @@ def cmd_view():
         consoler.info(' telnet operation end.')
     elif args.init_ansible:
         # 解析hosts.conf配置
-        os.system('sudo bash ./scripts/hostsname.sh')
-        os.system('bash ./scripts/ssh_copy_add.sh')
+        opr.init_chain()
         consoler.info(' ansible init success.')
     else:
         consoler.error(

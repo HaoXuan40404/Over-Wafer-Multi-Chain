@@ -11,6 +11,13 @@ from pys.log import consoler
 from pys.chain import data
 from pys.chain import package
 
+def init_chain():
+    """[init]
+    """
+
+    os.system('sudo bash ./scripts/hostsname.sh')
+    os.system('bash ./scripts/ssh_copy_add.sh')
+
 
 def start_chain(chain):
     """[解析命令行, 批量启动节点]
