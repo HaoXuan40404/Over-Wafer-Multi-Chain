@@ -69,7 +69,41 @@ function env_check_module()
 {
     local package_config=$1
     local check_path=$2
-    ansible ${package_config} -m script -a "${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_check.sh && bash  ${check_path}/scripts/tools/deps_install.sh"
+    ansible ${package_config} -m script -a "${check_path}/scripts/tools/os_check.sh" -s
+    ansible ${package_config} -m script -a "${check_path}/scripts/tools/deps_check.sh" -s
+    #ansible ${package_config} -m script -a "${check_path}/scripts/tools/os_check.sh && bash  ${check_path}/scripts/tools/deps_install.sh && bash  ${check_path}/scripts/tools/deps_check.sh "
+}
+
+###cmd_module###
+function cmd_module()
+{
+    for arg in $@
+    do 
+        if [ "${arg}" = "$1" ];then
+            msg=$msg
+        else
+            msg=$msg' '${arg}
+    fi
+    done
+    local package_config=$1
+
+    if [ -f $msg ];then
+        ansible ${package_config} -m shell -a "$msg"
+    else
+        ansible ${package_config} -m script -a "$msg"
+    fi
+
+    
+}
+
+
+###file_module####
+function file_module()
+{
+    local package_config=$1
+    local ansible_src=$2
+    local ansible_dest=$3
+    ansible ${package_config} -m synchronize -a "src=${ansible_src} dest=${ansible_dest}"
 }
 
 case $1 in
@@ -82,6 +116,9 @@ case $1 in
     monitor) monitor_module $2 $3;;
     env_check) env_check_module $2 $3;;
     telnet) telnet_module $2 $3;;
+    cmd) cmd_module $2 $3;;
+    file) file_module $2 $3;;
+
 
     *) echo "others case";;
 esac
