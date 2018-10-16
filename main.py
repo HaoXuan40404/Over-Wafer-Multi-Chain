@@ -20,22 +20,23 @@ def init():
     """[init函数]
     """
 
-    # 获取当前目录, 用来初始化各个模块的依赖路径
+    # init pwd dir
     pwd = os.getcwd()
     sys.path.append(pwd + '/pys')
     path.set_path(pwd)
 
     logger.info('main init ,pwd is %s', pwd)
 
-    # 解析mchain.conf配置
+    # parser mchain.conf for project initialize
     mconf.parser(pwd + '/conf/mchain.conf')
 
-    # 初始化证书(机构名称、证书路径)
+    # init agent name
     ca.set_agent(mconf.get_agent())
+
+    # init ca dir
     ca.set_ca_path(pwd + '/data/ca')
 
-
-    # ansible远程推送的根目录
+    # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
 
 

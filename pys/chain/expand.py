@@ -12,74 +12,64 @@ from pys.log import consoler
 from pys.chain import parser
 from pys.chain import data
 from pys.node import build
-from pys.node import temp_node
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
-def chain_expand(cfg, package_path):
-    """解析配置构建区块链对应版本的安装包
-
-    Arguments:
-        cfg {string} -- 配置信息, 可以是一个单独的配置文件或者是包含多个配置文件的目录, 例如：./conf/config.conf or ./conf
-        package_path {string} -- 指定的存放安装包的路径
-    Returns:
-        无返回
-    """
-    logger.debug('expand cfg is %s, package_path is %s ', cfg, package_path)
-
+def chain_expand(cfg, fisco_bcos, genesis, bootstrapnodes):
     
-    # 判断package_path是否存在
-    if not (os.path.exists(package_path)):
+    logger.debug('expand cfg is %s, fisco-bcos is %s, genesis is %s, bootstrpanodes is %s ',
+                 cfg, fisco_bcos, genesis, bootstrapnodes)
+
+    try:
+        # parse config
+        cc = parser.do_parser(cfg)
+        consoler.info('parser config %s successs, chain_id is %s, chain_version is %s' % (
+            cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
+
+    except Exception as e:
+        # exception throw, config maybe invalid format.
         consoler.error(
-            ' package_path is not exist, input path is %s', package_path)
+            'invalid config format parser failed, config is %s, excption is %s', cfg, e)
         return
 
-    # 通过cfg里的chain_id:version得到fisco-bcos
+    # check if install package of the server already exist.
+    dir = cc.get_chain().data_dir()
+    if os.path.exists(dir):
+        # package already exist, expand operation on chain which already has install package.
+        expand_add_package(cc, fisco_bcos, genesis, bootstrapnodes)
+    else:
+        # 
+        expand_add_node(cc) 
 
-    path.set_fiso_path(package_path)
-    fisco_path = path.get_fisco_path
+    logger.info('expand end.')
 
-    cc_dict = {}
-    if os.path.exists(cfg) and os.path.isfile(cfg):
+def expand_add_package(cc, fisco_bcos, genesis, bootstrapnodes):
 
-        consoler.info('config file is %s, fisco bcos path is %s' %
-                      (cfg, fisco_path))
-         # 单个配置文件解析
-    elif os.path.isdir(cfg):
+    # check if fisco-bcos exists
+    if not (os.path.exists(fisco_bcos) and os.path.isfile(fisco_bcos)):
+        consoler.error(' fisco-bcos is not exist, path is %s', fisco_bcos)
+        return
 
-        consoler.info('\t config dir is %s, fisco bcos path is %s' %
-                      (cfg, fisco_path))
-        # 指定文件夹, 解析文件夹中的所有配置文件, 解析失败则跳过
+    # check if genesis.json file exists
+    if not (os.path.exists(genesis) and os.path.isfile(genesis)):
+        consoler.error(' genesis.json is not exist, path is %s', genesis)
+        return
 
-    logger.debug('build cfg end.')
-
-
-
-def expand_cfg(cc):
-    """根据配置对象构建一条区块链的安装包
-
-    Arguments:
-        cc {ConfigConf} -- 解析配置文件生成ConfigConf对象   
-
-    Raises:
-        Exception
-    """
-    logger.info('expand, cc is %s', cc)
-
-    dir = data.package_dir(cc.get_chain().get_id(),
-                           cc.get_chain().get_version())
-    port = cc.get_port()
-    chain = cc.get_chain()
-
-    consoler.info('\t\t build install package for chain %s version %s',
-                  cc.get_chain().get_id(), cc.get_chain().get_version())
-
-    # 创建新文件夹 或者在该目录下创建新的安装包？
+    # check if bootstrapsnode.json file exists
+    if not (os.path.exists(bootstrapnodes) and os.path.isfile(bootstrapnodes)):
+        consoler.error(' bootstrapnodes.json is not exist, path is %s', bootstrapnodes)
+        return
     
-    # 拷贝bootstrapsnode.json
+    path.set_fiso_path(fisco_bcos)
 
-    # 拷贝genesis.json文件到各个文件夹
+    dir = cc.get_chain().data_dir()
 
-    # 拷贝fisco-bcos文件
+    # build install package dir
+    os.makedirs(dir)
+    shutil.copy(path.get_path() + '/scripts/node/start.sh', node_dir)
+    shutil.copy(path.get_path() + '/scripts/node/start.sh', node_dir)
+    build.build_install_dir(dir, cc.get_chain(), cc.get_port(), cc.get_nodes(), None)
 
-    # web3sdk
+
+def expand_add_node(cc):
+    pass

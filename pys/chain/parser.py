@@ -38,6 +38,9 @@ class Port:
     def get_channel_port(self):
         return self.channel_port
     
+    def to_port(self, index):
+        return Port(self.get_rpc_port() + index, self.get_p2p_port() + index, self.get_channel_port() + index)
+    
     def __repr__(self):
         return '[rpc_port] %d, [p2p_port] %d, [channel_port] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
 

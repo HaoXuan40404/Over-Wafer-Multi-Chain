@@ -17,8 +17,56 @@ from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
 
+def common_build(dir):
+    """build common directory for version of the chain
+    
+    Arguments:
+        dir {string} -- create the directory for the common directory
+
+    common/
+        ├── check.sh
+        ├── fisco-bcos
+        ├── monitor.sh
+        ├── node_manager.sh
+        ├── register.sh
+        ├── rmlogs.sh
+        ├── scripts
+        ├── start.sh
+        ├── stop.sh
+        ├── unregister.sh
+        └── web3sdk
+    """
+    # create common dir
+    com_dir = dir + '/common'
+    os.makedirs(com_dir)
+
+    # copy fisco-bcos file
+    shutil.copy(path.get_fisco_path(), com_dir)
+
+    # web3sdk
+    shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/web3sdk')
+    # copy ca.crt to web3sdk conf dir
+    shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt',
+                com_dir + '/web3sdk/conf')
+    # copy client.keystore to web3sdk conf dir
+    shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore',
+                com_dir + '/web3sdk/conf')
+
+    # copy scripts to common dir
+    shutil.copy(path.get_path() + '/scripts/node/start.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/stop.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/check.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/register.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/unregister.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/monitor.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/node_manager.sh', com_dir)
+
+    # copy scripts dir to common dir
+    shutil.copytree(path.get_path() + '/scripts', com_dir + '/scripts')
+
 def chain_build(cfg, fisco_path):
-    """解析配置构建区块链对应版本的安装包
+    """parser input config file, build install pacakge by 
 
     Arguments:
         cfg {string} -- 配置信息, 可以是一个单独的配置文件或者是包含多个配置文件的目录, 例如：./conf/config.conf or ./conf
@@ -29,7 +77,7 @@ def chain_build(cfg, fisco_path):
 
     logger.debug('build cfg is %s, fisco is %s ', cfg, fisco_path)
 
-    # 判断fisco-bcos文件是否存在
+    # check if fisco-bcos exists
     if not (os.path.exists(fisco_path) and os.path.isfile(fisco_path)):
         consoler.error(
             ' fisco-bcos is not exist, input path is %s', fisco_path)
@@ -101,13 +149,13 @@ def chain_build(cfg, fisco_path):
 
 
 def build_cfg(cc):
-    """根据配置对象构建一条区块链的安装包
+    """build all install package for one chain base on cc 
 
     Arguments:
-        cc {ConfigConf} -- 解析配置文件生成ConfigConf对象   
+        cc {ConfigConf} -- ConfigConf object  
 
     Raises:
-        Exception
+        Exception -- exception description
     """
 
     logger.info('building, cc is %s', cc)
@@ -120,7 +168,7 @@ def build_cfg(cc):
     consoler.info('\t\t build install package for chain %s version %s',
                   cc.get_chain().get_id(), cc.get_chain().get_version())
 
-    # 创建文件夹
+    # create dir base on version of the chain.
     if os.path.isdir(dir):
         logger.warn('version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
@@ -133,7 +181,7 @@ def build_cfg(cc):
     os.makedirs(dir)
 
     try:
-        # 生成bootstrapsnode.json
+        # generate bootstrapsnode.json
         phs = P2pHosts()
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
@@ -142,37 +190,37 @@ def build_cfg(cc):
         with open(dir + '/bootstrapnodes.json', "w+") as f:
             f.write(phs.to_json())
 
+        # create common dir
+        common_build(dir)
+
+        # create temp node for export genesis.json file
         temp_node.temp_node_build(dir, port)
 
+        # start temp node
         if not temp_node.start_temp_node(dir, port):
             raise Exception('temp node start failed.')
 
-        # 构建各个安装包
+        # build install dir for every server
         for node in cc.get_nodes():
             build.build_install_dir(dir, chain, port, node, temp_node)
 
+        # stop temp node
         temp_node.stop_temp_node(dir)
 
+        # export genesis.json file from the temp node
         if not temp_node.export_genesis(dir):
             raise Exception('export genesis.json failed.')
 
         temp_node.clean_temp_node(dir)
 
-        # 拷贝genesis.json文件到各个文件夹
+        # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 shutil.copy(dir + '/genesis.json', dir +
                             ('/%s/node%d/' % (node.get_host_ip(), index)))
+                shutil.copy(dir + '/bootstrapnodes.json', dir +
+                            ('/%s/node%d/' % (node.get_host_ip(), index)))
 
-        # 拷贝fisco-bcos文件
-        shutil.copy(path.get_fisco_path(), dir)
-
-        # web3sdk
-        shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/web3sdk')
-        shutil.copy(ca.get_agent_ca_path() +
-                    '/sdk/ca.crt', dir + '/web3sdk/conf')
-        shutil.copy(ca.get_agent_ca_path() +
-                    '/sdk/client.keystore', dir + '/web3sdk/conf')
         utils.replace(dir + '/web3sdk/conf/applicationContext.xml',
                       'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
