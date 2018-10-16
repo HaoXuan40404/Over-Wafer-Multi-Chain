@@ -44,7 +44,7 @@ def common_build(dir):
     shutil.copy(path.get_fisco_path(), com_dir)
 
     # web3sdk
-    shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/web3sdk')
+    shutil.copytree(path.get_path() + '/tpl/web3sdk', com_dir + '/web3sdk')
     # copy ca.crt to web3sdk conf dir
     shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt',
                 com_dir + '/web3sdk/conf')
