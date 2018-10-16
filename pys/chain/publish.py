@@ -94,14 +94,13 @@ def push_package(dir, host, chain_id, version):
         return ret
     
     # push common package
-    ret = ansible.copy_module(host, dir + '/common', ansible.get_dir() + '/' + chain_id)
-
+    ret = ansible.copy_module(host, dir + '/common/', ansible.get_dir() + '/' + chain_id)
     if not ret:
         consoler.error('chain %s host %s, push common dir failed.', chain_id, host)
         return ret
     
     # push host dir
-    ret = ansible.copy_module(host, dir + '/' + host, ansible.get_dir() + '/' + chain_id)
+    ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
     if not ret:
         consoler.error('chain %s host %s, publish install package failed', chain_id, host)
         return ret
