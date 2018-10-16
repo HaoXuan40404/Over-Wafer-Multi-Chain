@@ -77,13 +77,14 @@ def push_package(dir, host, chain_id, version):
         [bool] -- 成功返回True,失败返回False
     """
 
-    # 检查fisco-bcos文件是否存在
-    if not os.path.exists(dir + '/fisco-bcos'):
-        logger.warn('fisco-bcos is not exist, dir is ' + dir)
+    # check if common dir exist.
+    if not os.path.exists(dir + '/common'):
+        logger.warn('common dir is not exist, dir is %s, host is %s', dir, host)
         return False
 
-    if not os.path.isdir(dir + '/web3sdk'):
-        logger.warn('web3sdk is not exist, dir is ' + dir)
+    # check if host dir exist.
+    if not os.path.isdir(dir + '/' + host):
+        logger.warn('host dir is not exist, dir is %s, host is %s', dir, host)
         return False
 
     # create dir on the target server
@@ -92,21 +93,15 @@ def push_package(dir, host, chain_id, version):
         consoler.error('chain %s host %s, publish install package failed.', chain_id, host)
         return ret
     
-    # push package
-    ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
+    # push common package
+    ret = ansible.copy_module(host, dir + '/common', ansible.get_dir() + '/' + chain_id)
 
     if not ret:
-        consoler.error('chain %s host %s, publish install package failed.', chain_id, host)
-        return ret
-
-    # push fisco-bcos file
-    ret = ansible.copy_module(host, dir + '/fisco-bcos', ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('chain %s host %s, publish install package failed.', chain_id, host)
+        consoler.error('chain %s host %s, push common dir failed.', chain_id, host)
         return ret
     
-    # push web3sdk dir
-    ret = ansible.copy_module(host, dir + '/web3sdk', ansible.get_dir() + '/' + chain_id)
+    # push host dir
+    ret = ansible.copy_module(host, dir + '/' + host, ansible.get_dir() + '/' + chain_id)
     if not ret:
         consoler.error('chain %s host %s, publish install package failed', chain_id, host)
         return ret
