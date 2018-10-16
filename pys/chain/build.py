@@ -221,7 +221,7 @@ def build_cfg(cc):
                 shutil.copy(dir + '/bootstrapnodes.json', dir +
                             ('/%s/node%d/' % (node.get_host_ip(), index)))
 
-        utils.replace(dir + '/web3sdk/conf/applicationContext.xml',
+        utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
                       'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
         logger.info('build end ok, chain is %s', chain)
