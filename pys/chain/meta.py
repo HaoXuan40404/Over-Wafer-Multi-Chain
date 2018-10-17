@@ -54,6 +54,12 @@ class HostMeta:
     def to_json(self):
         return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
 
+class HostMetaEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, HostMeta):
+            return [ v for v in obj ]
+        return json.JSONEncoder.default(self, obj)
+
 class Meta:
     def __init__(self, chain_id):
         self.chain_id = chain_id
@@ -77,7 +83,7 @@ class Meta:
         self.nodes = {}
     
     def to_json(self):
-        return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
+        return json.dumps(self, cls=HostMetaEncoder, default = lambda obj : obj.__dict__, indent=4)
 
     def write_to_file(self):
         #if len(self.nodes) == 0:
