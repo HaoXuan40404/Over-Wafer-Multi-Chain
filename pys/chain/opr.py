@@ -203,7 +203,7 @@ def pub_list(chains):
     for m in meta_list:
         consoler.info(' => chain is %s' % m.get_chain_id())
         nodes = m.get_nodes()
-        for node in nodes.itervalues():
+        for node in nodes.iterkeys():
             consoler.info('\t node => %s' % node)
 
     logger.info('list end.')
@@ -396,8 +396,6 @@ def file_server(chain_id, src, dest):
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.copy_module(k, src, dest)
-
-
 
 
 def start_server(chain_id):

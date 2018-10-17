@@ -61,23 +61,16 @@ def publish_server(chain_id, chain_version):
     for host in os.listdir(dir):
         cf = config.Config(chain_id)
         if utils.valid_ip(host):
-            cfg_json = dir + '/' + host + '/node0/config.json'
-            if os.path.isfile(cfg_json):
-                consoler.info('config file is %s' %(cfg_json))
-                cf.fromJson(cfg_json)
-            else:
-                consoler.error('invalid config, config is %s', cfg_json)
-            node_dir = dir + '/' + host + '/'
-            node_number = 0
-            for list_dir in os.listdir(node_dir):
-                if 'node' in list_dir:
-                    node_number = node_number + 1
-            rpc_port = cf.get_rpc_port()
-            p2p_port = cf.get_p2p_port()
-            channel_port = cf.get_channel_port()
             ret = push_package(dir, host, chain_id, chain_version)
             if ret:
-                mm.append(meta.MetaNode(chain_version, host, rpc_port, p2p_port, channel_port,node_number))
+                for list_dir in os.listdir(dir + '/' + host + '/'):
+                    if 'node' in list_dir:
+                        cfg_json = dir + '/' + host + '/' + list_dir + '/config.json'
+                        if os.path.isfile(cfg_json):
+                            cf.fromJson(cfg_json)
+                            mm.append(meta.MetaNode(chain_version, host, cf.get_rpc_port(), cf.get_p2p_port(), cf.get_channel_port(), int(list_dir[4:])))
+                        else:
+                            consoler.error('invalid config, config is %s', cfg_json)
         else:
             logger.debug('skip, not invalid host_ip ' + dir)
     consoler.info('\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
