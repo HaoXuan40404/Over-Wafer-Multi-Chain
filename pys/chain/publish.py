@@ -7,6 +7,7 @@ from pys.log import consoler
 from pys.chain import meta
 from pys.chain import data
 from pys.chain.chain import Chain
+from pys.node import config
 
 from pys.chain.chain import Chain
 
@@ -46,7 +47,7 @@ def publish_server(chain_id, chain_version):
     """发布链区块链对应的版本, 并且将安装包的部署信息记录下来.
 
     Arguments:
-        chain_id {string} -- 区块链id
+        chain_id {string} -- chain id
         chain_version {string} -- 区块链版本
     """
 
@@ -58,10 +59,25 @@ def publish_server(chain_id, chain_version):
         return
     mm = meta.Meta(chain_id)
     for host in os.listdir(dir):
+        cf = config.Config(chain_id)
         if utils.valid_ip(host):
+            cfg_json = dir + '/' + host + '/node0/config.json'
+            if os.path.isfile(cfg_json):
+                consoler.info('config file is %s' %(cfg_json))
+                cf.fromJson(cfg_json)
+            else:
+                consoler.error('invalid config, config is %s', cfg_json)
+            node_dir = dir + '/' + host + '/'
+            node_number = 0
+            for list_dir in os.listdir(node_dir):
+                if 'node' in list_dir:
+                    node_number = node_number + 1
+            rpc_port = cf.get_rpc_port()
+            p2p_port = cf.get_p2p_port()
+            channel_port = cf.get_channel_port()
             ret = push_package(dir, host, chain_id, chain_version)
             if ret:
-                mm.append(meta.MetaNode(chain_version, host, 0, 0, 0))
+                mm.append(meta.MetaNode(chain_version, host, rpc_port, p2p_port, channel_port,node_number))
         else:
             logger.debug('skip, not invalid host_ip ' + dir)
     consoler.info('\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
