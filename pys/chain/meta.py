@@ -23,58 +23,29 @@ class MetaNode:
     def __repr__(self):
         return 'host %s, version %s, index %d, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.index, self.rpc_port, self.p2p_port, self.channel_port)
 
-class HostMeta:
-
-    def __init__(self):
-        self.nodes = []
-
-    def append(self, mn):
-        if not self.exist(mn.index):
-            self.nodes.append(mn)
-            logger.debug(' append mn success, mn is %s, hm is %s', mn, self.to_json())
-            return True
-        logger.info(' append mn failed, mn is %s, hm is %s', mn, self.to_json())
-        return False
-
-    def exist(self, index):
-        for node in self.nodes:
-            if index == node.index:
-                return True
-        return False
-    
-    def remove(self, index):
-        for node in self.nodes:
-            if index == node.index:
-                self.nodes.remove(node)
-                logger.debug(' remove mn success, index is %s, hm is %s', index, self.to_json())
-                return True
-        logger.info(' remove mn failed, index is %s, hm is %s', index, self.to_json())
-        return False
-    
-    def to_json(self):
-        return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
-
-class HostMetaEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, HostMeta):
-            return [ v for v in obj ]
-        return json.JSONEncoder.default(self, obj)
-
 class Meta:
+
     def __init__(self, chain_id):
         self.chain_id = chain_id
         self.nodes = {}
-    
+
     def get_chain_id(self):
         return self.chain_id
 
     def append(self, m):
         if self.nodes.has_key(m.host_ip):
-            self.nodes[m.host_ip].append(m)
+            host_nodes = self.nodes[m.host_ip]
+            for node in self.nodes:
+                if m.index == node.index:
+                    logger.info(' append mn failed, mn is %s, hm is %s', m, host_nodes)
+                    return False
+            host_nodes.append(m)
         else:
-            hm = HostMeta()
-            hm.append(m)
-            self.nodes[m.host_ip] = hm
+            host_nodes = []
+            host_nodes.append(m)
+            self.nodes[m.host_ip] = host_nodes
+        logger.info(' append mn failed, mn is %s, hm is %s', m, host_nodes)
+        return True
     
     def get_nodes(self):
         return self.nodes
@@ -83,7 +54,7 @@ class Meta:
         self.nodes = {}
     
     def to_json(self):
-        return json.dumps(self, cls=HostMetaEncoder, default = lambda obj : obj.__dict__, indent=4)
+        return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
 
     def write_to_file(self):
         #if len(self.nodes) == 0:
