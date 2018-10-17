@@ -268,14 +268,17 @@ def env_check(ip, src):
         ip {string} -- [目标服务器的ip, 'all'表示所有的服务器] (default: {'all'})
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    os.system('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh env_check ' + ip + ' ' + src)
-    logger.debug('env_check action , status %s, output %s' % (status, result))
-    if status:
-        consoler.error(' ansible env_check failed, host is %s, output is %s', ip, result)
-    elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible env_check failed, host is %s, output is %s', ip, result)
-    else:
-        consoler.info(' ansible env_check success, host is %s, output is \n%s', ip, result)
-        return True
-    return False
+    #(status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    #                                            '/scripts/ansible.sh env_check ' + ip + ' ' + src)
+
+    # logger.debug('env_check action , status %s, output %s' % (status, result))
+    # if status:
+    #     consoler.error(' ansible env_check failed, host is %s, output is %s', ip, result)
+    # elif not (result.find('SUCCESS') + 1):
+    #     consoler.error(' ansible env_check failed, host is %s, output is %s', ip, result)
+    # else:
+    #     consoler.info(' ansible env_check success, host is %s, output is \n%s', ip, result)
+    #     return True
+    # return False

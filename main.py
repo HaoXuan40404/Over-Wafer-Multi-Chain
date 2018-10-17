@@ -20,22 +20,23 @@ def init():
     """[init函数]
     """
 
-    # 获取当前目录, 用来初始化各个模块的依赖路径
+    # init pwd dir
     pwd = os.getcwd()
     sys.path.append(pwd + '/pys')
     path.set_path(pwd)
 
     logger.info('main init ,pwd is %s', pwd)
 
-    # 解析mchain.conf配置
+    # parser mchain.conf for project initialize
     mconf.parser(pwd + '/conf/mchain.conf')
 
-    # 初始化证书(机构名称、证书路径)
+    # init agent name
     ca.set_agent(mconf.get_agent())
+
+    # init ca dir
     ca.set_ca_path(pwd + '/data/ca')
 
-
-    # ansible远程推送的根目录
+    # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
 
 
@@ -75,7 +76,7 @@ def cmd_view():
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                        './chain_ca_dir', 'The Agency Name'), help='Output => the cert of agency that set on the SET directory')
+                                                        './chain_ca_dir', 'Agency_Name'), help='Output => the cert of agency that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     args = parser.parse_args()
@@ -148,9 +149,7 @@ def cmd_view():
         agency_dir = args.sdkca[1]
         ca.generator_sdk_ca(agency_dir)
         os.system('mv ' + agency_dir + '/sdk ' + sdk_dir + '/sdk')
-
         consoler.info(' sdk cert end.')
-
     elif args.env_check:
         consoler.info(' env_check operation begin.')
         hosts = args.env_check
@@ -163,8 +162,7 @@ def cmd_view():
         consoler.info(' telnet operation end.')
     elif args.init_ansible:
         # 解析hosts.conf配置
-        os.system('sudo bash ./scripts/hostsname.sh')
-        os.system('bash ./scripts/ssh_copy_add.sh')
+        opr.init_chain()
         consoler.info(' ansible init success.')
     else:
         consoler.error(

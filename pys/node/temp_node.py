@@ -14,11 +14,11 @@ from pys.log import consoler
 from pys.node import config
 
 def temp_node_build(dir, port):
-    """构建临时节点的运行环境
+    """create dir for temp node run
     
     Arguments:
-        dir {string} -- temp节点所在的目录
-        port {Port} -- 端口信息
+        dir {string} -- the dir where temp node create
+        port {Port} -- the port temp node use
     """
 
     logger.info('build temp node, dir => ' + dir)
@@ -27,7 +27,7 @@ def temp_node_build(dir, port):
     shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/temp/web3sdk')
 
     shutil.copytree(path.get_path() + '/tpl/temp_node', dir + '/temp/node')
-    #拷贝fisco-bcos文件
+    #copy fisco-bcos file
     shutil.copy(path.get_fisco_path(), dir + '/temp/node/')
 
     shutil.copy(dir + '/temp/node/sdk/ca.crt', dir + '/temp/web3sdk/conf')
@@ -42,17 +42,17 @@ def temp_node_build(dir, port):
     logger.info('build temp node end')
 
 def start_temp_node(dir, port):
-    """启动临时节点
+    """start temp node
     
     Arguments:
-        dir {string} -- temp节点所在目录
-        port {Port} -- temp节点使用的端口信息
+        dir {string} -- temp node dir
+        port {Port} -- the port temp node use
     
     Returns:
-        bool -- 启动成功返回True,否则返回False
+        bool -- if temp node start success, return True, if not False will return.
     """
 
-    # 端口检测
+    # check port conflicts
     if utils.port_in_use(port.get_rpc_port()):
         logger.warn(' rpc port in use, port is %s', port.get_rpc_port())
         consoler.error(' temp node rpc port is in use, port is %s', port.get_rpc_port())
@@ -80,15 +80,16 @@ def start_temp_node(dir, port):
     logger.info('check status, status is %d, output is %s', status, output)
 
     if utils.valid_string(output) and (output.find('is running') != -1):
+        # add consoler.log for the reason temp node start failed.
         return True
     else:
         return False
 
 def stop_temp_node(dir):
-    """停止temp节点
+    """stop temp node
     
     Arguments:
-        dir {string} -- temp节点所在目录
+        dir {string} -- temp node dir
     """
 
     cmd = 'bash %s/temp/node/stop.sh' % dir
@@ -96,13 +97,13 @@ def stop_temp_node(dir):
     logger.debug('stop status, status is %d, output is %s', status, output)
 
 def export_genesis(dir):
-    """从temp节点导出genesis.json文件
+    """ export genesis.json from temp node
     
     Arguments:
-        dir {string} -- temp节点所在目录
+        dir {string} -- temp node dir
         
     Returns:
-        bool -- 启动成功返回True,否则返回False
+        bool --  if export success, return True, if not False will return.
     """
 
     cmd = 'bash %s/temp/node/export.sh %s/%s' % (dir, dir, 'genesis.json')
@@ -115,10 +116,10 @@ def export_genesis(dir):
         return True
 
 def clean_temp_node(dir):
-    """停止temp节点,并且删除temp节点的目录
+    """ stop temp node and remove temp node dir
     
     Arguments:
-        dir {string} -- temp节点所在的目录
+        dir {string} -- temp node dir
     """
 
     stop_temp_node(dir)
@@ -126,14 +127,14 @@ def clean_temp_node(dir):
 
 
 def registerNode(dir, nodejson):
-    """注册一个节点信息,通过启动的temp节点
+    """register node info to node manager contract
     
     Arguments:
-        dir {string} -- temp节点所在的目录  
-        nodejson {json string} -- 节点注册信息
+        dir {string} -- temp node dir 
+        nodejson {json string} -- node info
     """
 
     cmd = 'bash %s/temp/web3sdk/bin/web3sdk NodeAction registerNode file:%s' % (dir, nodejson)
     status, output = commands.getstatusoutput(cmd)
 
-    logger.debug('register status, status is %d', status)
+    logger.debug('register status, status is %d, output is %s', status, output)

@@ -1,1 +1,1 @@
-__all__ = ['build', 'data', 'parser','chain','opr','publish','package']
+__all__ = ['build', 'data', 'parser','chain','opr','publish','package','expand']

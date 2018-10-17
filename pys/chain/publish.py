@@ -8,6 +8,8 @@ from pys.chain import meta
 from pys.chain import data
 from pys.chain.chain import Chain
 
+from pys.chain.chain import Chain
+
 
 def publish_chain(chains):
     """发布命令行传入的所有指定版本的区块链.
@@ -77,38 +79,85 @@ def push_package(dir, host, chain_id, version):
         [bool] -- 成功返回True,失败返回False
     """
 
-    # 检查fisco-bcos文件是否存在
-    if not os.path.exists(dir + '/fisco-bcos'):
-        logger.warn('fisco-bcos is not exist, dir is ' + dir)
+    # check if common dir exist.
+    if not os.path.exists(dir + '/common'):
+        logger.warn('common dir is not exist, dir is %s, host is %s', dir, host)
         return False
 
-    if not os.path.isdir(dir + '/web3sdk'):
-        logger.warn('web3sdk is not exist, dir is ' + dir)
+    # check if host dir exist.
+    if not os.path.exists(dir + '/' + host):
+        logger.warn('host dir is not exist, dir is %s, host is %s', dir, host)
         return False
 
     # create dir on the target server
     ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
     if not ret:
+        consoler.error('chain %s host %s, publish install package failed.', chain_id, host)
         return ret
     
-    # push package
+    # push common package
+    ret = ansible.copy_module(host, dir + '/common/', ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        consoler.error('chain %s host %s, push common dir failed.', chain_id, host)
+        return ret
+    
+    # push host dir
     ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
     if not ret:
-        return ret
-
-    # push fisco-bcos file
-    ret = ansible.copy_module(host, dir + '/fisco-bcos', ansible.get_dir() + '/' + chain_id)
-    if not ret:
+        consoler.error('chain %s host %s, publish install package failed', chain_id, host)
         return ret
     
-    # push web3sdk dir
-    ret = ansible.copy_module(host, dir + '/web3sdk', ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        return ret
-
     logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)
     
     return True
+
+def push_node(dir, host, chain_id, version, index, force = False):
+    # 
+    node_dir = Chain(chain_id, version).data_dir() + ('/%s/node%d/' % (host, index))
+    # check if nodeIndex dir exist.
+    if not os.path.exists(node_dir):
+        logger.warn('%s not exist, index is %d, host is %s',node_dir, index, host)
+        consoler.error('push node%d failed, node dir not exist.', index)
+        return False
+    
+    # create dir on the target server
+    ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        consoler.error('push node%d failed, mkdir operation failed.', index)
+        return ret
+    
+    # check if common dir exist.
+    if not os.path.exists(dir + '/common'):
+        logger.warn('common dir not exist, dir is %s, host is %s', dir, host)
+        consoler.error('push node%d failed, common dir not exist.', index)
+        return False
+    
+    # push common package
+    ret = ansible.copy_module(host, dir + '/common/', ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        consoler.error('push node%d failed, push common dir failed.', index)
+        return ret
+    
+    if not force:
+        # check if nodeIndex already push
+        pass
+    
+    # push nodeIndex dir
+    ret = ansible.copy_module(host, node_dir, ansible.get_dir() + '/' + chain_id)
+    if not ret:
+        consoler.error('push node%d failed.', index)
+        return ret
+    
+    
+
+
+
+
+    
+
+    
+
+
 
 
 

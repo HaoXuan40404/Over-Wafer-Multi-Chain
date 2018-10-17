@@ -1,9 +1,12 @@
 #coding:utf-8
 
+from pys.chain import data
+
 class Chain:
-    '''
-    描述一条区块链的chainid、版本号
-    '''
+    """
+    Chain object contains id and version of one chain.
+    """
+
     def __init__(self, id, version):
         self.id = id
         self.version = version
@@ -22,3 +25,6 @@ class Chain:
 
     def get_version(self):
         return self.version
+    
+    def data_dir(self):
+        return data.package_dir(self.get_id(), self.get_version())
