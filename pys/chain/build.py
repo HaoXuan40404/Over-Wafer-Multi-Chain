@@ -12,7 +12,6 @@ from pys.log import consoler
 from pys.chain import parser
 from pys.chain import data
 from pys.node import build
-from pys.chain.node_deps import NodeDeps
 from pys.node import temp_node
 from pys.exp import MCError
 from pys.node.bootstrapsnode import P2pHosts
@@ -216,8 +215,7 @@ def build_cfg(cc):
         # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
-                shutil.copy(dir + '/genesis.json', dir +
-                            ('/%s/node%d/' % (node.get_host_ip(), index)))
+                shutil.copy(dir + '/genesis.json', dir + '/' + node.get_host_ip() + '/node' + str(index))
 
         utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
                       'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
@@ -261,7 +259,7 @@ def expand_pkg(cc):
 def expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson):
     chain = cc.get_chain()
     port = cc.get_port()
-    
+
     if os.path.exists(chain.data_dir()): #
         if not os.path.exists(chain.data_dir() + '/common'):
             raise MCError(' chain dir exist ,but common dir not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))

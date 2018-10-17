@@ -37,7 +37,7 @@ def build_node_dir(chain, node, port, index):
     """
 
     logger.info('chain is %s, node is %s, index is %s', chain, node, index)
-    node_dir = chain.data_dir() + '/' + node.get_host_ip() + '/' + index + '/'
+    node_dir = chain.data_dir() + '/' + node.get_host_ip() + '/' + str(index) + '/'
     if os.path.exists(node_dir):
         logger.warn(
             ' skip, node%d already exist, chain is %s, node is %s ', index, chain, node)
