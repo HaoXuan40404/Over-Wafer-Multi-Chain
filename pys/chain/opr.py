@@ -498,8 +498,7 @@ def export_package(export_list, dest):
         for host in os.listdir(dir):
             if utils.valid_ip(host):
                 shutil.copytree(dir + '/' + host, dest + '/' + host)
-                shutil.copytree(dir + '/web3sdk', dest + '/' + host + '/web3sdk')
-                shutil.copy(dir + '/fisco-bcos', dest + '/' + host)
+                shutil.copytree(dir + '/common', dest + '/' + host + '/common')
             else:
                 logger.debug('not invalid host_ip ' + host)    
     else:
