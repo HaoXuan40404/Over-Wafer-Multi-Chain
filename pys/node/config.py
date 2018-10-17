@@ -57,6 +57,15 @@ class Config:
     def set_channel_port(self, channel_port):
         self.channelPort = str(channel_port)
 
+    def get_rpc_port(self):
+        return self.rpcport
+
+    def get_p2p_port(self):
+        return self.p2pport
+
+    def get_channel_port(self):
+        return self.channelPort
+
     def __repr__(self):
         return self.toJson()
 
@@ -70,7 +79,15 @@ class Config:
         '''
         解析json字符串, 转换为config对象
         '''
-        pass
+        with open(sjson) as f:
+            try : 
+                js = json.load(f)
+                self.systemproxyaddress = js['systemproxyaddress']
+                self.rpcport = js['rpcport']
+                self.p2pport = js['p2pport']
+                self.channelPort = js['channelPort']
+            except Exception as e:
+                logger.error('%s is not a valid config', e)
 
 def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT):
     '''
@@ -82,5 +99,3 @@ def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channe
     cf.set_p2p_port(p2p_port)
     logger.debug('config json is ' + cf.toJson())
     return cf.toJson()
-
-    

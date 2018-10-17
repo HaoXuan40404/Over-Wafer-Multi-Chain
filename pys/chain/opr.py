@@ -1,6 +1,6 @@
 #coding:utf-8
 import os
-
+import json
 from pys import path
 from pys import ansible, utils
 from pys.chain import meta
@@ -10,6 +10,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
 from pys.chain import package
+import shutil
 
 def init_chain():
     """[init]
@@ -481,3 +482,65 @@ def monitor_server(chain_id):
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.monitor_module(k, ansible.get_dir() + '/' + chain_id)
+
+def export_package(export_list, dest):
+    """[export package into dest]
+    
+    Arguments:
+        export_list {[list]} -- [chain_id:version]
+        dest {[mkdir]} -- [destination]
+    """
+
+    chain_get = valid_cmd(export_list)
+    
+    if utils.valid_chain_id(chain_get[0]):
+        dir = data.package_dir(chain_get[0], chain_get[1])
+        for host in os.listdir(dir):
+            if utils.valid_ip(host):
+                shutil.copytree(dir + '/' + host, dest + '/' + host)
+                shutil.copytree(dir + '/web3sdk', dest + '/' + host + '/web3sdk')
+                shutil.copy(dir + '/fisco-bcos', dest + '/' + host)
+            else:
+                logger.debug('not invalid host_ip ' + host)    
+    else:
+        consoler.error('invalid chain_id format. %s %s', chain_get[0], chain_get[1])
+
+def ls_port(host_ip):
+    """[show in host_ip which port used (published fisco-bcos) ]
+    
+    Arguments:
+        host_ip {[string]} -- [host_ip]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    if utils.valid_ip(host_ip):
+        dir = data.meta_dir_base()
+        for chain_id in  os.listdir(dir):
+            cfg = dir + chain_id +  '/meta.json'
+            if not os.path.isfile(cfg):
+                consoler.error('invalid cfg. %s', cfg)
+            with open(cfg) as f:
+                try : 
+                    js = json.load(f)
+                    node = js['nodes']
+                    for host in node:
+                        if host == host_ip:
+                            print('chain ' + chain_id + ' in ' + host + ' used port: ')
+                            for iter_var in range(int(node[host]['node_number'])):
+                                rpcport = node[host]['rpc_port']
+                                p2pport = node[host]['p2p_port']
+                                channelPort = node[host]['channel_port']
+                                rpcport = int(rpcport) + iter_var
+                                p2pport = int(p2pport) + iter_var
+                                channelPort = int(channelPort) + iter_var
+                                print('\trpcport => ' +  str(rpcport))
+                                print('\tp2pport => ' + str(p2pport))
+                                print('\tchannelPort => ' + str(channelPort))
+                except Exception as e:
+                    logger.error('%s is not a valid config', e)
+    return 0
+
+
+   

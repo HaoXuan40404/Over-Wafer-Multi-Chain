@@ -13,12 +13,13 @@ from pys.log import logger, consoler
 class MetaNode:
 
 
-    def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port):
+    def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port, node_number):
         self.host_ip = host_ip
         self.version = version
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
         self.channel_port = channel_port
+        self.node_number = node_number
 
     def __repr__(self):
         return 'host %s, version %s' % (self.host_ip, self.version)
@@ -70,6 +71,6 @@ class Meta:
                 jsondata = json.load(f)
                 if jsondata.has_key('nodes'):
                     for v in jsondata['nodes'].values():
-                        mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'])
+                        mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'], v['node_number'])
                         logger.info('load from meta.json, meta node is %s', mn)
                         self.append(mn)
