@@ -87,7 +87,7 @@ class Config:
                 self.p2pport = js['p2pport']
                 self.channelPort = js['channelPort']
             except Exception as e:
-                logger.error('%s is not a valid config', e)
+                logger.error('parser config failed, cfg is %s, exception is %s', sjson, e)
 
 def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT):
     '''
