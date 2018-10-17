@@ -64,7 +64,10 @@ def cmd_view():
     parser.add_argument('--pkg_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
     parser.add_argument('--pub_list', nargs='+', metavar=('all or chain_id or',
-                                                          'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
+                                                            'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
+    parser.add_argument('--export', nargs=2, metavar=('chain_id',
+                                                        'dest_path'), help='Output =>  export publish package.')
+    parser.add_argument('--ls_port', nargs=1, metavar=('host_ip'), help='Output =>  ls all publish port')
     parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
                                                         'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
@@ -161,9 +164,20 @@ def cmd_view():
         opr.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
     elif args.init_ansible:
-        # 解析hosts.conf配置
+        # 解析hosts.conf配置 
         opr.init_chain()
         consoler.info(' ansible init success.')
+    elif args.export:
+        consoler.info(' export operation begin.')
+        export_list = args.export[0]
+        dest = args.export[1]
+        opr.export_package(export_list, dest)
+        consoler.info(' export operation end.')
+    elif args.ls_port:
+        consoler.info(' ls_por operation begin.')
+        host_ip = args.ls_port[0]
+        opr.ls_port(host_ip)
+        consoler.info(' ls_por operation end.')  
     else:
         consoler.error(
             'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
