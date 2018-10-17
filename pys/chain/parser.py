@@ -6,13 +6,13 @@ import codecs
 import sys
 import os
 
-from chain import Chain
 from pys import utils
-from pys import exp
 from pys.log import logger
+from chain import Chain
+from pys.exp import MCError
 
 class Port:
-    """rpc port, p2p port, channel port的一组值.
+    """Port object contains rpc port、channel port、p2p port.
     """
 
     def __init__(self, rpc_port, p2p_port, channel_port):
@@ -56,7 +56,7 @@ class NodeEle:
         l = self.node_desc.split()
 
         if len(l) != 3:
-            raise Exception("node_desc invalid format ", self.node_desc)
+            raise Exception(" node_desc invalid format ", self.node_desc)
 
         if not utils.valid_ip(l[0]):
             raise Exception("node_desc invalid format invalid host_ip ", l[0])

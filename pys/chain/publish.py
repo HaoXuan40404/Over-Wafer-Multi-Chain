@@ -68,7 +68,7 @@ def publish_server(chain_id, chain_version):
     # 将部署信息保存
     mm.write_to_file()
 
-def push_package(dir, host, chain_id, version):
+def push_package(dir, host, chain_id, version, force = True):
     """推送单个安装包到指定服务器
     
     Arguments:
@@ -101,54 +101,19 @@ def push_package(dir, host, chain_id, version):
         consoler.error('chain %s host %s, push common dir failed.', chain_id, host)
         return ret
     
-    # push host dir
-    ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('chain %s host %s, publish install package failed', chain_id, host)
-        return ret
+    if force:
+        # push host dir
+        ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
+        if not ret:
+            consoler.error('chain %s host %s, publish install package failed', chain_id, host)
+            return ret
+    else:
+        # add 
+        pass
     
     logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)
     
-    return True
-
-def push_node(dir, host, chain_id, version, index, force = False):
-    # 
-    node_dir = Chain(chain_id, version).data_dir() + ('/%s/node%d/' % (host, index))
-    # check if nodeIndex dir exist.
-    if not os.path.exists(node_dir):
-        logger.warn('%s not exist, index is %d, host is %s',node_dir, index, host)
-        consoler.error('push node%d failed, node dir not exist.', index)
-        return False
-    
-    # create dir on the target server
-    ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('push node%d failed, mkdir operation failed.', index)
-        return ret
-    
-    # check if common dir exist.
-    if not os.path.exists(dir + '/common'):
-        logger.warn('common dir not exist, dir is %s, host is %s', dir, host)
-        consoler.error('push node%d failed, common dir not exist.', index)
-        return False
-    
-    # push common package
-    ret = ansible.copy_module(host, dir + '/common/', ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('push node%d failed, push common dir failed.', index)
-        return ret
-    
-    if not force:
-        # check if nodeIndex already push
-        pass
-    
-    # push nodeIndex dir
-    ret = ansible.copy_module(host, node_dir, ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('push node%d failed.', index)
-        return ret
-    
-    
+    return True  
 
 
 

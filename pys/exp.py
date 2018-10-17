@@ -2,7 +2,7 @@
 from pys.log import logger
 from pys.log import consoler
 
-class MchainError(Exception):
+class MCError(Exception):
     """自定义异常
     
     Arguments:
