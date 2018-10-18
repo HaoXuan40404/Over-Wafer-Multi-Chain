@@ -9,6 +9,7 @@ import time
 from pys import path
 from pys.chain import data
 from pys.log import logger
+from pys.exp import MCError
 
 class MetaNode:
 
@@ -100,6 +101,8 @@ class Meta:
         except Exception as e:
             logger.error(
                 ' write meta failed, chaind id is %s, exception is %s', self.chain_id, e)
+            # raise or not ???
+            raise MCError(' write meta.json failed, chain id is %s, exception is %s' % (self.chain_id, e))
 
     def exist(self):
         return os.path.exists(data.meta_dir(self.chain_id) + '/meta.json')
@@ -107,7 +110,7 @@ class Meta:
     def load_from_file(self):
         self.clear()
         if not self.exist():
-            logger.warn('meta.json not exist, chain_id is ' + self.chain_id)
+            logger.info(' meta.json not exist, chain_id is ' + self.chain_id)
             return
 
         try:
@@ -122,5 +125,7 @@ class Meta:
                                 'load from meta.json, meta node is %s', mn)
                             self.append(mn)
         except Exception as e:
-            logger.warn(
+            logger.error(
                 ' load meta failed, chaind id is %s, exception is %s', self.chain_id, e)
+            # raise or not ???
+            raise MCError(' load meta.json data failed, chain id is %s, exception is %s' % (self.chain_id, e))
