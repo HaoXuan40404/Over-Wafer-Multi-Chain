@@ -49,9 +49,9 @@ class Meta:
         if self.nodes.has_key(host_ip):
             host_nodes = self.nodes[host_ip]
             # assert len(host_nodes) != 0
-            for node in self.nodes:
+            for node in host_nodes:
                 if index == node.index:
-                    logger.debug(' host index exist, host is %s, index is %d, hm is %s', host_ip, index, host_nodes)
+                    logger.debug(' host index exist, host is %s, index is %d, host nodes is %s', host_ip, index, host_nodes)
                     return True
         logger.debug(' host index not exist, host is %s, index is %d, meta is %s', host_ip, index, self.to_json())
         return False
@@ -98,7 +98,7 @@ class Meta:
                 logger.info(
                     'write info meta.json, content is ' + self.to_json())
         except Exception as e:
-            logger.warn(
+            logger.error(
                 ' write meta failed, chaind id is %s, exception is %s', self.chain_id, e)
 
     def exist(self):
