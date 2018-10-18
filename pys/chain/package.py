@@ -6,7 +6,7 @@ from pys.log import logger, consoler
 from pys.chain import data
 
 class Ver:
-    """管理一条链对应版本的所有安装包信息
+    """all package of chain of the version
     """
 
     def __init__(self, chain_id, chain_version):
@@ -32,6 +32,9 @@ class Ver:
     def clear(self):
         self.pkg_list = []
     
+    def empty(self):
+        return len(self.pkg_list) == 0
+    
     def exist(self):
         dir = data.package_dir(self.chain_id, self.chain_version)
         return os.path.exists(dir)
@@ -40,7 +43,7 @@ class Ver:
 
         self.clear()
         if not self.exist():
-            logger.warn('dir not exist, chain_id is %s, chain_version is %s',
+            logger.info('dir not exist, chain_id is %s, chain_version is %s',
                         self.chain_id, self.chain_version)
             return
         
@@ -51,15 +54,15 @@ class Ver:
         for node in os.listdir(dir):
             if utils.valid_ip(node):
                 self.append(node)
-                logger.debug('node is %s', node)
+                logger.debug(' chain id %s, chain version %s, node is %s', self.chain_id, self.chain_version, node)
             else:
-                logger.debug('skip, not invalid host_ip ' + dir)
+                logger.debug(' skip, not invalid host_ip, chain id is %s, chain version is %s,  node is %s', self.chain_id, self.chain_version, node)
 
-        logger.debug('load end, len is %d', len(self.get_pkg_list()))
+        logger.info('load end, len is %d', len(self.get_pkg_list()))
 
 
 class Package:
-    """管理一条链所有的安装包信息
+    """all package of chain
     """
 
     def __init__(self, chain_id):
@@ -74,6 +77,9 @@ class Package:
     
     def get_version_list(self):
         return self.ver_list
+    
+    def empty(self):
+        return len(self.ver_list) == 0
 
     def append(self, v):
         self.ver_list.append(v)

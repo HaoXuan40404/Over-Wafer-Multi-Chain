@@ -106,6 +106,9 @@ class Meta:
 
     def exist(self):
         return os.path.exists(data.meta_dir(self.chain_id) + '/meta.json')
+    
+    def empty(self):
+        return len(self.nodes) == 0
 
     def load_from_file(self):
         self.clear()

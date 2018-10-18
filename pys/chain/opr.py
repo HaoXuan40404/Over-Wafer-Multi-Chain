@@ -175,7 +175,7 @@ def monitor_chain(chain):
                 consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def pub_list(chains):
-    """[列出部署后链的安装包对应的节点]
+    """list all package published
     
     Arguments:
         chains {[list]} -- [chain id]
@@ -191,35 +191,33 @@ def pub_list(chains):
             for chain_id in os.listdir(dir):
                 m = Meta(chain_id)
                 m.load_from_file()
-                meta_list.append(m)
+                if not m.empty():
+                    meta_list.append(m)
         else:
-            consoler.info(' No published chain pkg exist, do nothing.')
+            consoler.info(' No published chain exist, do nothing.')
     else:
         for chain_id in chains:
             m = Meta(chain_id)
             m.load_from_file()
-            meta_list.append(m)
+            if not m.empty():
+                meta_list.append(m)
 
     for m in meta_list:
-        consoler.info(' => chain is %s' % m.get_chain_id())
+        consoler.info(' => chain id ： %s' % m.get_chain_id())
         nodes = m.get_nodes()
         for node in nodes.iterkeys():
-            consoler.info('\t node => %s' % node)
+            consoler.info('\t host => %s' % node)
 
     logger.info('list end.')
 
-def pkg_list(chains, host_detail = True):
-    """[列出生成链的安装包对应的节点]
+def pkg_list(chains):
+    """list all version and all pacakge of the chain
     
     Arguments:
-        chains {[list]} -- [chain id]
-    
-    Keyword Arguments:
-        host_detail {bool} -- [description] (default: {True})
+        chains {[type]} -- all chains
     """
 
-
-    logger.info('chains is %s, host_detail is %s', chains, host_detail)
+    logger.info(' chains is %s', chains)
 
     consoler.info(' chains is %s' % chains)
 
@@ -230,22 +228,23 @@ def pkg_list(chains, host_detail = True):
             for chain_id in os.listdir(dir):
                 p = Package(chain_id)
                 p.load()
-                pkg_list.append(p)
+                if not p.empty():
+                    pkg_list.append(p)
         else:
-            consoler.info(' No build chain pkg exist, do nothing.')
+            consoler.info(' No build chain exist, do nothing.')
     else:
         for chain_id in chains:
             p = Package(chain_id)
             p.load()
-            pkg_list.append(p)
+            if not p.empty():
+                pkg_list.append(p)
 
     for p in pkg_list:
-        consoler.info(' => chain is %s' % p.get_chain_id())
+        consoler.info(' => chain id ： %s' % p.get_chain_id())
         for v in p.get_version_list():
-            consoler.info(' \t version is %s' % v.get_chain_version())
-            if isinstance(host_detail, bool) and host_detail:
-                for h in v.get_pkg_list():
-                    consoler.info(' \t\t pkg => %s' % h)
+            consoler.info(' \t chain version ： %s' % v.get_chain_version())
+            for h in v.get_pkg_list():
+                consoler.info(' \t\t package ：%s' % h)
 
     logger.info('load end')
 
