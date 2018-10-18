@@ -17,9 +17,7 @@ from pys.chain import publish
 
 
 def init():
-    """[init函数]
-    """
-
+ 
     # init pwd dir
     pwd = os.getcwd()
     sys.path.append(pwd + '/pys')
@@ -40,8 +38,8 @@ def init():
     ansible.set_dir(mconf.get_ansible_dir())
 
 
-def cmd_view():
-    """[执行命令行对应操作]
+def usage():
+    """cmd usage
     """
 
     parser = argparse.ArgumentParser(
@@ -164,7 +162,6 @@ def cmd_view():
         opr.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
     elif args.init_ansible:
-        # 解析hosts.conf配置 
         opr.init_chain()
         consoler.info(' ansible init success.')
     elif args.export:
@@ -184,10 +181,12 @@ def cmd_view():
     return 0
 
 def main():
-    init()
-    cmd_view()
-
-
+    try:
+        init()
+    except Exception as e:
+        consoler.error(' OWMC init fault , %s', e)
+    else:
+        usage()
 
 if __name__ == '__main__':
     main()

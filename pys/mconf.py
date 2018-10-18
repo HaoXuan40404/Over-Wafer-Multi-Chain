@@ -7,10 +7,11 @@ import codecs
 from pys import utils
 from pys import path
 from pys.log import logger
+from pys.exp import MCError
 
 
 class MchainConf():
-    """保存mchain.conf的配置
+    """parser mchain.conf 
     """
 
     agent_name = 'WB'
@@ -32,33 +33,40 @@ def get_sysaddress():
 
 
 def parser(mchain):
-    """解析mchain.conf配置文件
+    """parser mchain.conf config file
     
     Arguments:
-        mchain {string} -- mchain.conf路径
+        mchain {string} -- mchain.conf path
     
     Raises:
-        Exception -- 异常描述
+        MCError -- exception description
     """
 
     logger.info('mchain.conf is %s', mchain)
-    # 配置解析
+    # 
     if not utils.valid_string(mchain):
-        raise Exception('mchain not string ', mchain)
+        logger.error(' mchain.conf not invalid path, mchain.conf is %s', mchain)
+        raise MCError(' mchain.conf not invalid path, mchain.conf is %s' % mchain)
 
     # read and parser config file
     cf = configparser.ConfigParser()
-    with codecs.open(mchain, 'r', encoding='utf-8') as f:
-        cf.readfp(f)
+    try:
+        with codecs.open(mchain, 'r', encoding='utf-8') as f:
+            cf.readfp(f)
+    except Exception as e:
+        logger.error(' open mchain.conf file failed, exception is %s', e)
+        raise MCError(' open mchain.conf file failed, exception is %s' % e)
 
     agent_name = cf.get('agent', 'agent_name')
     if not utils.valid_string(agent_name):
-        raise Exception('invalid agent_name, ', agent_name)
+        logger.error(' invalid mchain.conf format, agent_name empty, agent_name is %s', agent_name)
+        raise MCError(' invalid mchain.conf format, agent_name empty, agent_name is %s' % agent_name)
     MchainConf.agent_name = agent_name
 
     ansible_dir = cf.get('ansible', 'dir')
     if not utils.valid_string(ansible_dir):
-        raise Exception('invalid ansible_dir, ', ansible_dir)
+        logger.error(' invalid mchain.conf format, ansible_dir empty, ansible_dir is %s', ansible_dir)
+        raise MCError(' invalid mchain.conf format, ansible_dir empty, ansible_dir is %s' % ansible_dir)
     MchainConf.ansible_dir = ansible_dir
 
     logger.info('mchain.conf end, result is %s', MchainConf())
