@@ -5,7 +5,7 @@ import json
 from pys.log import logger
 
 '''
-config.json的默认配置
+config.json defaults
 '''
 SEALENGINE = 'PBFT'
 SYSTEMPROXYADDRESS = '0xe4cd3e488cbf0a98e8ecd8bc5eefaf10e5d54905'
@@ -25,7 +25,7 @@ LOGCONF = './log.conf'
 
 class Config:
     '''
-    fisco-bcos config.json配置文件对应的对象, 用来生成config.json文件
+    Config object which use to generate config.json
     '''
     def __init__(self, networkid):
         self.sealEngine = SEALENGINE
@@ -71,13 +71,13 @@ class Config:
 
     def toJson(self):
         '''
-        将config对象转换为json对象
+        convert config object to json object
         '''
         return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
 
     def fromJson(self, sjson):
         '''
-        解析json字符串, 转换为config对象
+        parser config file and generate config object.
         '''
         with open(sjson) as f:
             try : 
@@ -86,16 +86,22 @@ class Config:
                 self.rpcport = js['rpcport']
                 self.p2pport = js['p2pport']
                 self.channelPort = js['channelPort']
+                logger.debug(' parser config success, cfg is %s, cfg_obj is %s', sjson, self)
+                return True
             except Exception as e:
-                logger.error('parser config failed, cfg is %s, exception is %s', sjson, e)
+                logger.error(' parser config failed, cfg is %s, exception is %s', sjson, e)
+                return False
 
 def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT):
     '''
-    构造config.json
+    generate config.json
     '''
     cf = Config(network_id)
     cf.set_rpc_port(rpc_port)
     cf.set_channel_port(channel_port)
     cf.set_p2p_port(p2p_port)
     logger.debug('config json is ' + cf.toJson())
-    return cf.toJson()
+    return cf.toJson() 
+
+def load_config_json(cfg):
+    pass
