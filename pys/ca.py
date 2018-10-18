@@ -85,7 +85,7 @@ def generate_root_ca(dir):
 
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['out'] = dir
-    os.system('bash $scripts/generate_chain_cert.sh -o $out')
+    os.system('bash $scripts/generate_chain_cert.sh -o $out >/dev/null 2>&1')
 
 def generator_agent_ca(dir, ca, agent):
     """[生成机构证书]
@@ -101,7 +101,7 @@ def generator_agent_ca(dir, ca, agent):
     os.environ['out'] = dir
     os.environ['ca'] = ca
     os.environ['agent'] = agent
-    os.system('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
+    os.system('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent >/dev/null 2>&1')
 
 def generator_node_ca(dir, node, agent):
     """[生成节点证书]
@@ -116,7 +116,7 @@ def generator_node_ca(dir, node, agent):
     os.environ['agent'] = agent
     os.environ['node'] = node
     os.environ['out']= dir
-    os.system('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
+    os.system('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out >/dev/null 2>&1')
 
 def generator_sdk_ca(dir):
     """[生成sdk证书]
@@ -128,4 +128,4 @@ def generator_sdk_ca(dir):
 
     os.environ['out'] = dir
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.system('bash $scripts/generate_sdk_cert.sh -d $out')
+    os.system('bash $scripts/generate_sdk_cert.sh -d $out >/dev/null 2>&1')
