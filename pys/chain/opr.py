@@ -245,7 +245,7 @@ def pkg_list(chains):
                     consoler.info('\t\t => package ：%s', pkg)
                     hn = HostNodeDirs(chain, version, pkg)
                     for node_idx in hn.get_node_dirs():
-                        consoler.info('\t\t\t\t => %s', node_idx)
+                        consoler.info('\t\t\t => %s', node_idx)
 
 
     logger.info('load end')
