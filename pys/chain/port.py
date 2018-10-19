@@ -76,7 +76,7 @@ class HostPort:
             cfg_json = host_dir + '/' + node + '/config.json'
             cf = config.Config(self.chain_id)
             if cf.fromJson(cfg_json):
-                p = Port(cf.get_rpc_port(), cf.get_p2p_port(), cf.get_channel_port())
+                p = Port(int(cf.get_rpc_port()), int(cf.get_p2p_port()), int(cf.get_channel_port()))
                 self.ports[node] = p
                 logger.debug(' append node, node is %d, port is %s', node, p)
 
