@@ -1,7 +1,9 @@
 
 from pys.chain.package import * 
+from pys.chain.package import *
 from pys.chain.chain import Chain
-from pys.chain.node import config
+from pys.node import config
+from pys.exp import MCError
 
 class Port:
     """Port object contains rpc port、channel port、p2p port.
@@ -9,7 +11,7 @@ class Port:
 
     def __init__(self, rpc_port, p2p_port, channel_port):
         self.rpc_port = rpc_port
-        self.p2p_port = p2p_port
+        self.p2p_port =  p2p_port
         self.channel_port = channel_port
     
     def set_rpc_port(self, rpc_port):
@@ -34,7 +36,7 @@ class Port:
         return Port(self.get_rpc_port() + index, self.get_p2p_port() + index, self.get_channel_port() + index)
     
     def __repr__(self):
-        return '[rpc_port] %d, [p2p_port] %d, [channel_port] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
+        return '[rpc] %d, [p2p] %d, [channel] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
 
 class HostPort:
     def __init__(self, chain_id, chain_version, host):
@@ -50,7 +52,8 @@ class HostPort:
     def get_by_index(self, index):
         if self.ports.has_key(index):
             return self.ports[index]
-        return Port(0, 0, 0)
+        raise MCError(' not found, chain id is %s, chain version is %s, host is %s, index is %d' % (
+            self.chain_id, self.chain_version, self.host, index))
     
     def get_chain_id(self):
         return self.chain_id
@@ -66,26 +69,18 @@ class HostPort:
     
     def load(self):
         self.clear()
-        host_dir = Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
-        if not os.path.exists(host_dir):
-            logger.info(' host dir not exist, chain_id is %s, chain_version is %s, host is %s',
-                        self.chain_id, self.chain_version, self.host)
-            return
 
-        logger.debug(' load begin, chain_id is %s, chain_version is %s, host is %s',
-                     self.chain_id, self.chain_version, self.host)
+        hn = HostNodeDirs(self.chain_id, self.chain_version, self.host)
+        host_dir = Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/' 
+        for node in hn.get_node_dirs():
+            cfg_json = host_dir + '/' + node + '/config.json'
+            cf = config.Config(self.chain_id)
+            if cf.fromJson(cfg_json):
+                p = Port(cf.get_rpc_port(), cf.get_p2p_port(), cf.get_channel_port())
+                self.ports[node] = p
+                logger.debug(' append node, node is %d, port is %s', node, p)
 
-        for list_dir in os.listdir(host_dir):
-            if 'node' in list_dir:
-                cfg_json = host_dir + '/' + list_dir + '/config.json'
-                cf = config.Config(chain_id)
-                if cf.fromJson(cfg_json):
-                    index = int(list_dir[4:])
-                    p = Port(cf.get_rpc_port(), cf.get_p2p_port(), cf.get_channel_port())
-                    m[index] = p
-                    logger.debug(' append node, index is %d, port is %s', index, p)
-        
-        logger.info('load end, ports is %d', self)
+        logger.info('load end, hp ports is %s', self)
     
 class ChainVerPort:
 
@@ -93,6 +88,7 @@ class ChainVerPort:
         self.chain_version = chain_version
         self.chain_id = chain_id
         self.ports = {}
+        self.load()
 
     def __repr__(self):
         return ' chain id is %s, chain version is %s, ports is %s' % (self.chain_id, self.chain_version, self.ports)
@@ -103,8 +99,11 @@ class ChainVerPort:
     def get_chain_version(self):
         return self.chain_version
 
-    def get_by_host_index(self, host, index):
-        pass
+    def get_by_host(self, host):
+        if self.ports.has_key(host):
+            return self.ports[host]
+        raise MCError(' not found, chain id is %s, chain version is %s, host is %s' % (
+            self.chain_id, self.chain_version, host))
     
     def clear(self):
         self.ports = {}
@@ -114,31 +113,67 @@ class ChainVerPort:
         return os.path.exists(dir)
 
     def load(self):
+
         self.clear()
-        if not self.exist():
-            logger.info('dir not exist, chain_id is %s, chain_version is %s',
-                        self.chain_id, self.chain_version)
-            return
+        vh = VerHosts(self.chain_id, self.chain_version)
+        for host in vh.get_pkg_list():
+            hp = HostPort(self.chain_id, self.chain_version, host)
+            self.ports[host] = hp
 
-        dir = Chain(self.chain_id, self.chain_version).data_dir()
-        logger.debug('load begin, chain_id is %s, chain_version is %s, dir is %s',
-                     self.chain_id, self.chain_version, dir)
-
-        for host in os.listdir(dir):
-            if utils.valid_ip(host):
-                self.ports[host] = HostPort(self.chain_id, self.chain_version, host)
-                logger.debug(' chain id %s, chain version %s, host is %s, ports is %s',
-                             self.chain_id, self.chain_version, host, )
-            else:
-                logger.debug(' skip, not invalid host_ip, chain id is %s, chain version is %s,  host is %s',
-                             self.chain_id, self.chain_version, host)
-
-        logger.info('load end, ports is %d', self)
+        logger.info('load end, cv ports is %s', self)
 
 class ChainPort:
-    pass
+
+    def __init__(self, chain_id):
+        self.chain_id = chain_id
+        self.ports = {}
+        self.load()
+    
+    def __repr__(self):
+        return ' chain id is %s, ports is %s' % (self.chain_id, self.ports)
+
+    def clear(self):
+        self.ports = {}
+
+    def get_chain_id(self):
+        return self.chain_id
+    
+    def get_by_chain_version(self, version):
+        if self.ports.has_key(version):
+            return self.ports[version]
+        raise MCError(' not found, chain id is %s, chain version is %s' % (self.chain_id, version))
+    
+    def load(self):
+
+        cv = ChainVers(self.chain_id)
+        for version in cv.get_ver_list():
+            hp = ChainVerPort(self.chain_id, version)
+            self.ports[version] = hp
+        
+        logger.info('load end, cp ports is %s', self)
 
 class AllChainPort:
     def __init__(self):
         self.ports = {}
+        self.load()
+    
+    def clear(self):
+        self.ports = {}
+    
+    def __repr__(self):
+        return ' ports is %s' % (self.ports)
+    
+    def get_by_chain_id(self, chain_id):
+        if self.ports.has_key(chain_id):
+            return self.ports[chain_id]
+        raise MCError(' not found, chain id is %s' % (chain_id))
+    
+    def load(self):
+    
+        ac = AllChain()
+        for chain_id in ac.get_chains():
+            hp = ChainPort(chain_id)
+            self.ports[chain_id] = hp
+        
+        logger.info('load end, acp ports is %s', self)
     

@@ -9,6 +9,7 @@ from pys.chain.package import AllChain
 from pys.chain.package import ChainVers
 from pys.chain.package import VerHosts
 from pys.chain.package import HostNodeDirs
+from pys.chain.port import AllChainPort
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
@@ -246,8 +247,7 @@ def pkg_list(chains):
                     hn = HostNodeDirs(chain, version, pkg)
                     for node_idx in hn.get_node_dirs():
                         consoler.info('\t\t\t => %s', node_idx)
-
-
+    acp = AllChainPort()
     logger.info('load end')
 
 def telnet_ansible(server):
