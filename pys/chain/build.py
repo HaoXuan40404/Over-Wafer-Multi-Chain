@@ -286,7 +286,7 @@ def expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson):
             logger.error(' expand failed, chain id is %s, chain version is %s, exception is %s.',
                          chain.get_id(), chain.get_version(), e)
         else:
-            consoler.info('\t expand package for chain %s version %s success.',
+            consoler.info('\texpand package for chain %s version %s success.',
                           chain.get_id(), chain.get_version())
 
     logger.info('expand end, cc is %s', cc)

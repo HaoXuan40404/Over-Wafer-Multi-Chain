@@ -5,7 +5,9 @@ from pys import path
 from pys import ansible, utils
 from pys.chain import meta
 from pys.chain.meta import Meta
-from pys.chain.package import Package
+from pys.chain.package import AllChain
+from pys.chain.package import ChainVers
+from pys.chain.package import VerHosts
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
@@ -221,30 +223,28 @@ def pkg_list(chains):
 
     consoler.info(' chains is %s' % chains)
 
-    pkg_list = []
-    if chains[0] == "all":
-        dir = data.package_dir_base()
-        if os.path.exists(dir):
-            for chain_id in os.listdir(dir):
-                p = Package(chain_id)
-                p.load()
-                if not p.empty():
-                    pkg_list.append(p)
-        else:
+    if chains[0] == 'all':
+        ac = AllChain()
+        ac.load()
+        chains = ac.get_chains()
+        if len(chains) == 0:
             consoler.info(' No build chain exist, do nothing.')
-    else:
-        for chain_id in chains:
-            p = Package(chain_id)
-            p.load()
-            if not p.empty():
-                pkg_list.append(p)
-
-    for p in pkg_list:
-        consoler.info(' => chain id ： %s' % p.get_chain_id())
-        for v in p.get_version_list():
-            consoler.info(' \t chain version ： %s' % v.get_chain_version())
-            for h in v.get_pkg_list():
-                consoler.info(' \t\t package ：%s' % h)
+        
+    for chain in chains:
+        logger.debug(' chain id is %s', chain)
+        consoler.info(' => chain id ： %s', chain)
+        cv = ChainVers(chain)
+        cv.load()
+        if len(cv.get_ver_list()) == 0:
+            consoler.info(' No build version exist for chain %s, do nothing.', chain)
+        else:
+            for version in cv.get_ver_list():
+                consoler.info('\t => chain version ： %s', version)
+                logger.debug(' chain id is %s, chain version is %s', chain, version)
+                vh = VerHosts(chain, version)
+                vh.load()
+                for pkg in vh.get_pkg_list():
+                    consoler.info('\t\t => package ：%s', pkg)
 
     logger.info('load end')
 

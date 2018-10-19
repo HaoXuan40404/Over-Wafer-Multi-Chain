@@ -11,19 +11,7 @@ from pys import ca
 from pys.node import config
 from pys.log import logger
 from pys.exp import MCError
-
-
-def node_index(chain, node):
-
-    index = 0
-    host_dir = chain.data_dir() + ('/%s' % node.get_host_ip())
-    while True:
-        if os.path.exists(host_dir + '/node' + str(index)):
-            index = index + 1
-        else:
-            break
-    logger.info(' now index is %d.', index)
-    return index
+from pys.chain.package import HostNodeDirs
 
 def remove_node_index_dir(chain, node, index):
     """remove node${index} dir if exist
@@ -141,10 +129,12 @@ def expand_host_dir(chain, node, port):
 
     logger.info(' chain is %s, node is %s, port is %s', chain, node, port)
     
-    host_dir = chain.data_dir() + ('/%s' % node.get_host_ip())
-    index = node_index(chain, node)
+    h = HostNodeDirs(chain.get_id(), chain.get_version(), node.get_host_ip())
+    h.load()
+    index = h.get_max_index()
     append_host_dir = False
 
+    host_dir = chain.data_dir() + ('/%s' % node.get_host_ip())
     if not os.path.exists(host_dir):
         os.makedirs(host_dir)
         append_host_dir = True
