@@ -50,7 +50,7 @@ def usage():
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('--expand', nargs='+', metavar=('./config.conf ', 'fisco_path', 'genesis.json path',
-                                                     'bootstapnodes.json path'), help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
+                                                     'bootstapnodes.json path', help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
     parser.add_argument('--check', nargs='+', metavar=('all or chain_id or',
