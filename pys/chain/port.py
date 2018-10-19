@@ -78,7 +78,7 @@ class HostPort:
             if cf.fromJson(cfg_json):
                 p = Port(int(cf.get_rpc_port()), int(cf.get_p2p_port()), int(cf.get_channel_port()))
                 self.ports[node] = p
-                logger.debug(' append node, node is %d, port is %s', node, p)
+                logger.debug(' append node, node is %s, port is %s', node, p)
 
         logger.info('load end, hp ports is %s', self)
     
