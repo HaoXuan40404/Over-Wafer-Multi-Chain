@@ -305,13 +305,17 @@ def chain_expand(args):
     if len(args) < 2:
         consoler.error(' expand operation at least need 2 parameters !!! ')
         return 
-        
+
     cfg = args[0]
     fisco_path = args[1]
     if len(args) > 2:
         genesisjson = args[2]
+    else:
+        genesisjson = ''
     if len(args) > 3:
         bootstrapnodesjson = args[3]
+    else:
+        bootstrapnodesjson = ''
 
     try:
         # parser config file
