@@ -1,4 +1,4 @@
-
+#coding:utf-8
 from pys.chain.package import * 
 from pys.chain.package import *
 from pys.chain.chain import Chain
