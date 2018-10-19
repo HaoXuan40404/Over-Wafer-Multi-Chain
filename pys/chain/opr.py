@@ -8,6 +8,7 @@ from pys.chain.meta import Meta
 from pys.chain.package import AllChain
 from pys.chain.package import ChainVers
 from pys.chain.package import VerHosts
+from pys.chain.package import HostNodeDirs
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
@@ -225,7 +226,6 @@ def pkg_list(chains):
 
     if chains[0] == 'all':
         ac = AllChain()
-        ac.load()
         chains = ac.get_chains()
         if len(chains) == 0:
             consoler.info(' No build chain exist, do nothing.')
@@ -234,7 +234,6 @@ def pkg_list(chains):
         logger.debug(' chain id is %s', chain)
         consoler.info(' => chain id ： %s', chain)
         cv = ChainVers(chain)
-        cv.load()
         if len(cv.get_ver_list()) == 0:
             consoler.info(' No build version exist for chain %s, do nothing.', chain)
         else:
@@ -242,9 +241,12 @@ def pkg_list(chains):
                 consoler.info('\t => chain version ： %s', version)
                 logger.debug(' chain id is %s, chain version is %s', chain, version)
                 vh = VerHosts(chain, version)
-                vh.load()
                 for pkg in vh.get_pkg_list():
                     consoler.info('\t\t => package ：%s', pkg)
+                    hn = HostNodeDirs(chain, version, pkg)
+                    for node_idx in hn.get_node_dirs():
+                        consoler.info('\t\t\t\t => %s', node_idx)
+
 
     logger.info('load end')
 

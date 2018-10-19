@@ -13,6 +13,7 @@ class HostNodeDirs:
         self.host = host
         self.node_dirs = []
         self.max_index = 0
+        self.load()
 
     def __repr__(self):
         return ' chain id : %s, chain version : %s, max_index : %d, node_dirs : %s' % (self.chain_id, self.chain_version, self.max_index, self.node_dirs)
@@ -65,6 +66,7 @@ class VerHosts:
         self.chain_version = chain_version
         self.chain = Chain(self.chain_id, self.chain_version)
         self.pkg_list = []
+        self.load()
 
     def __repr__(self):
         return 'chain is %s, list = %s' % (self.chain, self.pkg_list)
@@ -131,6 +133,7 @@ class ChainVers:
     def __init__(self, chain_id):
         self.chain_id = chain_id
         self.ver_list = []
+        self.load()
 
     def __repr__(self):
         return 'chain is %s, list = %s' % (self.chain_id, self.ver_list)
@@ -177,6 +180,7 @@ class AllChain:
 
     def __init__(self):
         self.chains = []
+        self.load()
 
     def clear(self):
         self.chains = []
