@@ -49,6 +49,8 @@ def usage():
     parser.add_argument('--init_ansible', action='store_true', help='Output => Init ansible hosts need sudo.')                   
     parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
+    parser.add_argument('--expand', nargs='+', metavar=('./config.conf ', 'fisco_path', 'genesis.json path',
+                                                     'bootstapnodes.json path'), help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
     parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
     parser.add_argument('--check', nargs='+', metavar=('all or chain_id or',
@@ -87,6 +89,10 @@ def usage():
         consoler.info(' build operation begin.')
         build.chain_build(args.build[0], args.build[1])
         consoler.info(' build operation end.')
+    elif args.expand:
+        consoler.info(' expand operation begin.')
+        build.chain_expand(args.expand)
+        consoler.info(' expand operation end.')
     elif args.check:
         consoler.info(' check operation begin.')
         chain = args.check
@@ -120,7 +126,7 @@ def usage():
     elif args.pkg_list:
         consoler.info(' pkg_list operation begin.')
         chain = args.pkg_list
-        opr.pkg_list(chain, True)
+        opr.pkg_list(chain)
         consoler.info(' pkg_list operation end.')
     elif args.cmd_push:
         consoler.info(' cmd_push operation begin.')
@@ -171,10 +177,10 @@ def usage():
         opr.export_package(export_list, dest)
         consoler.info(' export operation end.')
     elif args.ls_port:
-        consoler.info(' ls_por operation begin.')
+        consoler.info(' ls_port operation begin.')
         host_ip = args.ls_port[0]
         opr.ls_port(host_ip)
-        consoler.info(' ls_por operation end.')  
+        consoler.info(' ls_port operation end.')  
     else:
         consoler.error(
             'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')

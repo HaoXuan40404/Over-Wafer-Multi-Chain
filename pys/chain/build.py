@@ -65,6 +65,8 @@ def common_build(dir):
     # copy scripts dir to common dir
     shutil.copytree(path.get_path() + '/scripts', com_dir + '/scripts')
 
+    logger.debug(' build_common end, dir is %s ', dir)
+
 def chain_build(cfg, fisco_path):
     """parser input config file, build install pacakge by 
 
@@ -88,39 +90,41 @@ def chain_build(cfg, fisco_path):
     cc_dict = {}
     if os.path.exists(cfg) and os.path.isfile(cfg):
 
-        consoler.info('config file is %s, fisco bcos path is %s' %
+        consoler.info('\t config file is %s, fisco bcos path is %s' %
                       (cfg, fisco_path))
-        # 单个配置文件解析
+        # single input config
         try:
             cc = parser.do_parser(cfg)
-            consoler.info('parser config %s successs, chain_id is %s, chain_version is %s' % (
-                cfg, cc.get_chain().get_id(), cc.get_chain().get_version()))
+            chain = cc.get_chain()
+            consoler.info('\t parser config %s successs, chain_id is %s, chain_version is %s' % (
+                cfg, chain.get_id(), chain.get_version()))
 
-            key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
+            key = chain.get_id() + '_' + chain.get_version()
             cc_dict[key] = cc
 
         except Exception as e:
             consoler.error(
-                'invalid config format parser failed, config is %s, excption is %s', cfg, e)
+                ' invalid config format parser failed, config is %s, excption is %s', cfg, e)
             logger.warn('parser cfg %s end exception, e is %s ', cfg, e)
 
     elif os.path.isdir(cfg):
 
         consoler.info('\t config dir is %s, fisco bcos path is %s' %
                       (cfg, fisco_path))
-        # 指定文件夹, 解析文件夹中的所有配置文件, 解析失败则跳过
+        # The input config is in the folder 
         for c in os.listdir(cfg):
             try:
                 logger.debug('dir is %s, cfg is %s', cfg, c)
                 cc = parser.do_parser(cfg + '/' + c)
                 key = cc.get_chain().get_id() + '_' + cc.get_chain().get_version()
-                # 配置重复
+                # config repeat.
                 if key in cc_dict:
                     logger.error('chain_id and chain_version duplicate, chain_id is %s, chain_version is %s', cc.get_chain(
                     ).get_id(), cc.get_chain().get_version())
+                    ## clear cc_dict and will exit.
                     cc_dict = {}
                     consoler.error(
-                        'chain_id %s and chain_version %s config repeat, please update the chain_version.',cc.get_chain(
+                        'chain_id %s and chain_version %s config repeat, please update the chain_version.', cc.get_chain(
                     ).get_id(), cc.get_chain().get_version())
                     break
                 else:
@@ -138,7 +142,7 @@ def chain_build(cfg, fisco_path):
 
     logger.info('cc_dict is %s', cc_dict)
 
-    # 构建所有链的安装包
+    # build all chain
     if len(cc_dict) != 0:
         for cc in cc_dict.itervalues():
             build_cfg(cc)
@@ -164,15 +168,15 @@ def build_cfg(cc):
     chain = cc.get_chain()
     dir = chain.data_dir()
 
-    consoler.info('\t\t build install package for chain %s version %s',
+    consoler.info('\t build install package for chain %s version %s',
                   chain.get_id(), chain.get_version())
 
     # create dir base on version of the chain.
     if os.path.isdir(dir):
-        logger.warn('version of this chain already exists chain is %s, version is %s',
+        logger.warn(' version of this chain already exists chain is %s, version is %s',
                     cc.get_chain().get_id(), cc.get_chain().get_version())
 
-        consoler.error(' build install package for chain %s version %s failed, version data aleady exist, please change the version of the chain!!!.',
+        consoler.error(' build chain %s version %s failed, chain aleady exist, please change the version of the chain!!!.',
                        cc.get_chain().get_id(), cc.get_chain().get_version())
 
         return
@@ -197,18 +201,18 @@ def build_cfg(cc):
 
         # start temp node
         if not temp_node.start_temp_node(dir, port):
-            raise Exception('temp node start failed.')
+            raise MCError(' temp node start failed.')
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.build_install_dir(chain, node, port, temp_node)
+            build.build_host_dir(chain, node, port, temp_node)
 
         # stop temp node
         temp_node.stop_temp_node(dir)
 
         # export genesis.json file from the temp node
         if not temp_node.export_genesis(dir):
-            raise Exception('export genesis.json failed.')
+            raise MCError(' export genesis.json failed.')
 
         temp_node.clean_temp_node(dir)
 
@@ -220,95 +224,75 @@ def build_cfg(cc):
         utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
                       'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
-        logger.info('build end ok, chain is %s', chain)
-        consoler.info('\t\t build install package for chain %s version %s success.',
+        logger.info(' build end ok, chain is %s', chain)
+        consoler.info('\t build install package for chain %s version %s success.',
                       cc.get_chain().get_id(), cc.get_chain().get_version())
 
     except Exception as e:
-        consoler.error('\t\t build install package for chain %s version %s failed, exception is %s',
+        consoler.error('\t build install package for chain %s version %s failed, exception is %s',
                        cc.get_chain().get_id(), cc.get_chain().get_version(), e)
 
         temp_node.clean_temp_node(dir)
         if os.path.isdir(dir):
             shutil.rmtree(dir)
 
-def expand_pkg(cc):
-
-    port = cc.get_port()
-    chain = cc.get_chain()
-
-    dir = chain.data_dir()
-
-     # build install dir for every server
-    for node in cc.get_nodes():
-        build.build_install_dir(chain, node, port)
-
-    # copy genesis.json bootstrapnodes.json
-    for node in cc.get_nodes():
-        for index in range(node.get_node_num()):
-            shutil.copy(dir + '/genesis.json', dir +
-                        ('/%s/node%d/' % (node.get_host_ip(), index)))
-
-    utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
-                    'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
-
-    logger.info('expand end ok, chain is %s', chain)
-    consoler.info('\t\t build install package for chain %s version %s success.',
-                    cc.get_chain().get_id(), cc.get_chain().get_version())
-
 def expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson):
+
     chain = cc.get_chain()
     port = cc.get_port()
 
-    if os.path.exists(chain.data_dir()): #
+    if os.path.exists(chain.data_dir()): 
+        # expand on exist chain, check common、 genesis.json、 bootstrapnodes.json file exist.
         if not os.path.exists(chain.data_dir() + '/common'):
             raise MCError(' chain dir exist ,but common dir not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))
         if not os.path.exists(chain.data_dir() + '/genesis.json'):
             raise MCError(' chain dir exist ,but genesis.json not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))
         if not os.path.exists(chain.data_dir() + '/bootstrapnodes.json'):
             raise MCError(' chain dir exist ,but bootstrapnodes.json not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))
+        
+        # expand install dir for every server
+        for node in cc.get_nodes():
+            try:
+                build.expand_host_dir(chain, node, port)
+            except Exception as e:
+                continue
     else:
-        # check if fisco-bcos、genesis.json、bootstrapsnode.json exist.
-        if not os.path.exists(fisco_path):
-            raise MCError(' fisco bcos not exist, fisco bcos path is %s' % fisco_path)
-        if not os.path.exists(genesisjson):
-            raise MCError(' genesis.json not exist, genesis.json path is %s' % genesisjson)
-        if not os.path.exists(bootstrapnodesjson):
-            raise MCError(' bootstrapnodes.json not exist, bootstrapnodes.json path is %s' % bootstrapnodesjson)
         try:
-            path.set_fiso_path(fisco_path)
+            # check if fisco-bcos、genesis.json、bootstrapsnode.json exist.
+            if not os.path.exists(fisco_path):
+                raise MCError(
+                    ' fisco bcos not exist, fisco bcos path is %s' % fisco_path)
+            if not os.path.exists(genesisjson):
+                raise MCError(
+                    ' genesis.json not exist, genesis.json path is %s' % genesisjson)
+            if not os.path.exists(bootstrapnodesjson):
+                raise MCError(
+                    ' bootstrapnodes.json not exist, bootstrapnodes.json path is %s' % bootstrapnodesjson)
+
             os.makedirs(chain.data_dir())
+            path.set_fiso_path(fisco_path)
             shutil.copy(genesisjson, chain.data_dir() + '/')
             shutil.copy(bootstrapnodesjson, chain.data_dir() + '/')
+
             # create common dir
             common_build(chain.data_dir())
+            # build install dir for every server
+            for node in cc.get_nodes():
+                build.expand_host_dir(chain, node, port)
+
         except Exception as e:
             if os.path.exists(chain.data_dir()):
                 shutil.rmtree(chain.data_dir())
-            logger.error(' common dir build failed, chain id is %s, chain version is %s, exception is %s', chain.get_id(), chain.get_version(), e)
-            raise MCError(' build common dir failed, exception is %s' % e)
-    
-    # build install dir for every server
-    for node in cc.get_nodes():
-        build.build_install_dir(chain, node, port)
-    
-    # copy genesis.json bootstrapnodes.json
-    for node in cc.get_nodes():
-        for index in range(node.get_node_num()):
-            shutil.copy(dir + '/genesis.json', dir +
-                        ('/%s/node%d/' % (node.get_host_ip(), index)))
-            shutil.copy(dir + '/bootstrapnodes.json', dir +
-                        ('/%s/node%d/data' % (node.get_host_ip(), index)))
+            logger.error(' expand failed, chain id is %s, chain version is %s, exception is %s.',
+                         chain.get_id(), chain.get_version(), e)
+        else:
+            consoler.info('\t expand package for chain %s version %s success.',
+                          chain.get_id(), chain.get_version())
 
-    utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
-                    'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
-
-    logger.info('expand end ok, chain is %s', chain)
-    consoler.info('\t\t build install package for chain %s version %s success.',
-                    cc.get_chain().get_id(), cc.get_chain().get_version())
+    logger.info('expand end, cc is %s', cc)
     
 
-def chain_expand(cfg, fisco_path, genesisjson, bootstrapnodesjson):
+def chain_expand(args):
     """expand operation 
     
     Arguments:
@@ -318,6 +302,17 @@ def chain_expand(cfg, fisco_path, genesisjson, bootstrapnodesjson):
         bootstrapnodesjson {string} -- bootstrapsnodes.json file path
     """
 
+    if len(args) < 2:
+        consoler.error(' expand operation at least need 2 parameters !!! ')
+        return 
+        
+    cfg = args[0]
+    fisco_path = args[1]
+    if len(args) > 2:
+        genesisjson = args[2]
+    if len(args) > 3:
+        bootstrapnodesjson = args[3]
+
     try:
         # parser config file
         cc = parser.do_parser(cfg)
@@ -326,11 +321,11 @@ def chain_expand(cfg, fisco_path, genesisjson, bootstrapnodesjson):
             cfg, chain.get_id(), chain.get_version()))
         logger.info('expand operation, parser config success, cc is %s', cc)
 
-        expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson)
-
     except Exception as e:
         consoler.error(
             'invalid config format parser failed, config is %s, exception is %s', cfg, e)
+    else:
+        expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson)
         
     
 

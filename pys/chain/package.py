@@ -4,6 +4,7 @@ import os
 from pys import utils
 from pys.log import logger, consoler
 from pys.chain import data
+from pys.chain.chain import Chain
 
 class Ver:
     """all package of chain of the version
@@ -12,10 +13,11 @@ class Ver:
     def __init__(self, chain_id, chain_version):
         self.chain_id = chain_id
         self.chain_version = chain_version
+        self.chain = Chain(self.chain_id, self.chain_version)
         self.pkg_list = []
 
     def __repr__(self):
-        return 'chain_id = %s, chain_version = %s, list = %s' % (self.chain_id, self.chain_version, self.pkg_list)
+        return 'chain is %s, list = %s' % (self.chain, self.pkg_list)
 
     def get_chain_id(self):
         return self.chain_id
@@ -36,7 +38,7 @@ class Ver:
         return len(self.pkg_list) == 0
     
     def exist(self):
-        dir = data.package_dir(self.chain_id, self.chain_version)
+        dir = self.chain.data_dir()
         return os.path.exists(dir)
 
     def load(self):
@@ -47,7 +49,7 @@ class Ver:
                         self.chain_id, self.chain_version)
             return
         
-        dir = data.package_dir(self.chain_id, self.chain_version)
+        dir = self.chain.data_dir()
         logger.debug('load begin, chain_id is %s, chain_version is %s, dir is %s',
                      self.chain_id, self.chain_version, dir)
 

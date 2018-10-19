@@ -13,20 +13,17 @@ from pys.chain.chain import Chain
 
 
 def publish_chain(chains):
-    """发布命令行传入的所有指定版本的区块链.
+    """publish operation.
     
     Arguments:
-        list_chain_version {list} -- 需要发布的链, 格式为chain_id:chain_version, 可以一次发布多个, 多个之间使用空格分离.
-    
-    Returns:
-        无返回
+        list_chain_version {list} -- all chains need publish in the format of chain_id:chain_version, you can publish more than one at a time ,separate using spaces.
     """
     pchains = []
     for i in range(len(chains)):
         chain = chains[i].split(':')
         if len(chain) != 2:
             logger.error('not chain_id:chain_version format, str is %s', chains[i])
-            consoler.error('skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
+            consoler.error(' skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
             continue
 
         chain_id = chain[0]
@@ -44,50 +41,63 @@ def publish_chain(chains):
 
 
 def publish_server(chain_id, chain_version):
-    """发布链区块链对应的版本, 并且将安装包的部署信息记录下来.
+    """publish one chain.
 
     Arguments:
-        chain_id {string} -- chain id
-        chain_version {string} -- 区块链版本
+        chain_id {string} -- chain id.
+        chain_version {string} -- chain version.
     """
 
-    dir = data.package_dir(chain_id, chain_version)
+    chain = Chain(chain_id, chain_version)
+    dir = chain.data_dir()
     if not os.path.isdir(dir):
-        consoler.error('publish install package for chain %s version %s failed, no package build for the chain.', chain_id, chain_version)
+        consoler.error(
+            'publish install package for chain %s version %s failed, no package build for the chain.', chain_id, chain_version)
         logger.warn(
             'version of this chain is not exist, chain is %s, version is %s', chain_id, chain_version)
         return
     mm = meta.Meta(chain_id)
+    mm.load_from_file()
     for host in os.listdir(dir):
-        cf = config.Config(chain_id)
         if utils.valid_ip(host):
-            ret = push_package(dir, host, chain_id, chain_version)
-            if ret:
-                for list_dir in os.listdir(dir + '/' + host + '/'):
-                    if 'node' in list_dir:
-                        cfg_json = dir + '/' + host + '/' + list_dir + '/config.json'
-                        if os.path.isfile(cfg_json):
-                            cf.fromJson(cfg_json)
-                            mm.append(meta.MetaNode(chain_version, host, cf.get_rpc_port(), cf.get_p2p_port(), cf.get_channel_port(), int(list_dir[4:])))
-                        else:
-                            consoler.error('invalid config, config is %s', cfg_json)
-        else:
             logger.debug('skip, not invalid host_ip ' + dir)
-    consoler.info('\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
-    # 将部署信息保存
+            continue
+        ret = push_package(dir, host, chain_id, chain_version, meta)
+        if ret:
+            for list_dir in os.listdir(dir + '/' + host + '/'):
+                if 'node' in list_dir:
+                    cfg_json = dir + '/' + host + '/' + list_dir + '/config.json'
+                    index = int(list_dir[4:])
+                    cf = config.Config(chain_id)
+                    if os.path.isfile(cfg_json):
+                        cf.fromJson(cfg_json)
+                        logger.debug(
+                            ' load config success, index is %d, cf is %s', index, cf)
+                    else:
+                        logger.error(
+                            ' load config failed, config is %s', cfg_json)
+                        consoler.error(
+                            ' load config failed, config is %s', cfg_json)
+                    mm.append(meta.MetaNode(chain_version, host, cf.get_rpc_port(
+                    ), cf.get_p2p_port(), cf.get_channel_port(), index))
+    consoler.info(
+        '\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
+    # record meta info, write meta.json file
     mm.write_to_file()
 
-def push_package(dir, host, chain_id, version, force = True):
-    """推送单个安装包到指定服务器
+def push_package(dir, host, chain_id, version, meta, force = True):
+    """push install package of one server
     
     Arguments:
-        dir {string} -- 本地安装包目录        
-        pkg {string} -- 安装包名称
+        dir {string} -- package install dir       
+        host {string} -- server host
+        chain_id {string} -- chain id
+        version {string} -- chain version
+        force {string} -- is push all node dir or not published
     
     Returns:
-        [bool] -- 成功返回True,失败返回False
+        [bool] -- success return True, if not False will return.
     """
-
     # check if common dir exist.
     if not os.path.exists(dir + '/common'):
         logger.warn('common dir is not exist, dir is %s, host is %s', dir, host)
@@ -117,8 +127,18 @@ def push_package(dir, host, chain_id, version, force = True):
             consoler.error('chain %s host %s, publish install package failed', chain_id, host)
             return ret
     else:
-        # add 
-        pass
+        # push node${index} dir in host dir not published
+        for list_dir in os.listdir(dir + '/' + host + '/'):
+            if 'node' in list_dir:
+                index = int(list_dir[4:])
+                if meta.host_index_exist(host, index):
+                    continue
+                # push host dir
+                ret = ansible.copy_module(host, dir + '/' + host + '/' + list_dir + '/', ansible.get_dir() + '/' + chain_id)
+                if not ret:
+                    consoler.error('chain %s host %s node is %s, publish node package failed', chain_id, host, list_dir)
+                    return ret
+
     
     logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)
     
