@@ -1,4 +1,5 @@
 #coding:utf-8
+import json
 from pys.chain.package import * 
 from pys.chain.package import *
 from pys.chain.chain import Chain
@@ -35,6 +36,9 @@ class Port:
     def to_port(self, index):
         return Port(self.get_rpc_port() + index, self.get_p2p_port() + index, self.get_channel_port() + index)
     
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
+
     def __repr__(self):
         return '[rpc] %d, [p2p] %d, [channel] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
 
@@ -66,6 +70,9 @@ class HostPort:
     
     def clear(self):
         self.ports = {}
+
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
     
     def load(self):
         self.clear()
@@ -95,6 +102,9 @@ class ChainVerPort:
     
     def get_chain_id(self):
         return self.chain_id
+    
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
 
     def get_chain_version(self):
         return self.chain_version
@@ -131,6 +141,9 @@ class ChainPort:
     
     def __repr__(self):
         return ' chain id is %s, ports is %s' % (self.chain_id, self.ports)
+    
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
 
     def clear(self):
         self.ports = {}
@@ -159,6 +172,9 @@ class AllChainPort:
     
     def clear(self):
         self.ports = {}
+    
+    def to_json(self):
+        return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
     
     def __repr__(self):
         return ' ports is %s' % (self.ports)

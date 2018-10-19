@@ -248,6 +248,7 @@ def pkg_list(chains):
                     for node_idx in hn.get_node_dirs():
                         consoler.info('\t\t\t => %s', node_idx)
     acp = AllChainPort()
+    logger.info(' AllChainPort is %s', acp.to_json())
     logger.info('load end')
 
 def telnet_ansible(server):
