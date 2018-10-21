@@ -138,3 +138,34 @@ def registerNode(dir, nodejson):
     status, output = commands.getstatusoutput(cmd)
 
     logger.debug('register status, status is %d, output is %s', status, output)
+
+def GM_temp_node_build(dir, port):
+    """Generate GM temp node package
+    
+    Arguments:
+        dir {string} -- temp node dictionary 
+        port {Port} -- port message 
+    """
+
+    logger.info('GM build temp node, dir => ' + dir)
+
+    os.makedirs(dir + '/temp')
+    shutil.copytree(path.get_path() + '/tpl/GM_temp_node/web3sdk', dir + '/temp/web3sdk')
+
+    shutil.copytree(path.get_path() + '/tpl/GM_temp_node', dir + '/temp/node')
+    #copy GM fisco-bcos
+    shutil.copy(path.get_fisco_path(), dir + '/temp/node/')
+
+    shutil.copy(dir + '/temp/node/data/sdk/ca.crt', dir + '/temp/web3sdk/conf')
+    shutil.copy(dir + '/temp/node/data/sdk/client.keystore', dir + '/temp/web3sdk/conf')
+
+    cfg_json = config.build_config_json('12345', port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port())
+    with open(dir + '/temp/node/config.json',"w+") as f:
+            f.write(cfg_json)
+
+    old = 'NODE@HOSTIP'
+    new = 'node0@127.0.0.1:%d' % port.get_channel_port()
+    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml', old, new)
+    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml',
+                      'constructor-arg value="0"', 'constructor-arg value="1"')
+    logger.info('GM build temp node end')

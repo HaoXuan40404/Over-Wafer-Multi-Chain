@@ -1,5 +1,6 @@
 #!/bin/bash
-
+source ~/.bash_profile
+source /etc/profile
 #check if $1 is install
 function check_if_install()
 {

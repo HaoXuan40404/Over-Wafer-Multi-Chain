@@ -13,10 +13,14 @@ from pys.chain.chain import Chain
 
 
 def publish_chain(chains):
-    """publish operation.
+    """Publish a chain to designated servers 
+    using publish_server
     
     Arguments:
-        list_chain_version {list} -- all chains need publish in the format of chain_id:chain_version, you can publish more than one at a time ,separate using spaces.
+        chains {list} -- chain which you wanto published, type chain_id:chain_version, 可以一次发布多个, 多个之间使用空格分离.
+    
+    Returns:
+        null
     """
     pchains = []
     for i in range(len(chains)):

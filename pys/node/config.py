@@ -5,10 +5,12 @@ import json
 from pys.log import logger
 
 '''
-config.json defaults
+default Configuration
+config.json 
 '''
 SEALENGINE = 'PBFT'
 SYSTEMPROXYADDRESS = '0xe4cd3e488cbf0a98e8ecd8bc5eefaf10e5d54905'
+GM_SYSTEMPROXYADDRESS = '0xee80d7c98cb9a840b9c4df742f61336770951875'
 LISTEN_IP = '0.0.0.0'
 CRYPTOMOD = '0'
 RPCPORT = '8545'
@@ -25,7 +27,7 @@ LOGCONF = './log.conf'
 
 class Config:
     '''
-    Config object which use to generate config.json
+    object of fisco-bcos config.json ,  generate config.json
     '''
     def __init__(self, networkid):
         self.sealEngine = SEALENGINE
@@ -47,7 +49,10 @@ class Config:
 
     def set_sys_addr(self, addr):
         self.systemproxyaddress = addr
-        
+
+    def set_gm_sys_addr(self, addr):
+        self.systemproxyaddress = addr
+  
     def set_rpc_port(self, rpc_port):
         self.rpcport = str(rpc_port)
 
@@ -71,13 +76,13 @@ class Config:
 
     def toJson(self):
         '''
-        convert config object to json object
+        config to .json
         '''
         return json.dumps(self, default = lambda obj : obj.__dict__, indent=4)
 
     def fromJson(self, sjson):
         '''
-        parser config file and generate config object.
+        resolve .json, convert to config
         '''
         with open(sjson) as f:
             try : 
@@ -92,16 +97,16 @@ class Config:
                 logger.error(' parser config failed, cfg is %s, exception is %s', sjson, e)
                 return False
 
-def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT):
+def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT, gm = False):
     '''
-    generate config.json
+    build config.json
     '''
     cf = Config(network_id)
     cf.set_rpc_port(rpc_port)
     cf.set_channel_port(channel_port)
     cf.set_p2p_port(p2p_port)
-    logger.debug('config json is ' + cf.toJson())
-    return cf.toJson() 
+    if gm:
+        cf.set_gm_sys_addr(GM_SYSTEMPROXYADDRESS)
 
-def load_config_json(cfg):
-    pass
+    logger.debug('config json is ' + cf.toJson())
+    return cf.toJson()

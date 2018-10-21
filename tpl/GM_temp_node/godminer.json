@@ -1,0 +1,15 @@
+{
+    "godMinerStart": "1",
+    "godMinerEnd": "0xfffffffffff",
+    "miners": [
+        {
+            "Nodeid": "7c6a497440913412854459382c0d2620239ff8a729860cb6a98d20b0130f86bfbcfe1cbc6ce7d8105e6846c3eacafe4c224e9b414cfd89204dc86449f9a5f842",
+            "Nodedesc": "temp",
+            "Agencyinfo": "temp",
+            "Peerip": "127.0.0.1",
+            "Identitytype": 1,
+            "Port":30303,
+            "Idx":0
+        }
+    ]
+} 

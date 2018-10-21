@@ -3,10 +3,10 @@ from pys.log import logger
 from pys.log import consoler
 
 class MCError(Exception):
-    """自定义异常
+    """Customize exception handling
     
     Arguments:
-        Exception {string} -- 异常描述
+        Exception {string} -- exception description
     """
 
     def __init__(self, msg):

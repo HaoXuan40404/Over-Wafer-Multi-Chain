@@ -17,6 +17,8 @@ from pys.chain import publish
 
 
 def init():
+    """[init function]
+    """
 
     # init pwd dir
     pwd = os.getcwd()
@@ -25,7 +27,7 @@ def init():
 
     logger.info('main init ,pwd is %s', pwd)
 
-    # parser mchain.conf for project initialize
+    # parser mchain.conf for project initialize 
     mconf.parser(pwd + '/conf/mchain.conf')
 
     # init agent name

@@ -9,7 +9,7 @@ from pys.log import consoler
 
 
 class Ansible:
-    """ansible配置, 用来配置推送的目标文件夹, default = '/data'
+    """Ansible configuration, to configure the target folder for push, default = '/data'
     """
 
     dir = '/data'
@@ -27,14 +27,14 @@ def get_dir():
 
 
 def mkdir_module(ip, dest):
-    """调用ansible在目标服务器创建文件夹
+    """[Using ansible.sh mkdir_module create dictionary ]
     
     Arguments:
-        ip {string} -- 目标服务器
-        dest {string} -- 文件夹路径
+        ip {string} -- corresponding server host ip
+        dest {string} -- dir path
     
     Returns:
-        int -- 成功返回0, 否则返回-1.
+        int -- success return True, else return False.
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -51,12 +51,15 @@ def mkdir_module(ip, dest):
 
 
 def copy_module(ip, src, dest):
-    """使用ansible推送文件
+    """[Using ansible.sh copy_module, push package to servers]
     
     Arguments:
-        ip {string} -- 目录服务器
-        src {string} -- 推送的文件
-        dest {string} -- 目标服务器的目录
+        ip {string} -- corresponding server host ip
+        src {string} -- files which push
+        dest {string} -- corresponding server dir path
+
+    Returns:
+        bool -- true or false.
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -76,9 +79,18 @@ def copy_module(ip, src, dest):
 
 
 def unarchive_module(ip, src, dest):
-    '''
-    unarchive module
-    '''
+    """[Using ansible.sh unarchive_module, compress files to the corresponding server and extract it]
+    
+    Arguments:
+        ip {[string]} -- [corresponding server host ip]
+        src {[string]} -- [files dir path]
+        dest {[string]} -- [corresponding server dir path]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
     logger.debug('unarchive action , status %s, output %s' % (status, result))
@@ -95,14 +107,14 @@ def unarchive_module(ip, src, dest):
     return False
 
 def start_module(ip, dest):
-    """远程启动节点, 调用的是节点的start.sh
+    """Using ansible.sh start_module, start nodes
     
     Arguments:
-        ip {string} -- 目标服务器
-        dest {string} -- 远程调用目录
+        ip {string} -- corresponding server host ip
+        dest {string} -- corresponding server dir path
     
     Returns:
-        bool -- 成功返回Ture, 否则返回False
+        bool -- true or false
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -122,14 +134,14 @@ def start_module(ip, dest):
 
 
 def stop_module(ip, dest):
-    """远程停止节点, 调用的是节点的stop.sh
+    """Using ansible.sh stop_module, stop nodes
     
     Arguments:
-        ip {string} -- 目标服务器
-        dest {string} -- 远程调用目录
+        ip {string} -- corresponding server host ip
+        dest {string} -- corresponding server dir path
     
     Returns:
-        bool -- 成功返回Ture, 否则返回False
+        bool -- true or false
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -150,14 +162,14 @@ def stop_module(ip, dest):
 
 
 def check_module(ip, dest):
-    """远程调用查看节点是否正常启动, 调用的是节点的check.sh
+    """Using ansible.sh check_module, check chain status
     
     Arguments:
-        ip {string} -- 目标服务器
-        dest {string} -- 远程调用目录
+        ip {string} -- corresponding server host ip
+        dest {string} -- corresponding server dir path
     
     Returns:
-        bool -- 成功返回Ture, 否则返回False
+        bool -- true or false
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -180,16 +192,16 @@ def check_module(ip, dest):
 
 
 def telnet_module(ip, msg='HelloWorld!'):
-    """调用ansible.sh telnet模块, 进行echo测试, 判断ansible功能是否正常.
+    """using ansible.sh telnet module, echo 'HelloWorld' to screen to check ansible is useful.
 
     Arguments:
-        ip {string} -- 服务器ip
+        ip {string} -- host ip
 
     Keyword Arguments:
-        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
+        msg {string} -- test string (default: {'HelloWorld!'})
 
     Returns:
-        [bool] -- ansible正确调用echo返回True, 否则False.
+        [bool] -- ansible useful echo return True, else False.
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -207,45 +219,27 @@ def telnet_module(ip, msg='HelloWorld!'):
 
 
 def cmd_module(ip, msg):
-    """调用ansible.sh cmd模块, 在服务器上批量执行命令.
+    """Using ansible.sh cmd_module, execute commands on the corresponding server.
 
     Arguments:
-        ip {string} -- 服务器ip
+        ip {string} -- corresponding server host ip
 
     Keyword Arguments:
-        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
+        msg {string} -- execute commands
 
     Returns:
-        [bool] -- ansible正确调用echo返回True, 否则False.
+        [bool] -- true or false
     """
     msg = '"' + msg + '"'
     os.system('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
 
 
-def cmd_shell_module(ip, msg):
-    """调用ansible.sh cmd模块, 在服务器上批量执行本地脚本.
-
-    Arguments:
-        ip {string} -- 服务器ip
-
-    Keyword Arguments:
-        msg {string} -- echo测试的字符串 (default: {'HelloWorld!'})
-
-    Returns:
-        [bool] -- ansible正确调用echo返回True, 否则False.
-    """
-    msg = '"' + msg + '"'
-    os.system('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh cmd_shell ' + ip + ' ' + msg)
-
-
-
 def monitor_module(ip, dest):
-    """调用ansible.sh monitor模块, 远程调用节点的monotor.sh脚本, 测试节点的运行情况.
+    """Using ansible.sh monitor_module, call script -> monotor.sh, Check status of nodes
     Arguments:
-        ip {string} -- host ip
-        dest {string} -- 目录
+        ip {string} -- corresponding server host ip
+        dest {string} -- corresponding server dir path
     """
 
     (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
@@ -262,10 +256,10 @@ def monitor_module(ip, dest):
 
 
 def env_check(ip, src):
-    """检查目标服务器的运行环境
+    """Check whether the environment of the corresponding server satisfy the fisco bcos running conditions.
     
     Keyword Arguments:
-        ip {string} -- [目标服务器的ip, 'all'表示所有的服务器] (default: {'all'})
+        ip {string} -- [corresponding server host ip] (default: {'all'})
     """
 
     os.system('bash ' + path.get_path() +

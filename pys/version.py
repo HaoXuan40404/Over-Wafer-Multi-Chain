@@ -4,7 +4,7 @@ from pys import path
 from pys.log import consoler
 
 def version():
-    """读取release_node.txt, 打印版本号.
+    """load release_node.txt, print version number.
     """
 
     with open(path.get_path() + '/release_note.txt', 'r') as f:

@@ -6,13 +6,13 @@ from pys.log import logger
 from pys.log import consoler
 
 def valid_chain_id(chain_id):
-    """[判断chain id是否有效]
+    """[Determine if the chain id is valid]
     
     Arguments:
         ip {[string]} -- [chain id]
     
     Returns:
-        [bool] -- [如果为是有效chain id返回true，否则返回false]
+        [bool] -- [true or false]
     """
 
     try: 
@@ -23,13 +23,13 @@ def valid_chain_id(chain_id):
         return False
 
 def valid_ip(ip):
-    """[判断IP是否有效]
+    """[Determine if the host ip is valid]
     
     Arguments:
-        ip {[string]} -- [ip号]
+        ip {[string]} -- [host ip]
     
     Returns:
-        [bool] -- [如果为有效ip返回true，否则返回false]
+        [bool] -- [true or false]
     """
 
     p = re.compile('^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$')
@@ -39,13 +39,13 @@ def valid_ip(ip):
         return False
 
 def valid_port(port):
-    """[判断端口号port是否有效]
+    """[Determine if the port is valid]
     
     Arguments:
-        ip {[string]} -- [port端口号]
+        ip {[string]} -- [port number]
     
     Returns:
-        [bool] -- [如果为端口号有效返回true，否则返回false]
+        [bool] -- [true or false]
     """
 
     if isinstance(port, int) and (port > 0) and (port <= 65535):
@@ -54,13 +54,13 @@ def valid_port(port):
         return False
 
 def valid_string(s):
-    """[判断字符串是否有效]
+    """[Determine if the string->s is valid]
     
     Arguments:
-        ip {[string]} -- [字符串]
+        ip {[string]} -- [a string outside the function]
     
     Returns:
-        [bool] -- [如果为是有效字符串返回true，否则返回false]
+        [bool] -- [true or false]
     """
     
     if (isinstance(s, str) or isinstance(s, unicode)) and (len(s) > 0):
@@ -69,12 +69,12 @@ def valid_string(s):
         return False
 
 def replace(filepath, old, new):
-    """[替换文件中的字符串]
+    """[replace old string to new from filepath]
     
     Arguments:
-        filepath {[path]} -- [需要替换的文件路径]
-        old {[string]} -- [需要替换的字符串]
-        new {[string]} -- [替换后的字符串]
+        filepath {[path]} -- [file path that needs to be replaced]
+        old {[string]} -- [old string]
+        new {[string]} -- [new string]
     """
 
     with open(filepath, 'r+') as f:
@@ -86,13 +86,13 @@ def replace(filepath, old, new):
             f.write(line)
 
 def port_in_use(port):
-    """检查端口是否占用, 使用nc命令
+    """using cmd nc to check if the port is occupied.
     
     Arguments:
-        port {string} -- 端口
+        port {string} -- port number
     
     Returns:
-        bool -- 端口被占用返回True, 否则返回False.
+        bool -- True or False.
     """
 
     cmd = 'nc -z 127.0.0.1' + (' %d' % port)

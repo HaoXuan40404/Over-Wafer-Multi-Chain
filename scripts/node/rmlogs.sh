@@ -1,7 +1,7 @@
 #!/bin/bash
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 
-# log清理, 会删除三个小时以前生成的log文件。
+# clear log files, which last more than 3 hours。
 for dir in `ls $dirpath | egrep "node[0-9]+"`
 do
         if [ ! -d $dirpath/$dir/log ];then

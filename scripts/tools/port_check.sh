@@ -1,5 +1,5 @@
 #!/bin/bash
-# 检查端口是否被占用, 依赖nc -l 命令
+# Check if the port is occupied., need cmd -> nc -l
 function check_port()
 {
     type nc >/dev/null 2>&1

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 检查操作系统的版本, 目前支持的版本为: CentOS 7.2+ 64位, Ubuntu 16.04 64位
+# Check the version of theOS, new support version: CentOS 7.2+ 64bits, Ubuntu 16.04 64bits
 
 function os_check() 
 {

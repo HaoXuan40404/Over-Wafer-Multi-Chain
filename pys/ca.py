@@ -5,34 +5,34 @@ from pys import path
 
 class CA:
     '''
-    保存证书路径、机构名称
+    save cert path、agency name
     '''
     CA_path = ''
     agent = ''
 
 def set_agent(agent):
-    """[设置机构名称]
+    """[set agency name]
     
     Arguments:
-        agent {[string]} -- [机构名称]
+        agent {[string]} -- [agency name]
     """
 
     CA.agent = agent
 
 def get_agent():
-    """[获取机构名称]
+    """[get agency name]
     
     Returns:
-        [string] -- [机构名称]
+        [string] -- [agency name]
     """
 
     return CA.agent
 
 def set_ca_path(p):
-    """[设置证书路径]
+    """[set cert path]
     
     Arguments:
-        p {[path]} -- [证书存放路径]
+        path {[path]} -- [cert path]
     """
 
     if not os.path.isdir(p):
@@ -40,46 +40,64 @@ def set_ca_path(p):
     CA.CA_path = p
 
 def get_agent_ca_path():
-    """[获取机构证书路径]
+    """[get agency cert path]
     
     Returns:
-        [path] -- [机构证书路径]
+        [path] -- [agency cert path]
     """
 
     return CA.CA_path + '/' + CA.agent
 
 def get_ca_path():
-    """[获取根证书路径]
+    """[get root cert path]
     
     Returns:
-        [path] -- [根证书路径]
+        [path] -- [root cert path]
     """
 
     return CA.CA_path
 
-def root_ca_exist():
-    """[判断根证书是否存在]
+def get_GM_agent_ca_path():
+    """[get gm agency cert path]
     
     Returns:
-        [bool] -- [true为存在 false 为不存在]
+        [path] -- [agency cert path]
+    """
+
+    return CA.CA_path + '/GM/' + CA.agent
+
+def get_GM_ca_path():
+    """[get gm root cert path]
+    
+    Returns:
+        [path] -- [root cert path]
+    """
+
+    return CA.CA_path + '/GM/'
+
+def root_ca_exist():
+    """[check root cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
     """
     
     return os.path.exists(CA.CA_path + '/ca.crt') and os.path.exists(CA.CA_path + '/ca.key')
 
 def agent_ca_exist():
-    """[判断机构证书是否存在]
+    """[check agency cert exists]
     
     Returns:
-        [bool] -- [true为存在 false 为不存在]
+        [bool] -- [true or false]
     """
 
     return os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.crt') and os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.key')
 
 def generate_root_ca(dir):
-    """[生成根证书]
+    """[generate root cert]
     
     Arguments:
-        dir {[path]} -- [根证书输出路径]
+        dir {[path]} -- [root cert path]
     """
 
 
@@ -88,12 +106,12 @@ def generate_root_ca(dir):
     os.system('bash $scripts/generate_chain_cert.sh -o $out >/dev/null 2>&1')
 
 def generator_agent_ca(dir, ca, agent):
-    """[生成机构证书]
+    """[generate agency cert]
     
     Arguments:
-        dir {[path]} -- [机构证书输出路径]
-        ca {[path]} -- [根证书存放路径]
-        agent {[string]} -- [机构名称]
+        dir {[path]} -- [agency cert path]
+        ca {[path]} -- [root cert path]
+        agent {[string]} -- [agency name]
     """
 
 
@@ -104,12 +122,12 @@ def generator_agent_ca(dir, ca, agent):
     os.system('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent >/dev/null 2>&1')
 
 def generator_node_ca(dir, node, agent):
-    """[生成节点证书]
+    """[generate node cert ]
     
     Arguments:
-        dir {[path]} -- [节点证书输出路径]
-        node {[string]} -- [节点名称]
-        agent {[path]} -- [机构证书存放路径]
+        dir {[path]} -- [node cert path]
+        node {[string]} -- [node name]
+        agent {[path]} -- [agency cert path]
     """
 
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
@@ -119,13 +137,55 @@ def generator_node_ca(dir, node, agent):
     os.system('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out >/dev/null 2>&1')
 
 def generator_sdk_ca(dir):
-    """[生成sdk证书]
+    """[generate sdkcert ]
     
     Arguments:
-        dir {[path]} -- [机构证书路径]
-        运行成功后会在目标路径下生成名为sdk的文件夹，内容为sdk证书
+        dir {[path]} -- [agency cert path]
+        If operation success, dir will generate sdk dir under the target path, the content is sdk_cert.
     """
 
     os.environ['out'] = dir
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.system('bash $scripts/generate_sdk_cert.sh -d $out >/dev/null 2>&1')
+    os.system('bash $scripts/generate_sdk_cert.sh -d $out')
+
+def gm_generate_root_ca(dir):
+    """[generate guomi root cert]
+    
+    Arguments:
+        dir {[dir]} -- [put ca in dir]
+    """
+    
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
+    os.environ['out'] = dir
+    os.system('bash $scripts/generate_chain_cert.sh -o $out -g')
+
+def gm_generator_agent_ca(dir, ca, agent):
+    """[generate agency cert]
+    
+    Arguments:
+        dir {[path]} -- [agency cert path]
+        ca {[path]} -- [root cert path]
+        agent {[string]} -- [agency name]
+    """
+
+
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
+    os.environ['out'] = dir
+    os.environ['ca'] = ca
+    os.environ['agent'] = agent
+    os.system('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent -g')
+
+def gm_generator_node_ca(dir, node, agent):
+    """[generate node cert ]
+    
+    Arguments:
+        dir {[path]} -- [node cert path]
+        node {[string]} -- [node name]
+        agent {[path]} -- [agency cert path]
+    """
+
+    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
+    os.environ['agent'] = agent
+    os.environ['node'] = node
+    os.environ['out']= dir
+    os.system('bash $scripts/generate_node_cert.sh -a WB -d $agent -n $node -o $out -s sdk -g')

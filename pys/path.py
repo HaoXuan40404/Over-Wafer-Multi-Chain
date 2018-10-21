@@ -5,7 +5,7 @@ import sys
 
 class Path:
     '''
-    multi-chain工作目录
+    Over-Wafer-Multi-Chain path configuration
     '''
     dir = ''
     fisco_path = '/usr/local/bin'

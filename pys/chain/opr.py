@@ -24,10 +24,10 @@ def init_chain():
 
 
 def start_chain(chain):
-    """[解析命令行, 批量启动节点]
+    """[start nodes]
     
     Arguments:
-        chain {[list]} -- [命令行传入的chain_id:host_ip]
+        chain {[list]} -- [get chain_id:host_ip from command Line]
     """
 
     if chain[0] == 'all':
@@ -58,10 +58,10 @@ def start_chain(chain):
 
 
 def stop_chain(chain):
-    """[解析命令行, 批量停止节点]
+    """[stop nodes]
     
     Arguments:
-        chain {[list]} -- [命令行传入的chain_id:host_ip]
+        chain {[list]} -- [get chain_id:host_ip from command Line]
     """
 
     if chain[0] == 'all':
@@ -97,10 +97,10 @@ def stop_chain(chain):
                 consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def check_chain(chain):
-    """[解析命令行, 批量检查节点启动情况]
+    """[Check if the nodes is running normally.]
     
     Arguments:
-        chain {[list]} -- [命令行传入的chain_id:host_ip]
+        chain {[list]} -- [get chain_id:host_ip from command Line]
     """
     
     if chain[0] == 'all':
@@ -131,10 +131,10 @@ def check_chain(chain):
                 consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def env_check(hosts):
-    """依赖检查
+    """[check and confirm the environment normally]
     
     Arguments:
-        hosts {string} -- host列表
+        hosts {string} -- host list
     """
     if hosts[0] == 'all':
         ansible.env_check('all', path.get_path())
@@ -146,10 +146,10 @@ def env_check(hosts):
                 consoler.log(' skip, not invalid host, host is %s', host)
 
 def monitor_chain(chain):
-    """[解析命令行, 批量检查节点运行情况]
+    """[Check the chain's parameters e.g. blocknumber, consensus list...etc]
     
     Arguments:
-        chain {[list]} -- [命令行传入的chain_id:host_ip]
+        chain {[list]} -- [get chain_id:host_ip from command Line]
     """
     if chain[0] == 'all':
         dir = data.meta_dir_base()
@@ -178,7 +178,7 @@ def monitor_chain(chain):
                 consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def pub_list(chains):
-    """list all package published
+    """[List the nodes in package corresponding to the --publishi chain:version]
     
     Arguments:
         chains {[list]} -- [chain id]
@@ -248,10 +248,10 @@ def pkg_list(chains):
     logger.info('load end')
 
 def telnet_ansible(server):
-    """[测试托管服务器的ansible]
+    """[Test ansible operation to all server in operation server]
     
     Arguments:
-        server {[list]} -- [对应服务器的ip]
+        server {[list]} -- [host ip]
     """
 
     if server[0] == 'all':
@@ -264,13 +264,14 @@ def telnet_ansible(server):
                 consoler.error('skip host %s, invalid host format.', server[i])
 
 def valid_cmd(chain):
-    """[判断chain是否有效]
+    """[Determine if the cmd is valid or not
+        chain:version]
     
     Arguments:
         chain {[string]} -- [chain cmd]
     
     Returns:
-        [chain] -- [如果为是有效返回分割后的chainlist，否则返回false]
+        [chain] -- [if valid return chainlist[]，else return false]
     """
 
     try: 
@@ -282,13 +283,14 @@ def valid_cmd(chain):
         return False
 
 def valid_file(chain):
-    """[判断chain是否有效]
+    """[Determine if the cmd is exist
+        chain:version:hostip]
     
     Arguments:
         chain {[string]} -- [chain cmd]
     
     Returns:
-        [chain] -- [如果为是有效返回分割后的chainlist，否则返回false]
+        [chain] -- [if valid return chainlist[]，else return false]
     """
 
     try: 
@@ -300,10 +302,11 @@ def valid_file(chain):
         return False
 
 def cmd_push(chain):
-    """[解析命令行, 批量执行命令]
+    """[Execute commands on multi servers]
     
     Arguments:
-        chain {[list]} -- [命令行传入的chain_id:"cmd_1 cmd_2 用":"隔开，用引号包含"cmd1 cmd2"]
+        chain {[list]} -- [chain_id:"cmd using":"split chain and cmd，e.g."chain:"cmd. 
+        using '\"' includes command  e.g. "cmd1 cmd2"]
     """
 
     if valid_cmd(chain[0])[0] == 'all':
@@ -327,10 +330,10 @@ def cmd_push(chain):
                 consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
 
 def cmd_server(chain_id, cmd):
-    """[对某条链执行命令]
+    """[Execute commands on a chain]
     
     Arguments:
-        chain_id {[string]} -- [对所有服务器执行命令]
+        chain_id {[string]} -- [chain_id:version]
     """
 
     mm = Meta(chain_id)
@@ -347,10 +350,10 @@ def cmd_server(chain_id, cmd):
 
 
 def file_push(chain):
-    """[解析命令行, 批量推文件]
+    """[Push files on muti servers]
     
     Arguments:
-        chain {[list]} -- [命令行传入的chain_id:src:dest 用":"隔开]
+        chain {[list]} -- [chain_id:src:dest using":"split.]
     """
 
     if valid_file(chain[0])[0] == 'all':
@@ -375,10 +378,10 @@ def file_push(chain):
 
 
 def file_server(chain_id, src, dest):
-    """[对某条链执行命令]
+    """[Push files on a chain]
     
     Arguments:
-        chain_id {[string]} -- [对所有服务器执行命令]
+        chain_id {[string]} -- [push files on all servers of a chain]
     """
 
     mm = Meta(chain_id)
@@ -395,10 +398,10 @@ def file_server(chain_id, src, dest):
 
 
 def start_server(chain_id):
-    """[启动对应链的节点]
+    """[Using start.sh start all nodes of a chain]
     
     Arguments:
-        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的start.sh]
+        chain_id {[string]} -- [chain_id:version]
     """
 
     mm = Meta(chain_id)
@@ -417,10 +420,10 @@ def start_server(chain_id):
 
 
 def stop_server(chain_id):
-    """[停止对应链的节点]
+    """[Using stop.sh stop all nodes of a chain]
     
     Arguments:
-        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的stop.sh]
+        chain_id {[string]} -- [chain_id:version]
     """
 
     mm = Meta(chain_id)
@@ -437,10 +440,10 @@ def stop_server(chain_id):
 
 
 def check_server(chain_id):
-    """[检查对应链的节点]
+    """[Using scheck.sh check all nodes of a chain]
     
     Arguments:
-        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的check.sh]
+        chain_id {[string]} -- [chain_id:version]
     """
 
     mm = Meta(chain_id)
@@ -456,10 +459,10 @@ def check_server(chain_id):
 
 
 def monitor_server(chain_id):
-    """[检查对应链的节点的运行情况, 调用monitor.sh脚本]
+    """[Using monitor.sh check all nodes of a chain]
     
     Arguments:
-        chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的monitor.sh]
+        chain_id {[string]} -- [chain_id:version]
     """
 
     mm = Meta(chain_id)

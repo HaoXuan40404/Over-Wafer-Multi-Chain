@@ -1,6 +1,10 @@
 #coding:utf-8
 
 import json
+"""Generate boots .json, which is a configuration file for nodes to perform p2p link
+
+"""
+
 
 class P2pHost:
     def __init__(self, host, p2pport):

@@ -11,15 +11,16 @@ from pys.exp import MCError
 
 
 class MchainConf():
-    """parser mchain.conf 
+    """mchain.conf configuration
     """
 
     agent_name = 'WB'
     ansible_dir = '/data'
     sys_address = '0xe4cd3e488cbf0a98e8ecd8bc5eefaf10e5d54905'
+    gm_sys_address = '0xee80d7c98cb9a840b9c4df742f61336770951875'
 
     def __repr__(self):
-        return '[agent_name] %s, [ansible_dir] %s, [sys_address] %s' % (MchainConf.agent_name, MchainConf.ansible_dir, MchainConf.sys_address)
+        return '[agent_name] %s, [ansible_dir] %s, [sys_address] %s£¬ [gm_sys_address] %s' % (MchainConf.agent_name, MchainConf.ansible_dir, MchainConf.sys_address, MchainConf.gm_sys_address)
 
 
 def get_agent():
@@ -33,17 +34,17 @@ def get_sysaddress():
 
 
 def parser(mchain):
-    """parser mchain.conf config file
+    """resolve mchain.conf
     
     Arguments:
-        mchain {string} -- mchain.conf path
+        mchain {string} -- path of mchain.conf
     
     Raises:
         MCError -- exception description
     """
 
     logger.info('mchain.conf is %s', mchain)
-    # 
+    # resolve configuration
     if not utils.valid_string(mchain):
         logger.error(' mchain.conf not invalid path, mchain.conf is %s', mchain)
         raise MCError(' mchain.conf not invalid path, mchain.conf is %s' % mchain)

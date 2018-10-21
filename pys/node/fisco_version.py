@@ -16,13 +16,17 @@ def get_version(path):
     """
 
 
-    cmd = path + '--version'
+    cmd = path + ' --version'
 
     status,output = commands.getstatusoutput(cmd)
 
     version = output.split()
 
-    logger.debug('function fisco_version status => %s' + status)
-    consoler.info('fisco bcos version => %s', version[2])
+    if version[0] == 'FISCO-BCOS':
+        logger.debug('function fisco_version status => ' %(status))
+        consoler.info('fisco bcos version => '  %(version[2]))
+    else:
+        logger.debug('fisco bcos not exists, dir => ' %(output))
+        consoler.info('fisco bcos not exists, dir => ' %(path))
 
     return version[2]

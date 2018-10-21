@@ -1,0 +1,19 @@
+{
+        "sealEngine": "PBFT",
+        "systemproxyaddress":"0xee80d7c98cb9a840b9c4df742f61336770951875",
+        "listenip":"127.0.0.1",
+        "cryptomod":"0",
+        "rpcport": "8545",
+        "p2pport": "30303",
+        "channelPort": "8891",
+        "wallet":"./data/keys.info",
+        "keystoredir":"./data/keystore/",
+        "datadir":"./data/",
+        "vm":"interpreter",
+        "networkid":"12345",
+        "logverbosity":"4",
+        "coverlog":"OFF",
+        "eventlog":"ON",
+        "statlog":"ON",
+        "logconf":"./log.conf"
+}

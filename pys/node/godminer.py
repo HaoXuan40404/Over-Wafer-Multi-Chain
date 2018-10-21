@@ -1,4 +1,8 @@
 import json
+"""Godminer.json contains chain initialization information, 
+   including nodeid, agency information, peerip, port number, and node_idex
+"""
+
 
 NODEID = '8c0fbe3a9b31775fc9786d7ae791e72b299d71bec18f18eb908caf637c71eaab4c691e738c41bc03478dd262077230056a4b0f07e9043445ea5632560326b8f5'
 NODEDESC = 'temp'

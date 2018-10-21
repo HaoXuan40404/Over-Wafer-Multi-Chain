@@ -84,7 +84,7 @@ class NodeEle:
         return 'Node [host_ip %s, p2p_ip %s, node_num %d]' % (self.host_ip, self.p2p_ip, self.node_num)
 
 class ConfigConf:
-    """搭建一条新链的配置文件对应的对象
+    """Configuration containing object[port], [node] and [chain]
     """
     def __init__(self):
         self.chain = None
@@ -114,7 +114,7 @@ class ConfigConf:
 
 def do_parser(cfg):
     '''
-    解析config.conf配置文件, 返回Config.conf对象
+    resolve config.conf, return object[Config.conf]
     '''
     logger.info('cfg parser %s', cfg)
 
