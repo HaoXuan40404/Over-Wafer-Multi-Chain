@@ -85,7 +85,7 @@ class Meta:
             host_nodes = []
             host_nodes.append(m)
             self.nodes[m.host_ip] = host_nodes
-        logger.info(' append mn failed, mn is %s, hm is %s', m, host_nodes)
+        logger.info(' append mn, mn is %s, hm is %s', m, host_nodes)
         return True
 
     def get_nodes(self):
