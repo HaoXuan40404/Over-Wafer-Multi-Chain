@@ -498,14 +498,11 @@ def ls_port(hosts):
     """[show in host_ip which port used (published fisco-bcos) ]
     
     Arguments:
-        host_ip {[string]} -- [host_ip]
-    
-    Returns:
-        [bool] -- [true or false]
+        hosts {[string]} -- [host_ip]
     """
 
     am = AllMeta()
-    
+
     for host in hosts:
         consoler.info(' => host is %s', host)
         if not utils.valid_ip(host):
@@ -522,8 +519,6 @@ def ls_port(hosts):
             nodes = meta.get_host_nodes(host)
             for node in nodes:
                 consoler.info(' \t\t node%s, rpc_port：%s, p2p_port：%s, channel_port：%s', str(node.get_index()), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
-        
-    return 0
 
 
    
