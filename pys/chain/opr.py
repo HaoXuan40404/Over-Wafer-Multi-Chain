@@ -508,7 +508,7 @@ def ls_port(hosts):
     
     for host in hosts:
         consoler.info(' => host is %s', host)
-        if utils.valid_ip(host):
+        if not utils.valid_ip(host):
             consoler.info(' \t => Invalid host ip, host is %s.', host)
             continue
         
