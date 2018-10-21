@@ -182,9 +182,9 @@ def get_meta_ports_by_host(host, am = None):
         am = AllMeta()
     
     metas = []
-    for meta in am.get_metas():
+    for meta in am.get_metas().itervalues():
         try:
-            host_nodes = meta.get_host_nodes(host)
+            host_nodes = meta.get_host_nodes(meta)
             if len(host_nodes) == 0:
                 continue
             host_nodes.append(meta)
