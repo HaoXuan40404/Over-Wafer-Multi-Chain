@@ -507,21 +507,21 @@ def ls_port(hosts):
     am = AllMeta()
     
     for host in hosts:
-        consoler.log(' => host is %s', host)
+        consoler.info(' => host is %s', host)
         if utils.valid_ip(host):
-            consoler.log(' \t => Invalid host ip, host is %s.', host)
+            consoler.info(' \t => Invalid host ip, host is %s.', host)
             continue
         
         metas = get_meta_ports_by_host(host, am)
         if len(metas) == 0:
-            consoler.log(' \t => No chain published to this host.')
+            consoler.info(' \t => No chain published to this host.')
             continue
         
         for meta in metas:
-            consoler.log(' \t => chain id is %s ', meta.get_chain_id())
+            consoler.info(' \t => chain id is %s ', meta.get_chain_id())
             nodes = meta.get_nodes()
             for node in nodes():
-                consoler.log(' \t\t node%s, rpc_port is %s, p2p_port is %s, channel_port is %s', str(node.get_index()), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
+                consoler.info(' \t\t node%s, rpc_port is %s, p2p_port is %s, channel_port is %s', str(node.get_index()), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
         
     return 0
 
