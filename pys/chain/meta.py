@@ -20,6 +20,24 @@ class MetaNode:
         self.p2p_port = p2p_port
         self.channel_port = channel_port
         self.index = index
+    
+    def get_rpc(self):
+        return self.rpc_port
+    
+    def get_p2p(self):
+        return self.p2p_port
+    
+    def get_channel(self):
+        return self.channel_port
+    
+    def get_index(self):
+        return self.index
+    
+    def get_version(self):
+        return self.version
+    
+    def get_host(self):
+        return self.host_ip
 
     def __repr__(self):
         return 'host %s, version %s, index %d, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.index, self.rpc_port, self.p2p_port, self.channel_port)
@@ -30,6 +48,7 @@ class Meta:
     def __init__(self, chain_id):
         self.chain_id = chain_id
         self.nodes = {}
+        self.load()
 
     def get_chain_id(self):
         return self.chain_id
@@ -40,11 +59,10 @@ class Meta:
             host_nodes = self.nodes[host_ip]
             logger.info(' get host nodes, host is %s, hm is %s',
                         host_ip, host_nodes)
-        else:
-            host_nodes = []
-            logger.info(' get host nodes null, host is %s', host_ip)
+            return host_nodes
+        # raise or not ???
+        raise MCError(' not found meta node, chain_id is %s, host is %s' % (self.chain_id, host_ip))
 
-        return host_nodes
     
     def host_index_exist(self, host_ip, index):
         if self.nodes.has_key(host_ip):
@@ -110,7 +128,7 @@ class Meta:
     def empty(self):
         return len(self.nodes) == 0
 
-    def load_from_file(self):
+    def load(self):
         self.clear()
         if not self.exist():
             logger.info(' meta.json not exist, chain_id is ' + self.chain_id)
@@ -132,3 +150,50 @@ class Meta:
                 ' load meta failed, chaind id is %s, exception is %s', self.chain_id, e)
             # raise or not ???
             raise MCError(' load meta.json data failed, chain id is %s, exception is %s' % (self.chain_id, e))
+
+class AllMeta:
+    def __init__(self):
+        self.metas = {}
+        self.load()
+
+    def get_metas(self):
+        return self.metas
+
+    def get_meta_by_chain_id(self, chain_id):
+        if self.metas.has_key(chain_id):
+            return self.metas[chain_id]
+        # raise or not ???
+        raise MCError(' not found meta, chain_id is %s' % (chain_id))
+    
+    def load(self):
+
+        dir = data.meta_dir_base()
+        for chain_id in  os.listdir(dir):
+            try:
+                meta = Meta(chain_id)
+                self.metas[chain_id] = meta
+            except Exception as e:
+                pass
+
+def get_meta_ports_by_host(host, am = None):
+
+    if not am is None:
+        am = AllMeta()
+    
+    metas = []
+    for meta in am.get_metas():
+        try:
+            host_nodes = meta.get_host_nodes(host)
+            if len(host_nodes) == 0:
+                continue
+            host_nodes.append(meta)
+        except Exception as e:
+            pass
+        
+    return metas
+    
+
+    
+
+
+            

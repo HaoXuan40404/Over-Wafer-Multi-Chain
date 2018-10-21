@@ -1,10 +1,10 @@
 #coding:utf-8
 import os
 import json
+import shutil
 from pys import path
 from pys import ansible, utils
-from pys.chain import meta
-from pys.chain.meta import Meta
+from pys.chain.meta import *
 from pys.chain.package import AllChain
 from pys.chain.package import ChainVers
 from pys.chain.package import VerHosts
@@ -14,7 +14,6 @@ from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
 from pys.chain import package
-import shutil
 
 def init_chain():
     """[init]
@@ -194,7 +193,6 @@ def pub_list(chains):
         if os.path.exists(dir):
             for chain_id in os.listdir(dir):
                 m = Meta(chain_id)
-                m.load_from_file()
                 if not m.empty():
                     meta_list.append(m)
         else:
@@ -202,7 +200,6 @@ def pub_list(chains):
     else:
         for chain_id in chains:
             m = Meta(chain_id)
-            m.load_from_file()
             if not m.empty():
                 meta_list.append(m)
 
@@ -233,22 +230,21 @@ def pkg_list(chains):
         
     for chain in chains:
         logger.debug(' chain id is %s', chain)
-        consoler.info(' => chain id ： %s', chain)
+        consoler.info(' ==> chain id ： %s', chain)
         cv = ChainVers(chain)
         if len(cv.get_ver_list()) == 0:
             consoler.info(' No build version exist for chain %s, do nothing.', chain)
-        else:
-            for version in cv.get_ver_list():
-                consoler.info('\t => chain version ： %s', version)
-                logger.debug(' chain id is %s, chain version is %s', chain, version)
-                vh = VerHosts(chain, version)
-                for pkg in vh.get_pkg_list():
-                    consoler.info('\t\t => package ：%s', pkg)
-                    hn = HostNodeDirs(chain, version, pkg)
-                    for node_idx in hn.get_node_dirs():
-                        consoler.info('\t\t\t => %s', node_idx)
-    acp = AllChainPort()
-    logger.info(' AllChainPort is %s', acp.to_json())
+
+        for version in cv.get_ver_list():
+            consoler.info('\t\t => chain version ： %s', version)
+            logger.debug(' chain id is %s, chain version is %s', chain, version)
+            vh = VerHosts(chain, version)
+            for pkg in vh.get_pkg_list():
+                consoler.info('\t\t\t => package ：%s', pkg)
+                hn = HostNodeDirs(chain, version, pkg)
+                for node_idx in hn.get_node_dirs():
+                    consoler.info('\t\t\t\t => %s', node_idx)
+
     logger.info('load end')
 
 def telnet_ansible(server):
@@ -337,7 +333,7 @@ def cmd_server(chain_id, cmd):
         chain_id {[string]} -- [对所有服务器执行命令]
     """
 
-    mm = meta.Meta(chain_id)
+    mm = Meta(chain_id)
 
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
@@ -345,7 +341,6 @@ def cmd_server(chain_id, cmd):
         return 
 
     logger.info('cmd action, chain_id is ' + chain_id)
-    mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.cmd_module(k, cmd)
@@ -386,7 +381,7 @@ def file_server(chain_id, src, dest):
         chain_id {[string]} -- [对所有服务器执行命令]
     """
 
-    mm = meta.Meta(chain_id)
+    mm = Meta(chain_id)
 
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
@@ -394,7 +389,6 @@ def file_server(chain_id, src, dest):
         return 
 
     logger.info('cmd action, chain_id is ' + chain_id)
-    mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.copy_module(k, src, dest)
@@ -407,14 +401,13 @@ def start_server(chain_id):
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的start.sh]
     """
 
-    mm = meta.Meta(chain_id)
+    mm = Meta(chain_id)
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
         consoler.warn('chain is not published, can not start action, chain_id is %s', chain_id)
         return 
 
     logger.info('start action, chain_id is ' + chain_id)
-    mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.start_module(k, ansible.get_dir() + '/' + chain_id)
@@ -430,7 +423,7 @@ def stop_server(chain_id):
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的stop.sh]
     """
 
-    mm = meta.Meta(chain_id)
+    mm = Meta(chain_id)
 
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
@@ -438,7 +431,6 @@ def stop_server(chain_id):
         return 
 
     logger.info('stop action, chain_id is ' + chain_id)
-    mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.stop_module(k, ansible.get_dir() + '/' + chain_id)
@@ -451,14 +443,13 @@ def check_server(chain_id):
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的check.sh]
     """
 
-    mm = meta.Meta(chain_id)
+    mm = Meta(chain_id)
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
         consoler.warn('chain is not published, can not check action, chain_id is %s', chain_id)
         return 
 
     logger.info('check action, chain_id is ' + chain_id)
-    mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.check_module(k, ansible.get_dir() + '/' + chain_id)
@@ -471,14 +462,13 @@ def monitor_server(chain_id):
         chain_id {[string]} -- [调用chain_id对应的链的所有服务器下的monitor.sh]
     """
 
-    mm = meta.Meta(chain_id)
+    mm = Meta(chain_id)
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
         consoler.warn('chain is not published, can not monitor action, chain_id is %s', chain_id)
         return 
 
     logger.info('monitor_server action, chain_id is ' + chain_id)
-    mm.load_from_file()
     for k in mm.get_nodes().iterkeys():
         logger.debug('host ip is ' + k)
         ansible.monitor_module(k, ansible.get_dir() + '/' + chain_id)
@@ -504,7 +494,7 @@ def export_package(export_list, dest):
     else:
         consoler.error('invalid chain_id format. %s %s', chain_get[0], chain_get[1])
 
-def ls_port(host_ip):
+def ls_port(host_ip, hosts):
     """[show in host_ip which port used (published fisco-bcos) ]
     
     Arguments:
@@ -514,31 +504,25 @@ def ls_port(host_ip):
         [bool] -- [true or false]
     """
 
-    if utils.valid_ip(host_ip):
-        dir = data.meta_dir_base()
-        for chain_id in  os.listdir(dir):
-            cfg = dir + chain_id +  '/meta.json'
-            if not os.path.isfile(cfg):
-                consoler.error('invalid cfg. %s', cfg)
-            with open(cfg) as f:
-                try : 
-                    js = json.load(f)
-                    node = js['nodes']
-                    for host in node:
-                        if host == host_ip:
-                            print('chain ' + chain_id + ' in ' + host + ' used port: ')
-                            for iter_var in range(int(node[host]['node_number'])):
-                                rpcport = node[host]['rpc_port']
-                                p2pport = node[host]['p2p_port']
-                                channelPort = node[host]['channel_port']
-                                rpcport = int(rpcport) + iter_var
-                                p2pport = int(p2pport) + iter_var
-                                channelPort = int(channelPort) + iter_var
-                                print('\trpcport => ' +  str(rpcport))
-                                print('\tp2pport => ' + str(p2pport))
-                                print('\tchannelPort => ' + str(channelPort))
-                except Exception as e:
-                    logger.error('%s is not a valid config', e)
+    am = AllMeta()
+    
+    for host in hosts:
+        consoler.log(' => host is %s', host)
+        if utils.valid_ip(host):
+            consoler.log(' \t => Invalid host ip, host is %s.', host)
+            continue
+        
+        metas = get_meta_ports_by_host(host, am)
+        if len(metas) == 0:
+            consoler.log(' \t => No chain published to this host.')
+            continue
+        
+        for meta in metas:
+            consoler.log(' \t => chain id is %s ', meta.get_chain_id())
+            nodes = meta.get_nodes()
+            for node in nodes():
+                consoler.log(' \t\t node%s, rpc_port is %s, p2p_port is %s, channel_port is %s', str(node.get_index()), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
+        
     return 0
 
 

@@ -1,7 +1,11 @@
 #coding:utf-8
 import json
-from pys.chain.package import * 
-from pys.chain.package import *
+
+from pys.log import logger
+from pys.chain.package import HostNodeDirs
+from pys.chain.package import VerHosts
+from pys.chain.package import ChainVers
+from pys.chain.package import AllChain
 from pys.chain.chain import Chain
 from pys.node import config
 from pys.exp import MCError
@@ -176,6 +180,9 @@ class AllChainPort:
     def to_json(self):
         return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
     
+    def get_ports(self):
+        return self.ports
+    
     def __repr__(self):
         return ' ports is %s' % (self.ports)
     
@@ -192,4 +199,16 @@ class AllChainPort:
             self.ports[chain_id] = hp
         
         logger.info('load end, acp ports is %s', self)
+
+def get_all_ports_by_host(host, acp = None):
+
+    if not acp is None:
+        acp = AllChainPort()
+    
+    for cp in acp.get_ports():
+        for cvp in cp.get_ports():
+            pass
+
+
+
     

@@ -68,7 +68,7 @@ def usage():
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
     parser.add_argument('--export', nargs=2, metavar=('chain_id',
                                                       'dest_path'), help='Output =>  export publish package.')
-    parser.add_argument('--ls_port', nargs=1, metavar=('host_ip'),
+    parser.add_argument('--ls_port', nargs='+', metavar=('host_ip'),
                         help='Output =>  ls all publish port')
     parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
                                                         'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')

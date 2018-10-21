@@ -57,7 +57,6 @@ def publish_server(chain_id, chain_version):
             'version of this chain is not exist, chain is %s, version is %s', chain_id, chain_version)
         return
     mm = meta.Meta(chain_id)
-    mm.load_from_file()
     for host in os.listdir(dir):
         if utils.valid_ip(host):
             logger.debug('skip, not invalid host_ip ' + dir)
