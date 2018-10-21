@@ -184,10 +184,10 @@ def get_meta_ports_by_host(host, am = None):
     metas = []
     for meta in am.get_metas().itervalues():
         try:
-            host_nodes = meta.get_host_nodes(meta)
+            host_nodes = meta.get_host_nodes(host)
             if len(host_nodes) == 0:
                 continue
-            host_nodes.append(meta)
+            metas.append(meta)
         except Exception as e:
             pass
         
