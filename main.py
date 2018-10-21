@@ -180,8 +180,7 @@ def usage():
         consoler.info(' export operation end.')
     elif args.ls_port:
         consoler.info(' ls_port operation begin.')
-        host_ip = args.ls_port[0]
-        opr.ls_port(host_ip)
+        opr.ls_port(args.ls_port)
         consoler.info(' ls_port operation end.')
     else:
         consoler.error(
