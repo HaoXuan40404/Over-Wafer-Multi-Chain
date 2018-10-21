@@ -494,7 +494,7 @@ def export_package(export_list, dest):
     else:
         consoler.error('invalid chain_id format. %s %s', chain_get[0], chain_get[1])
 
-def ls_port(host_ip, hosts):
+def ls_port(hosts):
     """[show in host_ip which port used (published fisco-bcos) ]
     
     Arguments:
