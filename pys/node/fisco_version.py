@@ -62,7 +62,10 @@ class Fisco:
                 self.gm = True
             self.major = str(int(version[0]))
             self.minor = str(int(version[1]))
-            self.revision = str(int(version[2][:-3]))
+            if self.gm:
+                self.revision = str(int(version[2][:-3]))
+            else:
+                self.revision = str(int(version[2]))
 
             logger.info(' fisco-bcos is %s', self)
             
