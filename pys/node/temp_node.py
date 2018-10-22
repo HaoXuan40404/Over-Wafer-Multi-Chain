@@ -12,8 +12,40 @@ from pys import path
 from pys.log import logger
 from pys.log import consoler
 from pys.node import config
+from pys.exp import MCError
 
-def temp_node_build(dir, port):
+def GM_temp_node_build(dir, port, fisco):
+    """Generate GM temp node package
+    
+    Arguments:
+        dir {string} -- temp node dictionary 
+        port {Port} -- port message 
+    """
+
+    logger.info('GM build temp node, dir => ' + dir)
+
+    os.makedirs(dir + '/temp')
+    shutil.copytree(path.get_path() + '/tpl/GM_temp_node/web3sdk', dir + '/temp/web3sdk')
+
+    shutil.copytree(path.get_path() + '/tpl/GM_temp_node', dir + '/temp/node')
+    #copy GM fisco-bcos
+    shutil.copy(fisco.get_fisco_path(), dir + '/temp/node/')
+
+    shutil.copy(dir + '/temp/node/data/sdk/ca.crt', dir + '/temp/web3sdk/conf')
+    shutil.copy(dir + '/temp/node/data/sdk/client.keystore', dir + '/temp/web3sdk/conf')
+
+    cfg_json = config.build_config_json('12345', port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), True)
+    with open(dir + '/temp/node/config.json',"w+") as f:
+            f.write(cfg_json)
+
+    old = 'NODE@HOSTIP'
+    new = 'node0@127.0.0.1:%d' % port.get_channel_port()
+    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml', old, new)
+    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml',
+                      'constructor-arg value="0"', 'constructor-arg value="1"')
+    logger.info('GM build temp node end')
+
+def temp_node_build(dir, port, fisco):
     """create dir for temp node run
     
     Arguments:
@@ -28,7 +60,7 @@ def temp_node_build(dir, port):
 
     shutil.copytree(path.get_path() + '/tpl/temp_node', dir + '/temp/node')
     #copy fisco-bcos file
-    shutil.copy(path.get_fisco_path(), dir + '/temp/node/')
+    shutil.copy(fisco.get_fisco_path(), dir + '/temp/node/')
 
     shutil.copy(dir + '/temp/node/sdk/ca.crt', dir + '/temp/web3sdk/conf')
     shutil.copy(dir + '/temp/node/sdk/client.keystore', dir + '/temp/web3sdk/conf')
@@ -55,22 +87,19 @@ def start_temp_node(dir, port):
     # check port conflicts
     if utils.port_in_use(port.get_rpc_port()):
         logger.warn(' rpc port in use, port is %s', port.get_rpc_port())
-        consoler.error(' temp node rpc port is in use, port is %s', port.get_rpc_port())
-        return False
+        raise MCError(' rpc port(%s) is in use.' % port.get_rpc_port())
   
     if utils.port_in_use(port.get_p2p_port()):
         logger.warn('p2p port in use, port is %s', port.get_p2p_port())
-        consoler.error(' temp node p2p port is in use, port is %s', port.get_p2p_port())
-        return False
+        raise MCError(' p2p port(%s) is in use.' % port.get_p2p_port())
 
     if utils.port_in_use(port.get_channel_port()):
         logger.warn('channel port in use, port is %s', port.get_channel_port())
-        consoler.error(' temp node channel port is in use, port is %s', port.get_channel_port())
-        return False
+        raise MCError(' channel port(%s) is in use.' % port.get_channel_port())
 
     cmd = 'bash %s/temp/node/start.sh' % dir
     status, output = commands.getstatusoutput(cmd)
-    logger.debug('start status, status is %d, output is %s', status, output)
+    logger.debug(' start status, status is %d, output is %s', status, output)
 
     # sleep for temp start
     time.sleep(10)
@@ -79,11 +108,11 @@ def start_temp_node(dir, port):
     status, output = commands.getstatusoutput(cmd)
     logger.info('check status, status is %d, output is %s', status, output)
 
-    if utils.valid_string(output) and (output.find('is running') != -1):
+    if utils.valid_string(output) and (output.find('is running') != -1) and utils.port_in_use(port.get_channel_port()):
         # add consoler.log for the reason temp node start failed.
-        return True
+        pass
     else:
-        return False
+        raise MCError(' temp node start failed, outpus is %s' % output)
 
 def stop_temp_node(dir):
     """stop temp node
@@ -110,10 +139,9 @@ def export_genesis(dir):
     status, output = commands.getstatusoutput(cmd)
     if not os.path.exists(dir + '/genesis.json'):
         logger.warn('export genesis.json failed, output is %s', output)
-        return False
+        raise MCError(' export genesis.json failed, dir is %s, output is %s.' % (dir, output))
     else:
         logger.debug('export status, status is %d, output is %s', status, output)
-        return True
 
 def clean_temp_node(dir):
     """ stop temp node and remove temp node dir
@@ -138,34 +166,3 @@ def registerNode(dir, nodejson):
     status, output = commands.getstatusoutput(cmd)
 
     logger.debug('register status, status is %d, output is %s', status, output)
-
-def GM_temp_node_build(dir, port):
-    """Generate GM temp node package
-    
-    Arguments:
-        dir {string} -- temp node dictionary 
-        port {Port} -- port message 
-    """
-
-    logger.info('GM build temp node, dir => ' + dir)
-
-    os.makedirs(dir + '/temp')
-    shutil.copytree(path.get_path() + '/tpl/GM_temp_node/web3sdk', dir + '/temp/web3sdk')
-
-    shutil.copytree(path.get_path() + '/tpl/GM_temp_node', dir + '/temp/node')
-    #copy GM fisco-bcos
-    shutil.copy(path.get_fisco_path(), dir + '/temp/node/')
-
-    shutil.copy(dir + '/temp/node/data/sdk/ca.crt', dir + '/temp/web3sdk/conf')
-    shutil.copy(dir + '/temp/node/data/sdk/client.keystore', dir + '/temp/web3sdk/conf')
-
-    cfg_json = config.build_config_json('12345', port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port())
-    with open(dir + '/temp/node/config.json',"w+") as f:
-            f.write(cfg_json)
-
-    old = 'NODE@HOSTIP'
-    new = 'node0@127.0.0.1:%d' % port.get_channel_port()
-    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml', old, new)
-    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml',
-                      'constructor-arg value="0"', 'constructor-arg value="1"')
-    logger.info('GM build temp node end')

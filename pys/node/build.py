@@ -13,17 +13,8 @@ from pys.log import logger
 from pys.exp import MCError
 from pys.chain.package import HostNodeDirs
 
-def remove_node_index_dir(chain, node, index):
-    """remove node${index} dir if exist
-    """
 
-    node_dir = chain.data_dir() + '/' + node.get_host_ip() + '/' + str(index)
-    if os.path.exists(node_dir):
-        shutil.rmtree(node_dir)
-    logger.debug(' chain is %s, node is %s, index is %d', chain, node, index)
-
-
-def build_node_dir(chain, node, port, index):
+def build_node_dir(chain, node, fisco, port, index):
     """create node${index} dir.
     
     Arguments:
@@ -31,6 +22,7 @@ def build_node_dir(chain, node, port, index):
         node {Node} -- node info
         port {Port} -- port info
         index {int} -- index info
+        gm{bool} -- is gm build
     
     Raises:
         Exception -- exception description
@@ -47,7 +39,8 @@ def build_node_dir(chain, node, port, index):
         ├── check.sh
     """
 
-    logger.info('chain is %s, node is %s, index is %s', chain, node, index)
+    logger.info('chain is %s, node is %s, index is %s',
+                chain, node, index)
     node_dir = chain.data_dir() + '/' + node.get_host_ip() + \
         '/node' + str(index) + '/'
     if os.path.exists(node_dir):
@@ -65,7 +58,7 @@ def build_node_dir(chain, node, port, index):
                 node_dir + '/check.sh')
 
     cfg_json = config.build_config_json(chain.get_id(
-    ), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port())
+    ), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), chain.get_gm())
     with open(node_dir + '/config.json', "w+") as f:
         f.write(cfg_json)
 
@@ -73,22 +66,28 @@ def build_node_dir(chain, node, port, index):
     os.makedirs(node_dir + '/log')
 
     # copy bootstrapnodes.json、genesis.json to data fir
-    shutil.copy(chain.data_dir() + '/bootstrapnodes.json', node_dir + '/data')
+    if os.path.exists(chain.data_dir() + '/bootstrapnodes.json'):
+        shutil.copy(chain.data_dir() + '/bootstrapnodes.json', node_dir + '/data')
     if os.path.exists(chain.data_dir() + '/genesis.json'):
         shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/data')
 
-    ca.generator_node_ca(node_dir + '/data',
-                         node.get_p2p_ip(), ca.get_agent_ca_path())
+    if fisco.is_gm():
+        ca.gm_generator_node_ca(
+            node_dir + '/data', node.get_p2p_ip(), ca.get_GM_ca_path())
+    else:
+        ca.generator_node_ca(node_dir + '/data',
+                             node.get_p2p_ip(), ca.get_agent_ca_path())
+
     logger.info(' build_node_dir end. ')
 
-
-def build_host_dir(chain, node, port, temp=None):
+def build_host_dir(chain, node, port, fisco, temp=None):
     """build install pacakge of one server.
     
     Arguments:
         chain {Chain} -- chain info, chain id and chain version.
         node {Node} -- node info.
         port {Port} -- port info.
+        fisco {Fisco} -- fisco info.
         temp {Temp} -- temp node, if temp is not None, register the node info to the node manager info.
     
     Raises:
@@ -106,16 +105,81 @@ def build_host_dir(chain, node, port, temp=None):
 
     for index in range(node.get_node_num()):
         # create dir for every node on the server
-        build_node_dir(chain, node, port.to_port(index), index)
+        build_node_dir(chain, node, fisco, port.to_port(index), index)
         # register node info to node manager contract
         if not temp is None:
-            temp.registerNode(dir, host_dir + ('/node%d' %
-                                               index) + '/data/node.json')
+            if fisco.is_gm():
+                temp.registerNode(dir, host_dir + ('/node%d' %
+                                                   index) + '/data/gmnode.json')
+            else:
+                temp.registerNode(dir, host_dir + ('/node%d' %
+                                                   index) + '/data/node.json')
 
     logger.info('build_host_dir end.')
 
+def build_common_dir(chain, fisco):
+    """build common directory for version of the chain
+    
+    Arguments:
+        dir {string} -- create the directory for the common directory
 
-def expand_host_dir(chain, node, port):
+    common/
+        ├── check.sh
+        ├── fisco-bcos
+        ├── monitor.sh
+        ├── node_manager.sh
+        ├── register.sh
+        ├── rmlogs.sh
+        ├── scripts
+        ├── start.sh
+        ├── stop.sh
+        ├── unregister.sh
+        └── web3sdk
+    """
+    # dir = chain.data_dir()
+    # create common dir
+    com_dir = chain.data_dir() + '/common'
+    os.makedirs(com_dir)
+
+    # copy fisco-bcos file
+    shutil.copy(fisco.get_fisco_path(), com_dir)
+
+    if fisco.is_gm():
+        # web3sdk
+        shutil.copytree(path.get_path() +
+                        '/tpl/GM_temp_node/web3sdk', com_dir + '/web3sdk')
+        # copy ca.crt to web3sdk conf dir
+        shutil.copy(ca.get_ca_path() + '/GM/node0/data/sdk/ca.crt',
+                    com_dir + '/web3sdk/conf')
+        # copy client.keystore to web3sdk conf dir
+        shutil.copy(ca.get_ca_path() + '/GM/node0/data/sdk/client.keystore',
+                    com_dir + '/web3sdk/conf')
+    else:
+        # web3sdk
+        shutil.copytree(path.get_path() + '/tpl/web3sdk', com_dir + '/web3sdk')
+        # copy ca.crt to web3sdk conf dir
+        shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt',
+                    com_dir + '/web3sdk/conf')
+        # copy client.keystore to web3sdk conf dir
+        shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore',
+                    com_dir + '/web3sdk/conf')
+
+    # copy scripts to common dir
+    shutil.copy(path.get_path() + '/scripts/node/start.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/stop.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/check.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/register.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/unregister.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/monitor.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/node_manager.sh', com_dir)
+
+    # copy scripts dir to common dir
+    shutil.copytree(path.get_path() + '/scripts', com_dir + '/scripts')
+
+    logger.debug(' build common dir end, chain is %s', chain)
+
+def expand_host_dir(chain, node, port, fisco):
     """expand install pacakge of the server.
     
     Arguments:
@@ -127,116 +191,38 @@ def expand_host_dir(chain, node, port):
         Exception -- exception description
     """
 
-    logger.info(' chain is %s, node is %s, port is %s', chain, node, port)
-    
+    logger.info(' chain is %s, node is %s, port is %s',chain, node, port)
+
     h = HostNodeDirs(chain.get_id(), chain.get_version(), node.get_host_ip())
-    h.load()
     index = h.get_max_index()
     append_host_dir = False
 
-    host_dir = chain.data_dir() + ('/%s' % node.get_host_ip())
-    if not os.path.exists(host_dir):
-        os.makedirs(host_dir)
+    if not h.exist():
+        h.create()
         append_host_dir = True
         logger.info(
-            ' append host dir, chain is %s, node is %s, index is %s', chain, node, index)
+            ' append host dir, chain is %s, node is %s, index is %s, gm is %s', chain, node, index, gm)
     else:
         logger.info(
-            ' append node dir, chain is %s, node is %s, index is %s', chain, node, index)
+            ' append node dir, chain is %s, node is %s, index is %s, gm is %s', chain, node, index, gm)
 
     try:
         # create node dir
         for i in range(node.get_node_num()):
-            build_node_dir(chain, node, port.to_port(i), index + i)
+            build_node_dir(chain, node, fisco, port.to_port(i), index + i)
     except Exception as e:
-        logger.error(' expand opr failed, chain is %s, node is %s, append_host is %s, e is %s ',
+        logger.error(' expand operation failed, chain is %s, node is %s, append_host is %s, e is %s ',
                      chain, node, append_host_dir, e)
         # Delete the created folder
         if append_host_dir:
-            if os.path.exists(host_dir):
-                shutil.rmtree(host_dir)
+            h.remove()
         else:
             for i in range(node.get_node_num()):
-                remove_node_index_dir(chain, node, index + i)
-        # raise e again
+                # remove node dir
+                node_dir = chain.data_dir() + '/' + node.get_host_ip() + '/' + str(index + i)
+                if os.path.exists(node_dir):
+                    shutil.rmtree(node_dir)
+        # raise exception again
         raise e
 
-    logger.info(' expand_install_dir end.')
-
-def GM_build_node_dir(dir, node_dir, chain, port, node):
-    """GM build node dir.
-    
-    Arguments:
-        dir {string} -- base dir
-        node_dir {string} -- node dir
-        chain {Chain} -- chain info
-        port {Port} -- port info
-        node {Node} -- node info
-    
-    Raises:
-        Exception -- exception description
-
-    one node directory structure is as：
-    node/
-        ├── config.json
-        ├── genesis.json
-        ├── data
-        ├── log
-        ├── log.conf
-        ├── start.sh
-        └── stop.sh
-        ├── check.sh
-    """
-
-    logger.info('node_dir => %s, chain => %s, node => %s, port => %s', node_dir, chain, node, port)
-
-    if os.path.isdir(node_dir):
-        raise Exception('node dir aleady exist, node_dir ', node_dir)
-    os.makedirs(node_dir)
-    
-    shutil.copy(path.get_path() + '/tpl/log.conf', node_dir)
-    shutil.copy(path.get_path() + '/scripts/node/node_start.sh', node_dir + '/start.sh')
-    shutil.copy(path.get_path() + '/scripts/node/node_stop.sh', node_dir + '/stop.sh')
-    shutil.copy(path.get_path() + '/scripts/node/node_check.sh', node_dir + '/check.sh')
-
-    cfg_json = config.build_config_json(chain.get_id(), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(),True)
-    with open(node_dir + '/config.json',"w+") as f:
-        f.write(cfg_json)
-
-    os.makedirs(node_dir + '/data')
-    os.makedirs(node_dir + '/log')
-    # shutil.copy(dir + '/bootstrapnodes.json', node_dir + '/data')
-
-    # generate node ca
-    ca.gm_generator_node_ca(node_dir + '/data', node.get_p2p_ip(), ca.get_GM_ca_path())
-
-def GM_build_install_dir(dir, chain, port, node, temp=None):
-    """GM build install pacakge of one server.
-    
-    Arguments:
-        dir {string} -- base dir.
-        chain {Chain} -- chain info, chain id and chain version.
-        port {Port} -- port info.
-        node {Node} -- node info.
-        temp {Temp} -- temp node, if temp is not None, register the node info to the node manager info.
-    
-    Raises:
-        Exception -- exception description
-    """
-
-    logger.info('dir => %s, node => %s, port => %s', dir, node, port)
-
-    node_dir = dir + ('/%s' % node.get_host_ip())
-    if os.path.isdir(node_dir):
-        raise Exception('GM node dir aleady exist, dir ', node_dir)
-
-    os.makedirs(node_dir)
-
-    for index in range(node.get_node_num()):
-        # create dir for every node on the server
-        GM_build_node_dir(dir, node_dir + ('/node%d' % index), chain, port.to_port(index), node)
-        # register node info to node manager contract
-        if  not temp is None:
-            temp.registerNode(dir, node_dir + ('/node%d' % index) + '/data/gmnode.json')
-
-    logger.info('build_install_dir end.') 
+    logger.info(' expand_host_dir end.')

@@ -4,7 +4,7 @@ from pys.chain import data
 
 class Chain:
     """
-    Chain object contains id and version of one chain.
+    Chain object contains id and version of one chain and if it gm version.
     """
 
     def __init__(self, id, version):
@@ -25,6 +25,10 @@ class Chain:
 
     def get_version(self):
         return self.version
+    
+    def exist(self):
+        dir = self.data_dir()
+        return os.path.exists(dir)
     
     def data_dir(self):
         return data.package_dir(self.get_id(), self.get_version())

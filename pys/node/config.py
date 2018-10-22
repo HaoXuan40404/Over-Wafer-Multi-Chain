@@ -84,8 +84,8 @@ class Config:
         '''
         resolve .json, convert to config
         '''
-        with open(sjson) as f:
-            try : 
+        try : 
+            with open(sjson) as f:
                 js = json.load(f)
                 self.systemproxyaddress = js['systemproxyaddress']
                 self.rpcport = js['rpcport']
@@ -93,9 +93,10 @@ class Config:
                 self.channelPort = js['channelPort']
                 logger.debug(' parser config success, cfg is %s, cfg_obj is %s', sjson, self)
                 return True
-            except Exception as e:
+        except Exception as e:
                 logger.error(' parser config failed, cfg is %s, exception is %s', sjson, e)
                 return False
+            
 
 def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT, gm = False):
     '''

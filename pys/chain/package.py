@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import os
+import shutil
 from pys import utils
 from pys.log import logger, consoler
 from pys.chain import data
@@ -34,11 +35,28 @@ class HostNodeDirs:
     def get_max_index(self):
         return self.max_index
 
+    def create(self):
+        if not self.exist():
+            host_dir = Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
+            os.makedirs(host_dir)
+            return True
+        return self.exist()
+    
+    def remove(self):
+        if self.exist():
+            host_dir = Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
+            shutil.rmtree(host_dir)
+        return not self.exist()
+
+    def exist(self):
+        host_dir = Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
+        return os.path.exist(host_dir)
+
     def load(self):
         self.clear()
         host_dir = Chain(
             self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
-        if not os.path.exists(host_dir):
+        if not os.path.exist(host_dir):
             logger.info(' host dir not exist, chain_id is %s, chain_version is %s, host is %s',
                         self.chain_id, self.chain_version, self.host)
             return

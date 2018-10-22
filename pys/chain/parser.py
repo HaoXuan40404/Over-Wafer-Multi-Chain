@@ -7,42 +7,10 @@ import sys
 import os
 
 from pys import utils
-from pys.log import logger
-from chain import Chain
+from pys.log import logger, consoler
+from pys.chain.chain import Chain
+from pys.chain.port import Port
 from pys.exp import MCError
-
-class Port:
-    """Port object contains rpc port、channel port、p2p port.
-    """
-
-    def __init__(self, rpc_port, p2p_port, channel_port):
-        self.rpc_port = rpc_port
-        self.p2p_port = p2p_port
-        self.channel_port = channel_port
-    
-    def set_rpc_port(self, rpc_port):
-        self.rpc_port = rpc_port
-
-    def set_p2p_port(self, p2p_port):
-        self.p2p_port = p2p_port
-    
-    def set_channel_port(self, channel_port):
-        self.channel_port = channel_port
-        
-    def get_rpc_port(self):
-        return self.rpc_port
-    
-    def get_p2p_port(self):
-        return self.p2p_port
-    
-    def get_channel_port(self):
-        return self.channel_port
-    
-    def to_port(self, index):
-        return Port(self.get_rpc_port() + index, self.get_p2p_port() + index, self.get_channel_port() + index)
-    
-    def __repr__(self):
-        return '[rpc_port] %d, [p2p_port] %d, [channel_port] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
 
 class NodeEle:
     def __init__(self, node_desc):
@@ -59,17 +27,17 @@ class NodeEle:
             raise Exception(" node_desc invalid format ", self.node_desc)
 
         if not utils.valid_ip(l[0]):
-            raise Exception("node_desc invalid format invalid host_ip ", l[0])
+            raise Exception(" node_desc invalid format invalid host_ip ", l[0])
         if not utils.valid_ip(l[1]):
-            raise Exception("node_desc invalid format invalid p2p_ip ", l[1])
+            raise Exception(" node_desc invalid format invalid p2p_ip ", l[1])
             
         if l[2] <= 0:
-            raise Exception("node_desc invalid format node_num lt 0 ", l[2])
+            raise Exception(" node_desc invalid format node_num lt 0 ", l[2])
         self.host_ip = l[0]
         self.p2p_ip = l[1]
         self.node_num = int(l[2])
 
-        logger.info('cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
+        logger.info(' cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
 
     def get_host_ip(self):
         return self.host_ip
@@ -86,10 +54,12 @@ class NodeEle:
 class ConfigConf:
     """Configuration containing object[port], [node] and [chain]
     """
-    def __init__(self):
+    def __init__(self, cfg):
         self.chain = None
         self.port = None
+        self.cfg = cfg
         self.nodes = []
+        self.parser()
     
     def __repr__(self):
         return 'ConfParser [ chain %s, ports %s, nodes %s ]' % (self.chain, self.port, self.nodes)
@@ -112,56 +82,130 @@ class ConfigConf:
     def get_nodes(self):
         return self.nodes
 
-def do_parser(cfg):
-    '''
-    resolve config.conf, return object[Config.conf]
-    '''
-    logger.info('cfg parser %s', cfg)
+    def get_cfg(self):
+        return self.cfg
 
-     # read and parser config file
-    cf = configparser.ConfigParser()
-    with codecs.open(cfg, 'r', encoding='utf-8') as f:
-        cf.readfp(f)
+    def parser(self):
+        '''
+        resolve config.conf, return object[Config.conf]
+        '''
+        cfg = self.cfg
+        logger.info('cfg parser %s', cfg)
+
+        # read and parser config file
+        cf = configparser.ConfigParser()
+        with codecs.open(cfg, 'r', encoding='utf-8') as f:
+            cf.readfp(f)
+        
+        cc = ConfigConf(cfg)
+
+        chain_id = cf.get('chain', 'chainid')
+        if not utils.valid_string(chain_id):
+            raise Exception('chain_id empty.')
+        
+        if not utils.valid_chain_id(chain_id):
+            raise Exception('invalid chain_id, ', chain_id)
+
+        chain_version = cf.get('chain', 'version')
+        if not utils.valid_string(chain_id):
+            raise Exception('chain_version empty.')
+        cc.set_chain(Chain(chain_id, chain_version))
+
+        rpc_port = cf.getint('ports', 'rpc_port')
+        if not utils.valid_port(rpc_port):
+            raise Exception('invalid rpc_port, ', rpc_port)
+        p2p_port = cf.getint('ports', 'p2p_port')
+        if not utils.valid_port(p2p_port):
+            raise Exception('invalid p2p_port, ', p2p_port)
+        channel_port = cf.getint('ports', 'channel_port')
+        if not utils.valid_port(channel_port):
+            raise Exception('invalid channel_port, ', channel_port)
+        cc.set_port(Port(rpc_port, p2p_port, channel_port))
+
+        index = 0
+        while True:
+            try:
+                n = NodeEle(cf.get('nodes', 'node%u' % index))
+                index += 1
+                n.do_parser()
+                cc.add_node(n)
+            except Exception, err:
+                # logger.info('cfg parser end, result is %s', self)
+                break
+        
+        if len(cc.get_nodes()) == 0:
+            raise Exception('invalid cfg format, nodes empty')
+
+        logger.info('cfg parser end, result is %s', cc)
+
+        return cc
+
+class ConfigConfs:
+
+    def __init__(self, cfg):
+        self.cfg = cfg
+        self.ccs = {}
+        self.parser()
     
-    cc = ConfigConf()
+    def clear(self):
+        self.ccs = {}
 
-    chain_id = cf.get('chain', 'chainid')
-    if not utils.valid_string(chain_id):
-        raise Exception('chain_id empty.')
+    def append(self, cc):
+        chain = cc.get_chain()
+        if not self.exist(chain):
+            key = chain.get_id() + '_' + chain.get_version()
+            self.ccs[key] = cc
+            return True
+        else:
+            return False
     
-    if not utils.valid_chain_id(chain_id):
-        raise Exception('invalid chain_id, ', chain_id)
-
-    chain_version = cf.get('chain', 'version')
-    if not utils.valid_string(chain_id):
-        raise Exception('chain_version empty.')
-    cc.set_chain(Chain(chain_id, chain_version))
-
-    rpc_port = cf.getint('ports', 'rpc_port')
-    if not utils.valid_port(rpc_port):
-        raise Exception('invalid rpc_port, ', rpc_port)
-    p2p_port = cf.getint('ports', 'p2p_port')
-    if not utils.valid_port(p2p_port):
-        raise Exception('invalid p2p_port, ', p2p_port)
-    channel_port = cf.getint('ports', 'channel_port')
-    if not utils.valid_port(channel_port):
-        raise Exception('invalid channel_port, ', channel_port)
-    cc.set_port(Port(rpc_port, p2p_port, channel_port))
-
-    index = 0
-    while True:
-        try:
-            n = NodeEle(cf.get('nodes', 'node%u' % index))
-            index += 1
-            n.do_parser()
-            cc.add_node(n)
-        except Exception, err:
-            # logger.info('cfg parser end, result is %s', self)
-            break
+    def get_ccs(self):
+        return self.ccs
     
-    if len(cc.get_nodes()) == 0:
-        raise Exception('invalid cfg format, nodes empty')
+    def get_cc(self, chain):
+        if self.exist(chain):
+            return self.ccs[chain.get_id() + '_' + chain.get_version()]
+        raise MCError(' cc not exist, chain %s' % chain)
+    
+    def exist(self, chain):
+        key = chain.get_id() + '_' + chain.get_version()
+        return self.ccs.has_key(key)
+    
+    def get_cfg(self):
+        return self.cfg
 
-    logger.info('cfg parser end, result is %s', cc)
+    def parser(self):
 
-    return cc
+        self.clear()
+
+        if os.path.exists(self.cfg) and os.path.isfile(self.cfg):
+
+            logger.info(' single config is %s', self.cfg)
+            # resolve one config.json
+            try:
+                self.append(ConfigConf(self.cfg))
+            except Exception as e:
+                logger.warn('parser cfg %s end exception, e is %s ', self.cfg, e)
+                raise MCError(' parser config failed, invalid format, config is %s, exception is %s' % (self.cfg, e))
+
+        elif os.path.isdir(self.cfg):
+            logger.info(' config dir is %s', self.cfg)
+            # resolve dir, if not config.json goto next
+            for c in os.listdir(self.cfg):
+                try:
+                    logger.debug(' config dir is %s, config file is %s', self.cfg, c)
+                    cc = ConfigConf(self.cfg + '/' + c)
+                    chain = cc.get_chain()
+                    if not self.append(cc):
+                        cc = self.get_cc(chain)
+                        logger.error(' chain_id：%s and chain_version：%s duplicate, config is %s:%s', chain.get_id(), chain.get_version(), cc.get_cfg(), c)
+                        raise MCError(' chain_id：%s and chain_version：%s duplicate, config is %s:%s' % (chain.get_id(), chain.get_version(), cc.get_cfg(), c))
+                    logger.debug(' append cc, cc is %s', cc)
+                    consoler.error(' parser config %s success, chain_id is %s, chain_version is %s', c, chain.get_id(), chain.get_version())
+                except Exception as e:
+                    consoler.error(
+                        ' skip config %s, invalid config format parser failed, exception is %s', c, e)
+                    logger.warn(' parser cfg %s end exception, e %s ', c, e)
+
+        else:
+            raise MCError(' invalid config, neither directory nor file, config is %s' % self.cfg)

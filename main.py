@@ -13,6 +13,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.chain import opr
 from pys.chain import build
+from pys.chain import expand
 from pys.chain import publish
 
 
@@ -95,7 +96,7 @@ def usage():
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
-        build.chain_expand(args.expand)
+        expand.chain_expand(args.expand)
         consoler.info(' expand operation end.')
     elif args.check:
         consoler.info(' check operation begin.')
