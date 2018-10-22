@@ -101,7 +101,7 @@ def build_cfg(cc, fisco):
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.build_host_dir(chain, node, port, temp_node)
+            build.build_host_dir(chain, node, port, fisco, temp_node)
 
         # stop temp node and export for genesis.json file
         temp_node.stop_temp_node(dir)
