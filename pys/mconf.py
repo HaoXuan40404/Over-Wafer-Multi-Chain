@@ -20,7 +20,7 @@ class MchainConf():
     gm_sys_address = '0xee80d7c98cb9a840b9c4df742f61336770951875'
 
     def __repr__(self):
-        return '[agent_name] %s, [ansible_dir] %s, [sys_address] %s£¬ [gm_sys_address] %s' % (MchainConf.agent_name, MchainConf.ansible_dir, MchainConf.sys_address, MchainConf.gm_sys_address)
+        return '[agent_name] %s, [ansible_dir] %s, [sys_address] %s, [gm_sys_address] %s' % (MchainConf.agent_name, MchainConf.ansible_dir, MchainConf.sys_address, MchainConf.gm_sys_address)
 
 
 def get_agent():
