@@ -107,7 +107,7 @@ class ConfigConf:
         chain_version = cf.get('chain', 'version')
         if not utils.valid_string(chain_id):
             raise Exception('chain_version empty.')
-        cc.set_chain(Chain(chain_id, chain_version))
+        self.set_chain(Chain(chain_id, chain_version))
 
         rpc_port = cf.getint('ports', 'rpc_port')
         if not utils.valid_port(rpc_port):
@@ -118,7 +118,7 @@ class ConfigConf:
         channel_port = cf.getint('ports', 'channel_port')
         if not utils.valid_port(channel_port):
             raise Exception('invalid channel_port, ', channel_port)
-        cc.set_port(Port(rpc_port, p2p_port, channel_port))
+        self.set_port(Port(rpc_port, p2p_port, channel_port))
 
         index = 0
         while True:
@@ -126,17 +126,15 @@ class ConfigConf:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
                 index += 1
                 n.do_parser()
-                cc.add_node(n)
+                self.add_node(n)
             except Exception, err:
                 # logger.info('cfg parser end, result is %s', self)
                 break
         
-        if len(cc.get_nodes()) == 0:
+        if len(self.get_nodes()) == 0:
             raise Exception('invalid cfg format, nodes empty')
 
-        logger.info('cfg parser end, result is %s', cc)
-
-        return cc
+        logger.info('cfg parser end, result is %s', self)
 
 class ConfigConfs:
 
