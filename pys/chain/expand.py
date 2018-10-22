@@ -1,3 +1,4 @@
+#coding:utf-8
 import os
 import sys
 import shutil
@@ -15,6 +16,7 @@ from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 
 from pys.node.fisco_version import Fisco
+
 
 def expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson):
 
