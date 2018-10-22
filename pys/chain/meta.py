@@ -177,6 +177,7 @@ class AllMeta:
             except Exception as e:
                 pass
 
+"""
 def port_conflicts(host, port, am = None):
     
     metas = get_meta_ports_by_host(host, am)
@@ -192,9 +193,9 @@ def port_conflicts(host, port, am = None):
             if port.in_use(node.get_channel_port()):
                 logger.info(' channel port in use, port is %s, node is %s', port, node)
                 return node
-
+"""
     
-def get_meta_ports_by_host(host, am= None):
+def get_meta_ports_by_host(host, am = None):
 
     if not am is None:
         am = AllMeta()
