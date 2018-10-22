@@ -50,13 +50,13 @@ class HostNodeDirs:
 
     def exist(self):
         host_dir = Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
-        return os.path.exist(host_dir)
+        return os.path.exists(host_dir)
 
     def load(self):
         self.clear()
         host_dir = Chain(
             self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
-        if not os.path.exist(host_dir):
+        if not os.path.exists(host_dir):
             logger.info(' host dir not exist, chain_id is %s, chain_version is %s, host is %s',
                         self.chain_id, self.chain_version, self.host)
             return
