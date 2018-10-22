@@ -96,8 +96,6 @@ class ConfigConf:
         cf = configparser.ConfigParser()
         with codecs.open(cfg, 'r', encoding='utf-8') as f:
             cf.readfp(f)
-        
-        cc = ConfigConf(cfg)
 
         chain_id = cf.get('chain', 'chainid')
         if not utils.valid_string(chain_id):
