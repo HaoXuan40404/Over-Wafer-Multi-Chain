@@ -58,7 +58,7 @@ def build_node_dir(chain, node, fisco, port, index):
                 node_dir + '/check.sh')
 
     cfg_json = config.build_config_json(chain.get_id(
-    ), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), chain.get_gm())
+    ), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), fisco.is_gm())
     with open(node_dir + '/config.json', "w+") as f:
         f.write(cfg_json)
 
