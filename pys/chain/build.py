@@ -81,15 +81,15 @@ def build_cfg(cc, fisco):
         consoler.error(' \t chain_id:%s chain_version:%s aleady exist !!!.',
                        chain.get_id(), chain.get_version())
         return
-    
-    acp = AllChainPort()
-    # port check
-    for node in cc.get_nodes():
-        for index in range(node.get_node_num()):
-            # create dir for every node on the server
-            acp.port_conflicts(node.get_host_ip(), port)
 
     try:
+
+        acp = AllChainPort()
+        # port check
+        for node in cc.get_nodes():
+            for index in range(node.get_node_num()):
+                # create dir for every node on the server
+                acp.port_conflicts(node.get_host_ip(), port)
                 
         os.makedirs(dir)
 

@@ -222,7 +222,8 @@ class AllChainPort:
                     hps.append(hp)
                 except Exception as e:
                     pass
-                return hps
+        logger.debug('host is %s, len is %d', host, len(hps))
+        return hps
 
     def port_conflicts(self, host, port):
         hps = self.get_all_ports_by_host(host)
