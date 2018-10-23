@@ -197,10 +197,10 @@ class ConfigConfs:
                         logger.error(' chain_id：%s and chain_version：%s duplicate, config is %s:%s', chain.get_id(), chain.get_version(), cc.get_cfg(), c)
                         raise MCError(' chain_id：%s and chain_version：%s duplicate, config is %s:%s' % (chain.get_id(), chain.get_version(), cc.get_cfg(), c))
                     logger.debug(' append cc, cc is %s', cc)
-                    consoler.error(' parser config %s success, chain_id is %s, chain_version is %s', c, chain.get_id(), chain.get_version())
+                    consoler.info(' parser config %s success, chain_id is %s, chain_version is %s', c, chain.get_id(), chain.get_version())
                 except Exception as e:
                     consoler.error(
-                        ' \t skip config %s, invalid config format parser failed, exception is %s', c, e)
+                        ' skip config %s, invalid config format parser failed, exception is %s', c, e)
                     logger.warn(' parser cfg %s end exception, e %s ', c, e)
 
         else:
