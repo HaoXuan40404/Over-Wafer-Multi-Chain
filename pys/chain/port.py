@@ -211,8 +211,8 @@ class AllChainPort:
 
     def get_all_ports_by_host(self, host):
         hps = []
-        for cp in self.get_ports():
-            for cvp in cp.get_ports():
+        for cp in self.get_ports().itervalues():
+            for cvp in cp.get_ports().itervalues():
                 try:
                     hp = cvp.get_by_host(host)
                     logger.debug(' host is %s, hp is %s', host, hp)
@@ -224,7 +224,7 @@ class AllChainPort:
     def port_conflicts(self, host, port):
         hps = self.get_all_ports_by_host(host)
         for hp in hps:
-            for node in hp.get_ports():
+            for node in hp.get_ports().itervalues():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
                         ' rpc port in use, port is %s, host is %s, chain id is %s, chain version is %s', port, host, hp.get_chain_id(), hp.get_chain_version())
