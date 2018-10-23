@@ -46,7 +46,7 @@ def chain_build(cfg, fisco_path):
                     chain_id = cc.get_chain().get_id()
                     chain_version = cc.get_chain().get_version()
                     consoler.info(
-                        ' \t build install package for chain %s version %s.', chain_id, chain_version)
+                        ' build install package for chain %s version %s.', chain_id, chain_version)
                     build_cfg(cc, fisco)
                     consoler.info(
                         ' \t build install package for chain %s version %s success.', chain_id, chain_version)
@@ -89,7 +89,7 @@ def build_cfg(cc, fisco):
 
     try:
         dir = chain.data_dir()
-        
+
         acp = AllChainPort()
         # port check
         for node in cc.get_nodes():
