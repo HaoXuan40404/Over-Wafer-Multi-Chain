@@ -17,39 +17,49 @@ from pys.exp import MCError
 from pys.node.fisco_version import Fisco
 from pys.chain.port import AllChainPort
 
+
 def chain_build(cfg, fisco_path):
     """parser input config file, build install pacakge by 
 
     Arguments:
-        cfg {string} --config, maybe a config.json ora dictionary of conf,eg：./conf/config.conf or ./conf
+        cfg {string} --config, maybe a config.json or a dictionary of conf,eg：./conf/config.conf or ./conf
         fisco_path {string} -- path of fisco-bcos, eg：/usr/local/bin/fisco-bcos
-    Returns:
-        null
     """
 
-    logger.debug('build cfg is %s, fisco is %s ', cfg, fisco_path)
+    logger.info('build cfg is %s, fisco is %s ', cfg, fisco_path)
 
     try:
         # parser fisco-bcos version and check it.
         fisco = Fisco(fisco_path)
         if not fisco.is_13_version():
-            logger.error(' fisco-bcos is not 1.3.x version, not support now, versin is %s', fisco)
-            raise MCError(' fisco-bcos is not 1.3.x version, not support now, versin is %s' % fisco)
-        
+            logger.error(
+                ' fisco-bcos is not 1.3.x version, not support now, %s', fisco)
+            raise MCError(
+                ' fisco-bcos is not 1.3.x version, not support now, %s' % fisco)
+
         # parser and check config if valid
         ccs = ConfigConfs(cfg).get_ccs()
-
         # build all chain
         if len(ccs) != 0:
             for cc in ccs.itervalues():
-                build_cfg(cc, fisco)
+                try:
+                    chain_id = cc.get_chain().get_id()
+                    chain_version = cc.get_chain().get_version()
+                    consoler.info(
+                        ' \t build install package for chain %s version %s.', chain_id, chain_version)
+                    build_cfg(cc, fisco)
+                    consoler.info(
+                        ' \t build install package for chain %s version %s success.', chain_id, chain_version)
+                except MCError as me:
+                    logger.error(me)
+                    consoler.error(' \t %s', me)
+
         else:
             consoler.info(' build operation will do nothing.')
 
     except MCError as me:
+        logger.error(me)
         consoler.error(me)
-    except Exception as e:
-        consoler.error(' Unkown exception, e is %s' % e)
 
     logger.info(' chain build end.')
 
@@ -69,18 +79,13 @@ def build_cfg(cc, fisco):
 
     port = cc.get_port()
     chain = cc.get_chain()
-    dir = chain.data_dir()
-
-    consoler.info(' \t build install package for chain %s version %s .',
-                  chain.get_id(), chain.get_version())
+    chain_id = chain.get_id()
+    chain_version = chain.get_version()
 
     # create dir base on version of the chain.
-    if os.path.isdir(dir):
-        logger.warn(' chain_id:%s chain_version:%s aleady exist !!!.',
-                    chain.get_id(), chain.get_version())
-        consoler.error(' \t chain_id:%s chain_version:%s aleady exist !!!.',
-                       chain.get_id(), chain.get_version())
-        return
+    if os.path.isdir(chain.data_dir()):
+        raise MCError('chain_id:%s chain_version:%s aleady exist !!!.' %
+                      (chain_id, chain_version))
 
     try:
 
@@ -90,7 +95,8 @@ def build_cfg(cc, fisco):
             for index in range(node.get_node_num()):
                 # create dir for every node on the server
                 acp.port_conflicts(node.get_host_ip(), port)
-                
+
+        dir = chain.data_dir()
         os.makedirs(dir)
 
         # generate bootstrapsnode.json
@@ -120,20 +126,18 @@ def build_cfg(cc, fisco):
         # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
-                shutil.copy(dir + '/genesis.json', dir + '/' + node.get_host_ip() + '/node' + str(index))
+                shutil.copy(dir + '/genesis.json', dir + '/' +
+                            node.get_host_ip() + '/node' + str(index))
 
         utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
                       'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
         logger.info(' build end ok, chain is %s', chain)
-        consoler.info('\t build install package for chain %s version %s success.',
-                      chain.get_id(), chain.get_version())
-    
-    except Exception as e:
-        consoler.error('\t build package for chain %s version %s failed, exception is %s',
-                       chain.get_id(), chain.get_version(), e)
 
+    except Exception as e:
         temp_node.clean_temp_node(dir)
         if os.path.exists(dir):
             shutil.rmtree(dir)
 
+        raise MCError(' build package for chain %s version %s failed, exception is %s' % (
+            chain_id, chain_version, e))
