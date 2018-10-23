@@ -20,9 +20,9 @@ def build_node_dir(chain, node, fisco, port, index):
     Arguments:
         chain {Chain} -- chain info
         node {Node} -- node info
+        fisco {Fisco} -- fisco info
         port {Port} -- port info
         index {int} -- index info
-        gm{bool} -- is gm build
     
     Raises:
         Exception -- exception description
