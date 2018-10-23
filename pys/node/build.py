@@ -9,6 +9,9 @@ from pys.chain.package import HostNodeDirs
 from pys.exp import MCError
 from pys.log import logger
 from pys.node import config
+# import sys
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 
 def build_node_dir(chain, node, fisco, port, index):
@@ -72,8 +75,10 @@ def build_node_dir(chain, node, fisco, port, index):
         ca.gm_generator_node_ca(
             node_dir + '/data', 'node' + str(index), ca.get_GM_ca_path())
     else:
-        ca.generator_node_ca(node_dir + '/data',
-                             'node' + str(index), ca.get_agent_ca_path())
+        # ca.generator_node_ca(node_dir + '/data',
+        #                      node.get_p2p_ip(), ca.get_agent_ca_path())
+        ca.new_generator_node_ca(ca.get_agent_ca_path(),
+                             node_dir + '/data', 'node' + str(index))
 
     logger.info(' build_node_dir end. ')
 

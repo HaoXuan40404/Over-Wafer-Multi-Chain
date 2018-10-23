@@ -11,7 +11,7 @@ from pys import path
 from pys import version
 from pys.log import logger
 from pys.log import consoler
-from pys.chain import opr
+from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop,opr_check,opr_env_check,opr_monitor,opr_list, opr_export
 from pys.chain import build
 from pys.chain import expand
 from pys.chain import publish
@@ -85,6 +85,8 @@ def usage():
                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
                                                         './chain_ca_dir', 'Agency_Name'), help='Output => the cert of agency that set on the SET directory')
+    parser.add_argument('--nodeca', nargs=3, metavar=('./dir_agency_ca(SET)',
+                                                        './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     args = parser.parse_args()
@@ -101,7 +103,7 @@ def usage():
     elif args.check:
         consoler.info(' check operation begin.')
         chain = args.check
-        opr.check_chain(chain)
+        opr_check.check_chain(chain)
         consoler.info(' check operation end.')
     elif args.publish:
         consoler.info(' publish operation begin.')
@@ -111,79 +113,85 @@ def usage():
     elif args.start:
         consoler.info(' start operation begin.')
         chain = args.start
-        opr.start_chain(chain)
+        opr_start.start_chain(chain)
         consoler.info(' start operation end.')
     elif args.stop:
         consoler.info(' stop operation begin.')
         chain = args.stop
-        opr.stop_chain(chain)
+        opr_stop.stop_chain(chain)
         consoler.info(' stop operation end.')
     elif args.monitor:
         consoler.info(' monitor operation begin.')
         chain = args.monitor
-        opr.monitor_chain(chain)
+        opr_monitor.monitor_chain(chain)
         consoler.info(' monitor operation end.')
     elif args.pub_list:
         consoler.info(' pub_list operation begin.')
         chain = args.pub_list
-        opr.pub_list(chain)
+        opr_list.pub_list(chain)
         consoler.info(' pub_list operation end.')
     elif args.pkg_list:
         consoler.info(' pkg_list operation begin.')
         chain = args.pkg_list
-        opr.pkg_list(chain)
+        opr_list.pkg_list(chain)
         consoler.info(' pkg_list operation end.')
     elif args.cmd_push:
         consoler.info(' cmd_push operation begin.')
         chain = args.cmd_push
-        opr.cmd_push(chain)
+        opr_tools.cmd_push(chain)
         consoler.info(' cmd_push operation end.')
     elif args.file_push:
         consoler.info(' file_push operation begin.')
         chain = args.file_push
-        opr.file_push(chain)
+        opr_tools.file_push(chain)
         consoler.info(' file_push operation end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
-        ca.generate_root_ca(chain_dir)
+        ca.new_generate_root_ca(chain_dir)
         consoler.info(' chain cert end.')
     elif args.agencyca:
         consoler.info(' agency cert begin.')
         agency_dir = args.agencyca[0]
         chain_dir = args.agencyca[1]
         agency_name = args.agencyca[2]
-        ca.generator_agent_ca(agency_dir, chain_dir, agency_name)
+        ca.new_generator_agent_ca(agency_dir, chain_dir, agency_name)
+        consoler.info(' agency cert end.')
+    elif args.nodeca:
+        consoler.info(' agency cert begin.')
+        agency_dir = args.nodeca[0]
+        node_dir = args.nodeca[1]
+        node_name = args.nodeca[2]
+        ca.new_generator_node_ca(agency_dir, node_dir, node_name)
         consoler.info(' agency cert end.')
     elif args.sdkca:
         consoler.info(' sdk cert begin.')
         sdk_dir = args.sdkca[0]
         agency_dir = args.sdkca[1]
-        ca.generator_sdk_ca(agency_dir)
-        os.system('mv ' + agency_dir + '/sdk ' + sdk_dir + '/sdk')
+        ca.new_generator_sdk_ca(agency_dir,sdk_dir)
         consoler.info(' sdk cert end.')
     elif args.env_check:
         consoler.info(' env_check operation begin.')
         hosts = args.env_check
-        opr.env_check(hosts)
+        opr_env_check.env_check(hosts)
         consoler.info(' env_check operation end.')
     elif args.telnet:
         consoler.info(' telnet operation begin.')
         telnet_list = args.telnet
-        opr.telnet_ansible(telnet_list)
+        opr_tools.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
     elif args.init_ansible:
-        opr.init_chain()
+        opr_init_chain.init_chain()
         consoler.info(' ansible init success.')
     elif args.export:
         consoler.info(' export operation begin.')
         export_list = args.export[0]
         dest = args.export[1]
-        opr.export_package(export_list, dest)
+        opr_export.export_package(export_list, dest)
         consoler.info(' export operation end.')
     elif args.ls_port:
         consoler.info(' ls_port operation begin.')
-        opr.ls_port(args.ls_port)
+        opr_list.ls_port(args.ls_port)
         consoler.info(' ls_port operation end.')
     else:
         consoler.error(
