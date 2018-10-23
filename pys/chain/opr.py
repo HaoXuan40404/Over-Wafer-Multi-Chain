@@ -10,6 +10,7 @@ from pys.chain.package import ChainVers
 from pys.chain.package import VerHosts
 from pys.chain.package import HostNodeDirs
 from pys.chain.port import AllChainPort
+from pys.chain.port import HostPort
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import data
@@ -242,8 +243,9 @@ def pkg_list(chains):
             for pkg in vh.get_pkg_list():
                 consoler.info('\t\t\t => package ：%s', pkg)
                 hn = HostNodeDirs(chain, version, pkg)
-                for node_idx in hn.get_node_dirs():
-                    consoler.info('\t\t\t\t => %s', node_idx)
+                hp = HostPort(chain, version, pkg)
+                for node_dir in hn.get_node_dirs():
+                    consoler.info('\t\t\t\t => %s %s', node_dir, hp.get_by_index(node_dir))
 
     logger.info('load end')
 
