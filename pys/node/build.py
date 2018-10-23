@@ -70,10 +70,10 @@ def build_node_dir(chain, node, fisco, port, index):
 
     if fisco.is_gm():
         ca.gm_generator_node_ca(
-            node_dir + '/data', node.get_p2p_ip(), ca.get_GM_ca_path())
+            node_dir + '/data', 'node' + str(index), ca.get_GM_ca_path())
     else:
         ca.generator_node_ca(node_dir + '/data',
-                             node.get_p2p_ip(), ca.get_agent_ca_path())
+                             'node' + str(index), ca.get_agent_ca_path())
 
     logger.info(' build_node_dir end. ')
 
