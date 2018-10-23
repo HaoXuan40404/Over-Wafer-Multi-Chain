@@ -1,17 +1,14 @@
 #coding:utf-8
 
+import json
 import os
 import shutil
-import json
 
-from pys import utils
-from pys import path
-from pys import ca
-
-from pys.node import config
-from pys.log import logger
-from pys.exp import MCError
+from pys import ca, path, utils
 from pys.chain.package import HostNodeDirs
+from pys.exp import MCError
+from pys.log import logger
+from pys.node import config
 
 
 def build_node_dir(chain, node, fisco, port, index):
@@ -109,10 +106,10 @@ def build_host_dir(chain, node, port, fisco, temp=None):
         # register node info to node manager contract
         if not temp is None:
             if fisco.is_gm():
-                temp.registerNode(dir, host_dir + ('/node%d' %
+                temp.registerNode(chain.data_dir(), host_dir + ('/node%d' %
                                                    index) + '/data/gmnode.json')
             else:
-                temp.registerNode(dir, host_dir + ('/node%d' %
+                temp.registerNode(chain.data_dir(), host_dir + ('/node%d' %
                                                    index) + '/data/node.json')
 
     logger.info('build_host_dir end.')
