@@ -91,7 +91,7 @@ class Config:
                 self.rpcport = js['rpcport']
                 self.p2pport = js['p2pport']
                 self.channelPort = js['channelPort']
-                logger.debug(' parser config success, cfg is %s, cfg_obj is %s', sjson, self)
+                logger.debug(' parser config success, cfg is %s, rpc : %s, p2p : %s, channel : %s', sjson, str(self.rpcport), str(self.p2pport), str(self.channelPort))
                 return True
         except Exception as e:
                 logger.error(' parser config failed, cfg is %s, exception is %s', sjson, e)
