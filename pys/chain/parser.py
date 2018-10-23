@@ -200,7 +200,7 @@ class ConfigConfs:
                     consoler.error(' parser config %s success, chain_id is %s, chain_version is %s', c, chain.get_id(), chain.get_version())
                 except Exception as e:
                     consoler.error(
-                        ' skip config %s, invalid config format parser failed, exception is %s', c, e)
+                        ' \t skip config %s, invalid config format parser failed, exception is %s', c, e)
                     logger.warn(' parser cfg %s end exception, e %s ', c, e)
 
         else:
