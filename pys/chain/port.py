@@ -253,4 +253,4 @@ class AllChainPort:
             cp = ChainPort(chain_id)
             self.ports[chain_id] = cp
 
-        logger.info('load end, acp ports is %s', self)
+        logger.info('load end, acp ports is %s', self.to_json())
