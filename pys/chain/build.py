@@ -88,7 +88,8 @@ def build_cfg(cc, fisco):
                       (chain_id, chain_version))
 
     try:
-
+        dir = chain.data_dir()
+        
         acp = AllChainPort()
         # port check
         for node in cc.get_nodes():
@@ -96,7 +97,6 @@ def build_cfg(cc, fisco):
                 # create dir for every node on the server
                 acp.port_conflicts(node.get_host_ip(), port)
 
-        dir = chain.data_dir()
         os.makedirs(dir)
 
         # generate bootstrapsnode.json
