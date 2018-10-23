@@ -134,5 +134,3 @@ def build_cfg(cc, fisco):
                        chain.get_id(), chain.get_version(), e)
 
         temp_node.clean_temp_node(dir)
-        if os.path.isdir(dir):
-            shutil.rmtree(dir)

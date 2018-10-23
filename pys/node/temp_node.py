@@ -151,7 +151,8 @@ def clean_temp_node(dir):
     """
 
     stop_temp_node(dir)
-    shutil.rmtree(dir + '/temp') 
+    if os.path.isdir(dir + '/temp'):
+        shutil.rmtree(dir + '/temp') 
 
 
 def registerNode(dir, nodejson):
