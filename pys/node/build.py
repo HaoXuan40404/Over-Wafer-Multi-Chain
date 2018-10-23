@@ -198,10 +198,10 @@ def expand_host_dir(chain, node, port, fisco):
         h.create()
         append_host_dir = True
         logger.info(
-            ' append host dir, chain is %s, node is %s, index is %s, gm is %s', chain, node, index, gm)
+            ' append host dir, chain is %s, node is %s, index is %s.', chain, node, index)
     else:
         logger.info(
-            ' append node dir, chain is %s, node is %s, index is %s, gm is %s', chain, node, index, gm)
+            ' append node dir, chain is %s, node is %s, index is %s.', chain, node, index)
 
     try:
         # create node dir
