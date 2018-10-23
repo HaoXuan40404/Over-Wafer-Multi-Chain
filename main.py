@@ -96,7 +96,7 @@ def usage():
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
-        expand.chain_expand(args.expand)
+        expand.chain_expand(args.expand[0], args.expand[1:])
         consoler.info(' expand operation end.')
     elif args.check:
         consoler.info(' check operation begin.')

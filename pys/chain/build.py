@@ -15,6 +15,7 @@ from pys.node import temp_node
 from pys.exp import MCError
 
 from pys.node.fisco_version import Fisco
+from pys.chain.port import AllChainPort
 
 def chain_build(cfg, fisco_path):
     """parser input config file, build install pacakge by 
@@ -80,10 +81,18 @@ def build_cfg(cc, fisco):
         consoler.error(' \t chain_id:%s chain_version:%s aleady exist !!!.',
                        chain.get_id(), chain.get_version())
         return
-
-    os.makedirs(dir)
+    
 
     try:
+        acp = AllChainPort()
+        # port check
+        for node in cc.get_nodes():
+            for index in range(node.get_node_num()):
+                # create dir for every node on the server
+                acp.port_conflicts(node.get_host_ip(), port)
+                
+        os.makedirs(dir)
+
         # generate bootstrapsnode.json
         utils.create_bootstrapnodes(cc.get_nodes(), port, dir)
 
@@ -119,7 +128,7 @@ def build_cfg(cc, fisco):
         logger.info(' build end ok, chain is %s', chain)
         consoler.info('\t build install package for chain %s version %s success.',
                       chain.get_id(), chain.get_version())
-
+    
     except Exception as e:
         consoler.error('\t build package for chain %s version %s failed, exception is %s',
                        chain.get_id(), chain.get_version(), e)

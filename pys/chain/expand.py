@@ -14,6 +14,7 @@ from pys.node import temp_node
 from pys.exp import MCError
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
+from pys.chain.parser import ConfigConf
 
 from pys.node.fisco_version import Fisco
 
@@ -26,16 +27,17 @@ def expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson):
     if os.path.exists(chain.data_dir()): 
         # expand on exist chain, check common、 genesis.json、 bootstrapnodes.json file exist.
         if not os.path.exists(chain.data_dir() + '/common'):
-            raise MCError(' chain dir exist ,but common dir not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))
+            raise MCError(' chain dir exist ,but common dir not exist, chain_id %s、chain_version %s' % (chain.get_id(), chain.get_version()))
         if not os.path.exists(chain.data_dir() + '/genesis.json'):
-            raise MCError(' chain dir exist ,but genesis.json not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))
+            raise MCError(' chain dir exist ,but genesis.json not exist, chain_id %s、chain_version %s' % (chain.get_id(), chain.get_version()))
         if not os.path.exists(chain.data_dir() + '/bootstrapnodes.json'):
-            raise MCError(' chain dir exist ,but bootstrapnodes.json not exist, chain_id %s and chain_version %s' % (chain.get_id(), chain.get_version()))
+            raise MCError(' chain dir exist ,but bootstrapnodes.json not exist, chain_id %s、and chain_version %s' % (chain.get_id(), chain.get_version()))
         
+        fisco = Fisco(chain.data_dir() + '/' + 'common' + '/' + 'fisco-bcos')
         # expand install dir for every server
         for node in cc.get_nodes():
             try:
-                build.expand_host_dir(chain, node, port)
+                build.expand_host_dir(chain, node, port, fisco)
             except Exception as e:
                 continue
     else:
@@ -65,7 +67,7 @@ def expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson):
             build.build_common_dir(chain, fisco)
             # build install dir for every server
             for node in cc.get_nodes():
-                build.expand_host_dir(chain, node, port)
+                build.expand_host_dir(chain, node, port,fisco)
 
         except Exception as e:
             if os.path.exists(chain.data_dir()):
@@ -101,15 +103,15 @@ def chain_expand(cfg, args):
         bootstrapnodesjson = args[2]
 
     try:
-        # parser config file    
-        cc = parser.do_parser(cfg)
-        chain = cc.get_chain()
-        consoler.info(' parser config %s success, chain_id is %s, chain_version is %s' % (
-            cfg, chain.get_id(), chain.get_version()))
-        logger.info('expand operation, parser config success, cc is %s', cc)
+        try:
+            # parser and check config if valid
+            cc = ConfigConf(cfg)
+        except Exception as e:
+            raise MCError(' expand operation failed, invalid config, exception is %s' % e) 
 
-    except Exception as e:
-        consoler.error(
-            ' invalid config format parser failed, config is %s, exception is %s', cfg, e)
-    else:
         expand_cc(cc, fisco_path, genesisjson, bootstrapnodesjson)
+
+    except MCError as me:
+        consoler.error(me)
+    except Exception as e:
+        consoler.error(' Unkown exception, e is %s' % e)
