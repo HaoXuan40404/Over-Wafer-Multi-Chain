@@ -230,17 +230,17 @@ class AllChainPort:
             for node in hp.get_ports().itervalues():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
-                        ' rpc port in use, port is %s, host is %s, chain id is %s, chain version is %s', port, host, hp.get_chain_id(), hp.get_chain_version())
-                    raise MCError(' rpc port in use, port is %s, host is %s, chain id is %s, chain version is %s' % (port, host, hp.get_chain_id(), hp.get_chain_version()))
+                        ' rpc port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
+                    raise MCError(' rpc port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s' % (str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
                 
                 if port.in_use(node.get_p2p_port()):
                     logger.info(
-                        ' p2p port in use, port is %s, host is %s, chain id is %s, chain version is %s' % (port, host, hp.get_chain_id(), hp.get_chain_version()))
-                    raise MCError(' p2p port in use, port is %s, host is %s, chain id is %s, chain version is %s' % (port, host, hp.get_chain_id(), hp.get_chain_version()))
+                        ' p2p port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_p2p_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
+                    raise MCError(' p2p port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s' % (str(node.get_p2p_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
                 if port.in_use(node.get_channel_port()):
-                    logger.info(
-                        ' channel port in use, port is %s, host is %s, chain id is %s, chain version is %s' % (port, host, hp.get_chain_id(), hp.get_chain_version()))
-                    raise MCError(' channel port in use, port is %s, host is %s, chain id is %s, chain version is %s' % (port, host, hp.get_chain_id(), hp.get_chain_version()))
+                     logger.info(
+                        ' channel port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_channel_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
+                    raise MCError(' channel port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s' % (str(node.get_channel_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
 
     def load(self):
 
