@@ -1,5 +1,6 @@
 #coding:utf-8
 import json
+import os
 
 from pys.log import logger
 from pys.chain.package import HostNodeDirs
@@ -42,6 +43,9 @@ class Port:
     
     def to_json(self):
         return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
+    
+    def in_use(self, port):
+        return port == self.rpc_port or port == self.p2p_port or port == self.channel_port
 
     def __repr__(self):
         return '[rpc] %d, [p2p] %d, [channel] %d' % (self.rpc_port, self.p2p_port, self.channel_port)
@@ -100,6 +104,9 @@ class ChainVerPort:
         self.chain_id = chain_id
         self.ports = {}
         self.load()
+    
+    def get_ports(self):
+        return self.ports
 
     def __repr__(self):
         return ' chain id is %s, chain version is %s, ports is %s' % (self.chain_id, self.chain_version, self.ports)
@@ -149,6 +156,9 @@ class ChainPort:
     def to_json(self):
         return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
 
+    def get_ports(self):
+        return self.ports
+
     def clear(self):
         self.ports = {}
 
@@ -195,19 +205,40 @@ class AllChainPort:
     
         ac = AllChain()
         for chain_id in ac.get_chains():
-            hp = ChainPort(chain_id)
-            self.ports[chain_id] = hp
+            cp = ChainPort(chain_id)
+            self.ports[chain_id] = cp
         
         logger.info('load end, acp ports is %s', self)
 
-def get_all_ports_by_host(host, acp = None):
+def port_conflicts(host, port, am = None):
+    
+    hps = get_all_ports_by_host(host, am)
+    for hp in hps:
+        for node in hp.get_ports():
+            if port.in_use(node.get_rpc_port()):
+                logger.info(' rpc port in use, port is %s, node is %s', port, node)
+                return node
+            if port.in_use(node.get_p2p_port()):
+                logger.info(' p2p port in use, port is %s, node is %s', port, node)
+                return node
+            if port.in_use(node.get_channel_port()):
+                logger.info(' channel port in use, port is %s, node is %s', port, node)
+                return node
+
+def get_all_ports_by_host(host, acp=None):
 
     if not acp is None:
         acp = AllChainPort()
-    
+    hps = []
     for cp in acp.get_ports():
         for cvp in cp.get_ports():
-            pass
+            try:
+                hp = cvp.get_by_host(host)
+                logger.debug(' host is %s, hp is %s', host, hp)
+                hps.append(hp)
+            except Exception as e:
+                pass
+    return hps
 
 
 

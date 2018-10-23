@@ -10,6 +10,7 @@ from pys import path
 from pys.chain import data
 from pys.log import logger
 from pys.exp import MCError
+from pys.chain.port import Port
 
 class MetaNode:
 
@@ -176,25 +177,38 @@ class AllMeta:
             except Exception as e:
                 pass
 
+"""
+def port_conflicts(host, port, am = None):
+    
+    metas = get_meta_ports_by_host(host, am)
+    for meta in metas:
+        nodes = meta.get_host_nodes(host)
+        for node in nodes:
+            if port.in_use(node.get_rpc_port()):
+                logger.info(' rpc port in use, port is %s, node is %s', port, node)
+                return node
+            if port.in_use(node.get_p2p_port()):
+                logger.info(' p2p port in use, port is %s, node is %s', port, node)
+                return node
+            if port.in_use(node.get_channel_port()):
+                logger.info(' channel port in use, port is %s, node is %s', port, node)
+                return node
+"""
+    
 def get_meta_ports_by_host(host, am = None):
 
     if not am is None:
         am = AllMeta()
-    
+
     metas = []
     for meta in am.get_metas().itervalues():
         try:
             host_nodes = meta.get_host_nodes(host)
             if len(host_nodes) == 0:
                 continue
+            logger.debug(' host is %s, meta is %s', host, meta)
             metas.append(meta)
         except Exception as e:
             pass
-        
+
     return metas
-    
-
-    
-
-
-            
