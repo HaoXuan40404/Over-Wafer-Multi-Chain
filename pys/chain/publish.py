@@ -17,7 +17,7 @@ def publish_chain(chains):
     using publish_server
     
     Arguments:
-        chains {list} -- chain which you wanto published, type chain_id:chain_version, ¿ÉÒÔÒ»´Î·¢²¼¶à¸ö, ¶à¸öÖ®¼äÊ¹ÓÃ¿Õ¸ñ·ÖÀë.
+        chains {list} -- chain which you wanto published, type chain_id:chain_version, ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ê¹ï¿½Ã¿Õ¸ï¿½ï¿½ï¿½ï¿½.
     
     Returns:
         null
@@ -62,7 +62,7 @@ def publish_server(chain_id, chain_version):
         return
     mm = meta.Meta(chain_id)
     for host in os.listdir(dir):
-        if utils.valid_ip(host):
+        if not utils.valid_ip(host):
             logger.debug('skip, not invalid host_ip ' + dir)
             continue
         ret = push_package(dir, host, chain_id, chain_version, meta)
