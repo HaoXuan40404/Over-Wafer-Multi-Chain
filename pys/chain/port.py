@@ -77,6 +77,9 @@ class HostPort:
 
     def get_host(self):
         return self.host
+    
+    def get_ports(self):
+        return self.ports
 
     def clear(self):
         self.ports = {}
