@@ -65,11 +65,11 @@ def build_node_dir(chain, node, fisco, port, index):
     os.makedirs(node_dir + '/data')
     os.makedirs(node_dir + '/log')
 
-    # copy bootstrapnodes.json、genesis.json to data fir
+    # copy bootstrapnodes.json、genesis.json to correspond dir
     if os.path.exists(chain.data_dir() + '/bootstrapnodes.json'):
         shutil.copy(chain.data_dir() + '/bootstrapnodes.json', node_dir + '/data')
     if os.path.exists(chain.data_dir() + '/genesis.json'):
-        shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/data')
+        shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
         ca.gm_generator_node_ca(
