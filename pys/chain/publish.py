@@ -138,7 +138,7 @@ def push_package(dir, host, chain_id, version, meta, force = True):
                 continue
             logger.info(' publish nodedir, chain_id is %s, chain_version is %s, node is %s', chain_id, version, node_dir)
             # push host dir
-            ret = ansible.copy_module(host, dir + '/' + host + '/' + node_dir + '/', ansible.get_dir() + '/' + chain_id)
+            ret = ansible.copy_module(host, dir + '/' + host + '/' + node_dir, ansible.get_dir() + '/' + chain_id)
             if not ret:
                 return ret
 
