@@ -47,31 +47,31 @@ def usage():
 
     parser = argparse.ArgumentParser(
         description='Description of multi-chain usage.')
-    parser.add_argument('--version', action='store_true',
+    parser.add_argument('-v', '--version', action='store_true',
                         help='version of multi-chain')
     parser.add_argument('--init_ansible', action='store_true',
                         help='Output => Init ansible hosts need sudo.')
-    parser.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
+    parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
-    parser.add_argument('--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
+    parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
                         help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
-    parser.add_argument('--publish', nargs='+', metavar=('chain_id:version eg.',
+    parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
-    parser.add_argument('--check', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
                                                        'chain_id:host_ip'), help='Output => check servers status')
-    parser.add_argument('--stop', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-s', '--stop', nargs='+', metavar=('all or chain_id or',
                                                       'chain_id:host_ip'), help='Output => stop node')
-    parser.add_argument('--start', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-S', '--start', nargs='+', metavar=('all or chain_id or',
                                                        'chain_id:host_ip'), help='Output => start node')
-    parser.add_argument('--monitor', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
-    parser.add_argument('--pkg_list', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-p', '--pkg_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
-    parser.add_argument('--pub_list', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-P', '--pub_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
-    parser.add_argument('--export', nargs=2, metavar=('chain_id',
+    parser.add_argument('-E', '--export', nargs=2, metavar=('chain_id',
                                                       'dest_path'), help='Output =>  export publish package.')
-    parser.add_argument('--ls_port', nargs='+', metavar=('host_ip'),
+    parser.add_argument('-l', '--ls_port', nargs='+', metavar=('host_ip'),
                         help='Output =>  ls all publish port')
     parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
                                                         'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
@@ -89,7 +89,7 @@ def usage():
                                                         './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
-    parser.add_argument('--force', action='store_true',
+    parser.add_argument('-f', '--force', action='store_true',
                         help='output => effect with --build.')
     args = parser.parse_args()
     if args.version:
