@@ -135,11 +135,12 @@ class ConfigConf:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
                 index += 1
                 n.do_parser()
-                if not self.add_node(n):
-                    raise Exception(' host ip dup, host is %s.', n.get_host_ip())
             except Exception, err:
                 # logger.info('cfg parser end, result is %s', self)
                 break
+            else:
+                if not self.add_node(n):
+                    raise Exception(' host ip dup, host is %s.', n.get_host_ip())
         
         if len(self.get_nodes()) == 0:
             raise Exception('invalid cfg format, nodes empty')
