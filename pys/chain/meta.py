@@ -41,7 +41,7 @@ class MetaNode:
         return self.host_ip
 
     def __repr__(self):
-        return 'host %s, version %s, index %d, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.index, self.rpc_port, self.p2p_port, self.channel_port)
+        return 'host %s, version %s, index %s, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.index, self.rpc_port, self.p2p_port, self.channel_port)
 
 
 class Meta:
