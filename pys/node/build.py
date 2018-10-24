@@ -211,7 +211,7 @@ def expand_host_dir(chain, node, port, fisco):
     try:
         # create node dir
         for i in range(node.get_node_num()):
-            build_node_dir(chain, node, fisco, port.to_port(i), index + i)
+            build_node_dir(chain, node, fisco, port.to_port(i), index + i + 1)
     except Exception as e:
         logger.error(' expand operation failed, chain is %s, node is %s, append_host is %s, e is %s ',
                      chain, node, append_host_dir, e)
