@@ -141,7 +141,7 @@ class ConfigConf:
                 break
             else:
                 if not self.add_node(n):
-                    raise Exception(' host ip dup, host is ', n.get_host_ip())
+                    raise Exception(' duplicate host ip, host is ', n.get_host_ip())
         
         if len(self.get_nodes()) == 0:
             raise Exception('invalid cfg format, nodes empty')
