@@ -52,8 +52,26 @@ function check_module()
 function monitor_module()
 {
     local package_config=$1
-    local check_path=$2
-    ansible ${package_config} -m shell -a "bash  ${check_path}/monitor.sh"
+    local monitor_path=$2
+    ansible ${package_config} -m shell -a "bash  ${monitor_path}/monitor.sh"
+}
+
+###register_module###
+function register_module()
+{
+    local package_config=$1
+    local register_path=$2
+    local index=$3
+    ansible ${package_config} -m shell -a "bash  ${register_path}/register.sh ${index}"
+}
+
+###unregister_module###
+function unregister_module()
+{
+    local package_config=$1
+    local unregister_path=$2
+    local index=$3
+    ansible ${package_config} -m shell -a "bash  ${register_path}/unregister.sh ${index}"
 }
 
 ###telnet_module###
@@ -111,6 +129,8 @@ case $1 in
     unarchive) unarchive_module $2 $3 $4;;
     start) start_module $2 $3;;
     stop) stop_module $2 $3;;
+    register) register_module $2 $3 $4;;
+    unregister) unregister_module $2 $3 $4;;
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
     monitor) monitor_module $2 $3;;

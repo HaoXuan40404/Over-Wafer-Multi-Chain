@@ -75,7 +75,7 @@ def publish_server(chain_id, chain_version, force = False):
             hp = HostPort(chain_id, chain_version, host)
             for node_dir, p in hp.get_ports().iteritems():
                 logger.debug(' node_dir is %s, port is %s', node_dir, p)
-                if not mm.host_index_exist(host, node_dir):
+                if not mm.host_node_exist(host, node_dir):
                     mm.append(meta.MetaNode(chain_version, host, p.get_rpc_port(
                     ), p.get_p2p_port(), p.get_channel_port(), node_dir))
             consoler.info(' \t push package : %s  success.', host)
@@ -133,7 +133,7 @@ def push_package(dir, host, chain_id, version, meta, force = True):
         # push node${index} dir in host dir not published
         hnd = HostNodeDirs(chain_id, version, host)
         for node_dir in hnd.get_node_dirs():
-            if meta.host_index_exist(host, node_dir):
+            if meta.host_node_exist(host, node_dir):
                 logger.info(' %s already published, skip', node_dir)
                 continue
             logger.info(' publish nodedir, chain_id is %s, chain_version is %s, node is %s', chain_id, version, node_dir)

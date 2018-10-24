@@ -11,7 +11,7 @@ from pys import path
 from pys import version
 from pys.log import logger
 from pys.log import consoler
-from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop,opr_check,opr_env_check,opr_monitor,opr_list, opr_export
+from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop, opr_check, opr_env_check, opr_monitor, opr_list, opr_export, opr_register
 from pys.chain import build
 from pys.chain import expand
 from pys.chain import publish
@@ -57,17 +57,21 @@ def usage():
                         help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
-    parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
-                                                       'chain_id:host_ip'), help='Output => check servers status')
     parser.add_argument('-s', '--stop', nargs='+', metavar=('all or chain_id or',
                                                       'chain_id:host_ip'), help='Output => stop node')
     parser.add_argument('-S', '--start', nargs='+', metavar=('all or chain_id or',
                                                        'chain_id:host_ip'), help='Output => start node')
+    parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', ' host_ip '
+                                                       'node'), help='Output => register one node already published')
+    parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ', ' host_ip '
+                                                       'node'), help='Output => unregister one node already published')
     parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
-    parser.add_argument('-k', '--pkg_list', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
+                                                       'chain_id:host_ip'), help='Output => check servers status')
+    parser.add_argument('-K', '--pkg_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
-    parser.add_argument('-u', '--pub_list', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
     parser.add_argument('-E', '--export', nargs=2, metavar=('chain_id',
                                                       'dest_path'), help='Output =>  export publish package.')
@@ -90,7 +94,7 @@ def usage():
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     parser.add_argument('-f', '--force', action='store_true',
-                        help='output => effect with --build.')
+                        help='output => effect with --publish.')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -112,6 +116,14 @@ def usage():
         chain = args.publish
         publish.publish_chain(chain, args.force)
         consoler.info(' publish operation end.')
+    elif args.register:
+        consoler.info(' register operation begin.')
+        opr_register.register(args.register[0], args.register[1], args.register[2])
+        consoler.info(' register operation end.')
+    elif args.unregister:
+        consoler.info(' unregister operation begin.')
+        opr_register.unregister(args.unregister[0], args.unregister[1], args.unregister[2])
+        consoler.info(' unregister operation end.')
     elif args.start:
         consoler.info(' start operation begin.')
         chain = args.start

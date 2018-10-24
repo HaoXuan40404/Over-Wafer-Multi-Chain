@@ -14,13 +14,13 @@ from pys.chain.port import Port
 
 class MetaNode:
 
-    def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port, index):
+    def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port, node):
         self.host_ip = host_ip
         self.version = version
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
         self.channel_port = channel_port
-        self.index = index
+        self.node = node
     
     def get_rpc(self):
         return self.rpc_port
@@ -31,8 +31,8 @@ class MetaNode:
     def get_channel(self):
         return self.channel_port
     
-    def get_index(self):
-        return self.index
+    def get_node(self):
+        return self.node
     
     def get_version(self):
         return self.version
@@ -41,7 +41,7 @@ class MetaNode:
         return self.host_ip
 
     def __repr__(self):
-        return 'host %s, version %s, index %s, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.index, self.rpc_port, self.p2p_port, self.channel_port)
+        return 'host %s, version %s, node %s, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.node, self.rpc_port, self.p2p_port, self.channel_port)
 
 
 class Meta:
@@ -64,21 +64,30 @@ class Meta:
         # raise or not ???
         logger.info(' get host nodes failed, host is %s', host_ip)
         raise MCError(' not found meta node, chain_id is %s, host is %s' % (self.chain_id, host_ip))
-
     
-    def host_index_exist(self, host_ip, index):
+    def get_host_node(self, host_ip, node):
+
         if self.nodes.has_key(host_ip):
             host_nodes = self.nodes[host_ip]
-            # assert len(host_nodes) != 0
-            for node in host_nodes:
-                if index == node.index:
-                    logger.debug(' host index exist, host is %s, index is %s, host nodes is %s', host_ip, index, host_nodes)
-                    return True
-        logger.debug(' host index not exist, host is %s, index is %s, meta is %s', host_ip, index, self.to_json())
-        return False
+            for n in host_nodes:
+                if node == n.node:
+                    logger.debug(
+                        ' host is %s, node is %s, n is %s', host_ip, node, n)
+                    return n
+            logger.debug(' node not exist, node is %s.', node)
+            raise MCError(' Node not exist in the chain, node is %s' % host_ip)
+        logger.debug(' host not exist, host is %s, node is %s.', host_ip, node)
+        raise MCError(' Host not exist in the chain, host is %s' % host_ip)
+    
+    def host_node_exist(self, host_ip, node):
+        try:
+            self.get_host_node(host_ip, node)
+            return True
+        except Exception as e:
+            return False
 
     def append(self, m):
-        if self.host_index_exist(m.host_ip, m.index):
+        if self.host_node_exist(m.host_ip, m.index):
             return False
         if self.nodes.has_key(m.host_ip):
             host_nodes = self.nodes[m.host_ip]
@@ -147,6 +156,7 @@ class Meta:
                             logger.info(
                                 'load from meta.json, meta node is %s', mn)
                             self.append(mn)
+            logger.info(' Meta is %s', self.to_json())
         except Exception as e:
             logger.error(
                 ' load meta failed, chaind id is %s, exception is %s', self.chain_id, e)
