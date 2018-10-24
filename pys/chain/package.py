@@ -13,7 +13,7 @@ class HostNodeDirs:
         self.chain_version = chain_version
         self.host = host
         self.node_dirs = []
-        self.max_index = 0
+        self.max_index = -1
         self.load()
 
     def __repr__(self):
@@ -21,7 +21,7 @@ class HostNodeDirs:
 
     def clear(self):
         self.node_dirs = []
-        self.max_index = 0
+        self.max_index = -1
 
     def get_node_dir(self, index):
         return Chain(self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/' + str(index) + '/'
