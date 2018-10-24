@@ -75,8 +75,8 @@ def pkg_list(chains):
                 consoler.info('\t\t\t => package ：%s', pkg)
                 hn = HostNodeDirs(chain, version, pkg)
                 hp = HostPort(chain, version, pkg)
-                for node_idx in hn.get_node_dirs():
-                    consoler.info('\t\t\t\t => %s %s ', node_idx, hp.get_by_index(node_dir))
+                for node_dir in hn.get_node_dirs():
+                    consoler.info('\t\t\t\t => %s %s ', node_dir, hp.get_by_index(node_dir))
 
     logger.info('load end')
 
