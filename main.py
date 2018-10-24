@@ -65,9 +65,9 @@ def usage():
                                                        'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
-    parser.add_argument('-p', '--pkg_list', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-k', '--pkg_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
-    parser.add_argument('-P', '--pub_list', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-u', '--pub_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
     parser.add_argument('-E', '--export', nargs=2, metavar=('chain_id',
                                                       'dest_path'), help='Output =>  export publish package.')
