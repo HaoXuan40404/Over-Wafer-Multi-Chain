@@ -128,7 +128,7 @@ def start_module(ip, dest):
         logger.warn('start action failed, output %s' % (result))
         consoler.warn(' ansible start failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible start success, host is %s, output is \n%s.', ip, result)
+        consoler.info(' ansible start success, host is %s, output is %s.', ip, result)
         return True
     return False
 
@@ -155,7 +155,7 @@ def stop_module(ip, dest):
         logger.warn('stop action failed, output %s' % (result))
         consoler.warn(' ansible stop failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible stop success, host is %s, output is \n%s.', ip, result)
+        consoler.info(' ansible stop success, host is %s, output is %s.', ip, result)
         return True
     return False
 
@@ -183,7 +183,7 @@ def check_module(ip, dest):
         logger.warn('check action failed, output %s' % (result))
         consoler.warn(' ansible check failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible check success, host is %s, output is \n%s.', ip, result)
+        consoler.info(' ansible check success, host is %s, output is %s.', ip, result)
         return True
     
     return False
@@ -212,7 +212,7 @@ def telnet_module(ip, msg='HelloWorld!'):
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible telnet failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible telnet success, host is %s, output is \n%s', ip, result)
+        consoler.info(' ansible telnet success, host is %s, output is %s', ip, result)
         return True
     return False
 
@@ -250,7 +250,7 @@ def monitor_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible monitor failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible monitor success, host is %s, result is \n%s.', ip, result)
+        consoler.info(' ansible monitor success, host is %s, result is %s.', ip, result)
         return True
     return False
 
