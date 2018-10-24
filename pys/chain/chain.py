@@ -1,5 +1,6 @@
 #coding:utf-8
 
+import os
 from pys.chain import data
 
 class Chain:
