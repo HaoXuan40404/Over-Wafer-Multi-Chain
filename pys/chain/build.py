@@ -4,7 +4,7 @@ import os
 import sys
 import shutil
 
-from pys import path
+from pys import path,ca
 from pys import utils
 from pys.log import logger
 from pys.log import consoler
@@ -18,7 +18,7 @@ from pys.node.fisco_version import Fisco
 from pys.chain.port import AllChainPort
 
 
-def chain_build(cfg, fisco_path):
+def chain_build(cfg, fisco_path, cert_path = ''):
     """parser input config file, build install pacakge by 
 
     Arguments:
@@ -27,7 +27,6 @@ def chain_build(cfg, fisco_path):
     """
 
     logger.info('build cfg is %s, fisco is %s ', cfg, fisco_path)
-
     try:
         # parser fisco-bcos version and check it.
         fisco = Fisco(fisco_path)
@@ -47,7 +46,14 @@ def chain_build(cfg, fisco_path):
                     chain_version = cc.get_chain().get_version()
                     consoler.info(
                         ' build install package for chain %s version %s.', chain_id, chain_version)
-                    build_cfg(cc, fisco)
+                    if cert_path == '':
+                        build_cfg(cc, fisco)
+                    else:
+                        if ( not  ca.check_cert_complete(cc, cert_path)) and ca.check_cert_sdk(cert_path + '/sdk'):
+                            build_cfg(cc, fisco, cert_path)
+                        else:
+                            consoler.error('Init cert failed.')
+                            continue
                     consoler.info(
                         ' \t build install package for chain %s version %s success.', chain_id, chain_version)
                 except MCError as me:
@@ -64,7 +70,7 @@ def chain_build(cfg, fisco_path):
     logger.info(' chain build end.')
 
 
-def build_cfg(cc, fisco):
+def build_cfg(cc, fisco, cert_path = ''):
     """build all install package for one chain base on cc 
 
     Arguments:
@@ -103,8 +109,10 @@ def build_cfg(cc, fisco):
         utils.create_bootstrapnodes(cc.get_nodes(), port, dir)
 
         # create common dir
-        build.build_common_dir(chain, fisco)
-
+        if cert_path == '':
+            build.build_common_dir(chain, fisco)
+        else:
+            build.build_common_dir(chain, fisco, cert_path)
         if fisco.is_gm():
             # create temp node for export genesis.json file
             temp_node.GM_temp_node_build(dir, port, fisco)
@@ -116,7 +124,10 @@ def build_cfg(cc, fisco):
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.build_host_dir(chain, node, port, fisco, temp_node)
+            if cert_path == '':
+                build.build_host_dir(chain, node, port, fisco, temp_node)
+            else:
+                build.build_host_dir(chain, node, port, fisco, temp_node, cert_path)
 
         # stop temp node and export for genesis.json file
         temp_node.stop_temp_node(dir)
