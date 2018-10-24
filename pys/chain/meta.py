@@ -87,7 +87,7 @@ class Meta:
             return False
 
     def append(self, m):
-        if self.host_node_exist(m.host_ip, m.index):
+        if self.host_node_exist(m.host_ip, m.node):
             return False
         if self.nodes.has_key(m.host_ip):
             host_nodes = self.nodes[m.host_ip]
@@ -152,7 +152,7 @@ class Meta:
                     for hm in jsondata['nodes'].values():
                         for v in hm:
                             mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'],
-                                          v['p2p_port'], v['channel_port'], v['index'])
+                                          v['p2p_port'], v['channel_port'], v['node'])
                             logger.info(
                                 'load from meta.json, meta node is %s', mn)
                             self.append(mn)
