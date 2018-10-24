@@ -77,10 +77,9 @@ class ConfigConf:
         return None
 
     def add_node(self, node):
-        if not (self.get_by_host_ip(node.get_host_ip()) is None):
-            return False
-        #  add code uniq
-        self.nodes.append(node)
+        for n in self.nodes:
+            if n.get_host_ip() == node.get_host_ip():
+                return False
         return True
 
     def get_chain(self):
