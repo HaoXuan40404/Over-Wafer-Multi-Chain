@@ -20,9 +20,9 @@ def register(chain_id, host, node):
     else:
         ret = ansible.register_module(host, ansible.get_dir() + '/' + chain_id, int(node[4:]))
         if ret:
-            consoler.info(' register success, chain_id is %s, host is %s, node is %s.')
+            consoler.info(' register success, chain_id is %s, host is %s, node is %s.', chain_id, host, node)
         else:
-            consoler.error(' register failed, chain_id is %s, host is %s, node is %s.')
+            consoler.error(' register failed, chain_id is %s, host is %s, node is %s.', chain_id, host, node)
 
 
 def unregister(chain_id, host, node):
@@ -41,7 +41,7 @@ def unregister(chain_id, host, node):
     else:
         ret = ansible.unregister_module(host, ansible.get_dir() + '/' + chain_id, int(node[4:]))
         if ret:
-            consoler.info(' unregister success, chain_id is %s, host is %s, node is %s.')
+            consoler.info(' unregister success, chain_id is %s, host is %s, node is %s.', chain_id, host, node)
         else:
-            consoler.error(' unregister failed, chain_id is %s, host is %s, node is %s.')
+            consoler.error(' unregister failed, chain_id is %s, host is %s, node is %s.', chain_id, host, node)
     
