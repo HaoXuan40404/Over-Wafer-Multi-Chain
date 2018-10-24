@@ -68,9 +68,9 @@ def publish_server(chain_id, chain_version, force = False):
     mm = meta.Meta(chain_id)
     for host in os.listdir(dir):
         if not utils.valid_ip(host):
-            logger.debug(' skip, not invalid host_ip ' + dir)
+            logger.debug(' skip, not invalid host_ip ' + host)
             continue
-        ret = push_package(dir, host, chain_id, chain_version, meta, force)
+        ret = push_package(dir, host, chain_id, chain_version, mm, force)
         if ret:
             hp = HostPort(chain_id, chain_version, host)
             for node_dir, p in hp.get_ports().iteritems():
