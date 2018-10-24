@@ -80,6 +80,7 @@ class ConfigConf:
         for n in self.nodes:
             if n.get_host_ip() == node.get_host_ip():
                 return False
+        self.nodes.append(node)
         return True
 
     def get_chain(self):
