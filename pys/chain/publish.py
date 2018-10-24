@@ -78,9 +78,9 @@ def publish_server(chain_id, chain_version, force = False):
                 if not mm.host_index_exist(host, node_dir):
                     mm.append(meta.MetaNode(chain_version, host, p.get_rpc_port(
                     ), p.get_p2p_port(), p.get_channel_port(), node_dir))
-            consoler.info(' \t push package : %s  success.', node_dir)
+            consoler.info(' \t push package : %s  success.', host)
         else:
-            consoler.error(' \t push package : %s  failed.', node_dir)
+            consoler.error(' \t push package : %s  failed.', host)
     # record meta info, write meta.json file
     mm.write_to_file()
 
