@@ -9,7 +9,7 @@ def register(chain_id, host, node):
     logger.debug(' chain_id is %s, host is %s, node is %s',
                  chain_id, host, node)
     meta = Meta(chain_id)
-    if meta.exist():
+    if not meta.exist():
         consoler.error(' register failed, chain not published, chain id is %s', chain_id)
         return
 
@@ -30,7 +30,7 @@ def unregister(chain_id, host, node):
     logger.debug(' chain_id is %s, host is %s, node is %s',
                  chain_id, host, node)
     meta = Meta(chain_id)
-    if meta.exist():
+    if not meta.exist():
         consoler.error(' unregister failed, chain not published, chain id is %s.', chain_id)
         return
 
