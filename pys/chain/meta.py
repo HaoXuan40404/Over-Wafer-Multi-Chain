@@ -72,9 +72,9 @@ class Meta:
             # assert len(host_nodes) != 0
             for node in host_nodes:
                 if index == node.index:
-                    logger.debug(' host index exist, host is %s, index is %d, host nodes is %s', host_ip, index, host_nodes)
+                    logger.debug(' host index exist, host is %s, index is %s, host nodes is %s', host_ip, index, host_nodes)
                     return True
-        logger.debug(' host index not exist, host is %s, index is %d, meta is %s', host_ip, index, self.to_json())
+        logger.debug(' host index not exist, host is %s, index is %s, meta is %s', host_ip, index, self.to_json())
         return False
 
     def append(self, m):
