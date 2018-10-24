@@ -63,7 +63,7 @@ def usage():
                                                        'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
                                                        'node'), help='Output => register one node already published')
-    parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  host_ip',
+    parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
                                                        'node'), help='Output => unregister one node already published')
     parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
                                                          'chain_id:host_ip'), help='Output => monitor node')
