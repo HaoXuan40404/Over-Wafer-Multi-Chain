@@ -62,7 +62,7 @@ class Meta:
                         host_ip, host_nodes)
             return host_nodes
         # raise or not ???
-        logger.info(' get host nodes failed, host is %s, hm is %s', host_ip, host_nodes)
+        logger.info(' get host nodes failed, host is %s', host_ip)
         raise MCError(' not found meta node, chain_id is %s, host is %s' % (self.chain_id, host_ip))
 
     
