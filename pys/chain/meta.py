@@ -75,8 +75,8 @@ class Meta:
                         ' host is %s, node is %s, n is %s', host_ip, node, n)
                     return n
             logger.debug(' node not exist, node is %s.', node)
-            raise MCError(' Node not exist in the chain, node is %s' % host_ip)
-        logger.debug(' host not exist, host is %s, node is %s.', host_ip, node)
+            raise MCError(' Node not exist in the chain, node is %s' % node)
+        logger.debug(' host not exist, host is %s, host is %s.', host_ip, node)
         raise MCError(' Host not exist in the chain, host is %s' % host_ip)
     
     def host_node_exist(self, host_ip, node):
