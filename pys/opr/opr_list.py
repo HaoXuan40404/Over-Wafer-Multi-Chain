@@ -5,6 +5,7 @@ from pys import ansible, utils
 from pys.chain import data
 from pys.chain.meta import *
 from pys.chain.package import AllChain, ChainVers, HostNodeDirs, VerHosts
+from pys.chain.port import HostPort
 from pys.log import consoler, logger
 
 
@@ -73,8 +74,9 @@ def pkg_list(chains):
             for pkg in vh.get_pkg_list():
                 consoler.info('\t\t\t => package ：%s', pkg)
                 hn = HostNodeDirs(chain, version, pkg)
+                hp = HostPort(chain, version, pkg)
                 for node_idx in hn.get_node_dirs():
-                    consoler.info('\t\t\t\t => %s', node_idx)
+                    consoler.info('\t\t\t\t => %s %s ', node_idx, hp.get_by_index(node_dir))
 
     logger.info('load end')
 
