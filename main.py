@@ -89,6 +89,8 @@ def usage():
                                                         './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
+    parser.add_argument('--force', action='store_true',
+                        help='output => effect with --build.')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -108,7 +110,7 @@ def usage():
     elif args.publish:
         consoler.info(' publish operation begin.')
         chain = args.publish
-        publish.publish_chain(chain)
+        publish.publish_chain(chain, args.force)
         consoler.info(' publish operation end.')
     elif args.start:
         consoler.info(' start operation begin.')
