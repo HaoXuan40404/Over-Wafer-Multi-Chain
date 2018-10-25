@@ -9,17 +9,10 @@ cd $dirpath
 index=$1;
 
 if [ -z $index ];then
-    total=999
-    index=0
     echo "start all node ... "
-    while [ $index -le $total ]
+    for startfile in `ls $dirpath/node*/start.sh`
     do
-        if [ -d node$index ];then
-            bash node$index/start.sh
-        else	
-            break
-        fi
-        index=$(($index+1))
+        bash $startfile
     done
 else
     #echo "start node$index ... "
