@@ -136,7 +136,7 @@ class ConfigConf:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
                 index += 1
                 n.do_parser()
-            except Exception, err:
+            except Exception as e:
                 # logger.info('cfg parser end, result is %s', self)
                 break
             else:
