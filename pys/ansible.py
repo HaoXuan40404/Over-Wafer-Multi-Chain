@@ -128,10 +128,59 @@ def start_module(ip, dest):
         logger.warn('start action failed, output %s' % (result))
         consoler.warn(' ansible start failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible start success, host is %s, output is \n%s.', ip, result)
+        consoler.info(' ansible start success, host is %s, output is %s.', ip, result)
         return True
     return False
 
+def register_module(ip, dest, index):
+    """Using ansible.sh register_module, start nodes
+    
+    Arguments:
+        ip {string} -- corresponding server host ip
+        dest {string} -- corresponding server dir path
+        index {int} -- node index to be register
+    
+    Returns:
+        bool -- true or false
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh register ' + ip + ' ' + dest + ' ' + str(index))
+    logger.debug(' register action, status %s, output %s' % (status, result))
+    
+    if status:
+        consoler.warn(' ansible register  failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
+    else:
+        consoler.info(' ansible register success, host is %s, index is %s, output is %s.', ip, str(index), result)
+        return True
+    return False
+
+def unregister_module(ip, dest, index):
+    """Using ansible.sh unregister_module, start nodes
+    
+    Arguments:
+        ip {string} -- corresponding server host ip
+        dest {string} -- corresponding server dir path
+        index {int} -- node index to be register
+    
+    Returns:
+        bool -- true or false
+    """
+
+    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh unregister ' + ip + ' ' + dest + ' ' + str(index))
+    logger.debug(' unregister action, status %s, output %s' % (status, result))
+    
+    if status:
+        consoler.warn(' ansible unregister  failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.warn(' ansible unregister failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
+    else:
+        consoler.info(' ansible unregister success, host is %s, index is %s, output is %s.', ip, str(index), result)
+        return True
+    return False
 
 def stop_module(ip, dest):
     """Using ansible.sh stop_module, stop nodes
@@ -155,7 +204,7 @@ def stop_module(ip, dest):
         logger.warn('stop action failed, output %s' % (result))
         consoler.warn(' ansible stop failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible stop success, host is %s, output is \n%s.', ip, result)
+        consoler.info(' ansible stop success, host is %s, output is %s.', ip, result)
         return True
     return False
 
@@ -183,7 +232,7 @@ def check_module(ip, dest):
         logger.warn('check action failed, output %s' % (result))
         consoler.warn(' ansible check failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
-        consoler.info(' ansible check success, host is %s, output is \n%s.', ip, result)
+        consoler.info(' ansible check success, host is %s, output is %s.', ip, result)
         return True
     
     return False
@@ -212,7 +261,7 @@ def telnet_module(ip, msg='HelloWorld!'):
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible telnet failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible telnet success, host is %s, output is \n%s', ip, result)
+        consoler.info(' ansible telnet success, host is %s, output is %s', ip, result)
         return True
     return False
 
@@ -250,7 +299,7 @@ def monitor_module(ip, dest):
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible monitor failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible monitor success, host is %s, result is \n%s.', ip, result)
+        consoler.info(' ansible monitor success, host is %s, result is %s.', ip, result)
         return True
     return False
 

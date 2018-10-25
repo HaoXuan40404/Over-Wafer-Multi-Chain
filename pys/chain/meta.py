@@ -14,13 +14,12 @@ from pys.chain.port import Port
 
 class MetaNode:
 
-    def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port, index):
+    def __init__(self, host_ip, rpc_port, p2p_port, channel_port, node):
         self.host_ip = host_ip
-        self.version = version
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
         self.channel_port = channel_port
-        self.index = index
+        self.node = node
     
     def get_rpc(self):
         return self.rpc_port
@@ -31,28 +30,31 @@ class MetaNode:
     def get_channel(self):
         return self.channel_port
     
-    def get_index(self):
-        return self.index
-    
-    def get_version(self):
-        return self.version
+    def get_node(self):
+        return self.node
     
     def get_host(self):
         return self.host_ip
 
     def __repr__(self):
-        return 'host %s, version %s, index %d, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.index, self.rpc_port, self.p2p_port, self.channel_port)
-
+        return 'host %s, node %s, rpc %s, p2p %s, channel %s' % (self.host_ip, self.node, self.rpc_port, self.p2p_port, self.channel_port)
 
 class Meta:
 
-    def __init__(self, chain_id):
+    def __init__(self, chain_id, chain_version = ''):
         self.chain_id = chain_id
+        self.chain_version = chain_version
         self.nodes = {}
         self.load()
 
     def get_chain_id(self):
         return self.chain_id
+    
+    def get_chain_version(self):
+        return self.chain_version
+
+    def set_chain_version(self, chain_version):
+        self.chain_version = chain_version
 
     def get_host_nodes(self, host_ip):
 
@@ -62,23 +64,32 @@ class Meta:
                         host_ip, host_nodes)
             return host_nodes
         # raise or not ???
-        logger.info(' get host nodes failed, host is %s, hm is %s', host_ip, host_nodes)
+        logger.info(' get host nodes failed, host is %s', host_ip)
         raise MCError(' not found meta node, chain_id is %s, host is %s' % (self.chain_id, host_ip))
-
     
-    def host_index_exist(self, host_ip, index):
+    def get_host_node(self, host_ip, node):
+
         if self.nodes.has_key(host_ip):
             host_nodes = self.nodes[host_ip]
-            # assert len(host_nodes) != 0
-            for node in host_nodes:
-                if index == node.index:
-                    logger.debug(' host index exist, host is %s, index is %d, host nodes is %s', host_ip, index, host_nodes)
-                    return True
-        logger.debug(' host index not exist, host is %s, index is %d, meta is %s', host_ip, index, self.to_json())
-        return False
+            for n in host_nodes:
+                if node == n.node:
+                    logger.debug(
+                        ' host is %s, node is %s, n is %s', host_ip, node, n)
+                    return n
+            logger.debug(' node not exist, node is %s ', node)
+            raise MCError(' node not exist in the chain, node is %s' % node)
+        logger.debug(' host not exist, host is %s.', host_ip)
+        raise MCError(' host not exist in the chain, host is %s' % host_ip)
+    
+    def host_node_exist(self, host_ip, node):
+        try:
+            self.get_host_node(host_ip, node)
+            return True
+        except Exception as e:
+            return False
 
     def append(self, m):
-        if self.host_index_exist(m.host_ip, m.index):
+        if self.host_node_exist(m.host_ip, m.node):
             return False
         if self.nodes.has_key(m.host_ip):
             host_nodes = self.nodes[m.host_ip]
@@ -94,6 +105,7 @@ class Meta:
         return self.nodes
 
     def clear(self):
+        self.chain_version = ''
         self.nodes = {}
 
     def to_json(self):
@@ -139,14 +151,18 @@ class Meta:
         try:
             with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
                 jsondata = json.load(f)
+
+                if jsondata.has_key('chain_version'):
+                    self.chain_version = str(jsondata['chain_version'])
+
                 if jsondata.has_key('nodes'):
                     for hm in jsondata['nodes'].values():
                         for v in hm:
-                            mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'],
-                                          v['p2p_port'], v['channel_port'], v['index'])
+                            mn = MetaNode(v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'], v['node'])
                             logger.info(
                                 'load from meta.json, meta node is %s', mn)
                             self.append(mn)
+            logger.info(' Meta is %s', self.to_json())
         except Exception as e:
             logger.error(
                 ' load meta failed, chaind id is %s, exception is %s', self.chain_id, e)
@@ -176,24 +192,6 @@ class AllMeta:
                 self.metas[chain_id] = meta
             except Exception as e:
                 pass
-
-"""
-def port_conflicts(host, port, am = None):
-    
-    metas = get_meta_ports_by_host(host, am)
-    for meta in metas:
-        nodes = meta.get_host_nodes(host)
-        for node in nodes:
-            if port.in_use(node.get_rpc_port()):
-                logger.info(' rpc port in use, port is %s, node is %s', port, node)
-                return node
-            if port.in_use(node.get_p2p_port()):
-                logger.info(' p2p port in use, port is %s, node is %s', port, node)
-                return node
-            if port.in_use(node.get_channel_port()):
-                logger.info(' channel port in use, port is %s, node is %s', port, node)
-                return node
-"""
     
 def get_meta_ports_by_host(host, am = None):
 

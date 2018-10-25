@@ -8,16 +8,19 @@ from pys.chain import meta
 from pys.chain import data
 from pys.chain.chain import Chain
 from pys.node import config
+from pys.chain.port import HostPort
+from pys.chain.package import HostNodeDirs
 
 from pys.chain.chain import Chain
+from pys.exp import MCError
 
 
-def publish_chain(chains):
+def publish_chain(chains, force = False):
     """Publish a chain to designated servers 
     using publish_server
     
     Arguments:
-        chains {list} -- chain which you wanto published, type chain_id:chain_version, ����һ�η������, ���֮��ʹ�ÿո����.
+        chains {list} -- chain which you wanto published, type chain_id:chain_version.
     
     Returns:
         null
@@ -41,52 +44,61 @@ def publish_chain(chains):
     if len(pchains) != 0:
         for chain in pchains:
             logger.info('publish, chain_id is %s, chain_version is %s', chain_id, chain_version)
-            publish_server(chain.get_id(), chain.get_version())
+            publish_server(chain.get_id(), chain.get_version(), force)
 
 
-def publish_server(chain_id, chain_version):
+def publish_server(chain_id, chain_version, force=False):
     """publish one chain.
 
     Arguments:
         chain_id {string} -- chain id.
         chain_version {string} -- chain version.
+        force {bool}
     """
 
     chain = Chain(chain_id, chain_version)
     dir = chain.data_dir()
     if not os.path.isdir(dir):
-        consoler.error(
-            'publish install package for chain %s version %s failed, no package build for the chain.', chain_id, chain_version)
+        consoler.info(
+            ' No build version exist for chain_id:%s chain_version:%s, do nothing.', chain_id, chain_version)
         logger.warn(
-            'version of this chain is not exist, chain is %s, version is %s', chain_id, chain_version)
+            ' No build version exist for chain_id:%s chain_version:%s, do nothing.', chain_id, chain_version)
         return
+
     mm = meta.Meta(chain_id)
+    if force:
+        # force is set, publish this chain again.
+        mm.clear()
+        mm.set_chain_version(chain_version)
+    else:
+        if mm.exist():
+            if chain_version != mm.get_chain_version():
+                consoler.error(
+                    ' chain %s already publish %s version, if you want publish annother version, --force/-f need to be set. ', chain_id, mm.get_chain_version())
+                return
+        else:
+            mm.set_chain_version(chain_version)
+
+    consoler.info(' publish package for chain %s version %s begin.',
+                  chain_id, chain_version)
+
     for host in os.listdir(dir):
         if not utils.valid_ip(host):
-            logger.debug('skip, not invalid host_ip ' + dir)
+            logger.debug(' skip, not invalid host_ip ' + host)
             continue
-        ret = push_package(dir, host, chain_id, chain_version, meta)
+        ret = push_package(dir, host, chain_id, chain_version, mm, force)
         if ret:
-            for list_dir in os.listdir(dir + '/' + host + '/'):
-                if 'node' in list_dir:
-                    cfg_json = dir + '/' + host + '/' + list_dir + '/config.json'
-                    index = int(list_dir[4:])
-                    cf = config.Config(chain_id)
-                    if os.path.isfile(cfg_json):
-                        cf.fromJson(cfg_json)
-                        logger.debug(
-                            ' load config success, index is %d, cf is %s', index, cf)
-                    else:
-                        logger.error(
-                            ' load config failed, config is %s', cfg_json)
-                        consoler.error(
-                            ' load config failed, config is %s', cfg_json)
-                    mm.append(meta.MetaNode(chain_version, host, cf.get_rpc_port(
-                    ), cf.get_p2p_port(), cf.get_channel_port(), index))
-    consoler.info(
-        '\t\t publish install package for chain %s version %s end.', chain_id, chain_version)
+            hp = HostPort(chain_id, chain_version, host)
+            for node_dir, p in hp.get_ports().iteritems():
+                logger.debug(' node_dir is %s, port is %s', node_dir, p)
+                if not mm.host_node_exist(host, node_dir):
+                    mm.append(meta.MetaNode(host, p.get_rpc_port(), p.get_p2p_port(), p.get_channel_port(), node_dir))
+            consoler.info(' \t push package : %s success.', host)
+        else:
+            consoler.error(' \t push package : %s  failed.', host)
     # record meta info, write meta.json file
     mm.write_to_file()
+    consoler.info(' publish package for chain %s version %s end.', chain_id, chain_version)
 
 def push_package(dir, host, chain_id, version, meta, force = True):
     """push install package of one server
@@ -103,44 +115,46 @@ def push_package(dir, host, chain_id, version, meta, force = True):
     """
     # check if common dir exist.
     if not os.path.exists(dir + '/common'):
-        logger.warn('common dir is not exist, dir is %s, host is %s', dir, host)
+        logger.warn(' common dir is not exist, dir is %s, host is %s', dir, host)
         return False
 
     # check if host dir exist.
     if not os.path.exists(dir + '/' + host):
-        logger.warn('host dir is not exist, dir is %s, host is %s', dir, host)
+        logger.warn(' host dir is not exist, dir is %s, host is %s', dir, host)
         return False
-
-    # create dir on the target server
-    ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('chain %s host %s, publish install package failed.', chain_id, host)
-        return ret
     
-    # push common package
-    ret = ansible.copy_module(host, dir + '/common/', ansible.get_dir() + '/' + chain_id)
-    if not ret:
-        consoler.error('chain %s host %s, push common dir failed.', chain_id, host)
-        return ret
+    try:
+        if meta.get_host_nodes(host):
+            pass
+    except MCError as me:
+        # create dir on the target server
+        ret = ansible.mkdir_module(host, ansible.get_dir() + '/' + chain_id)
+        if not ret:
+            return ret
+        
+        # push common package
+        ret = ansible.copy_module(host, dir + '/common/', ansible.get_dir() + '/' + chain_id)
+        if not ret:
+            return ret
     
     if force:
+        logger.debug(' force is set, push all package, chain_id is %s, chain_version is %s, host is %s',chain_id, version, host)
         # push host dir
         ret = ansible.copy_module(host, dir + '/' + host + '/', ansible.get_dir() + '/' + chain_id)
         if not ret:
-            consoler.error('chain %s host %s, publish install package failed', chain_id, host)
             return ret
     else:
         # push node${index} dir in host dir not published
-        for list_dir in os.listdir(dir + '/' + host + '/'):
-            if 'node' in list_dir:
-                index = int(list_dir[4:])
-                if meta.host_index_exist(host, index):
-                    continue
-                # push host dir
-                ret = ansible.copy_module(host, dir + '/' + host + '/' + list_dir + '/', ansible.get_dir() + '/' + chain_id)
-                if not ret:
-                    consoler.error('chain %s host %s node is %s, publish node package failed', chain_id, host, list_dir)
-                    return ret
+        hnd = HostNodeDirs(chain_id, version, host)
+        for node_dir in hnd.get_node_dirs():
+            if meta.host_node_exist(host, node_dir):
+                logger.info(' %s already published, skip', node_dir)
+                continue
+            logger.info(' publish nodedir, chain_id is %s, chain_version is %s, node is %s', chain_id, version, node_dir)
+            # push host dir
+            ret = ansible.copy_module(host, dir + '/' + host + '/' + node_dir, ansible.get_dir() + '/' + chain_id)
+            if not ret:
+                return ret
 
     
     logger.info('push package success, dir is %s, host is %s, chain_id is %s, chain_version is %s', dir, host, chain_id, version)

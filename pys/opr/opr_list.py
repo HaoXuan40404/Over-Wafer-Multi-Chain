@@ -5,6 +5,7 @@ from pys import ansible, utils
 from pys.chain import data
 from pys.chain.meta import *
 from pys.chain.package import AllChain, ChainVers, HostNodeDirs, VerHosts
+from pys.chain.port import HostPort
 from pys.log import consoler, logger
 
 
@@ -35,10 +36,12 @@ def pub_list(chains):
                 meta_list.append(m)
 
     for m in meta_list:
-        consoler.info(' => chain id ： %s' % m.get_chain_id())
+        consoler.info(' => chain id ：%s    published version : %s', m.get_chain_id(), m.get_chain_version())
         nodes = m.get_nodes()
-        for node in nodes.iterkeys():
-            consoler.info('\t host => %s' % node)
+        for host, nodes in nodes.iteritems():
+            consoler.info('\t host => %s', host)
+            for node in nodes:
+                consoler.info('\t\t node => %s', node.get_node())
 
     logger.info('list end.')
 
@@ -73,8 +76,9 @@ def pkg_list(chains):
             for pkg in vh.get_pkg_list():
                 consoler.info('\t\t\t => package ：%s', pkg)
                 hn = HostNodeDirs(chain, version, pkg)
-                for node_idx in hn.get_node_dirs():
-                    consoler.info('\t\t\t\t => %s', node_idx)
+                hp = HostPort(chain, version, pkg)
+                for node_dir in hn.get_node_dirs():
+                    consoler.info('\t\t\t\t => %s %s ', node_dir, hp.get_by_index(node_dir))
 
     logger.info('load end')
 
@@ -100,7 +104,7 @@ def ls_port(hosts):
             continue
         
         for meta in metas:
-            consoler.info(' \t => chain id is %s ', meta.get_chain_id())
+            consoler.info(' \t => chain id ：%s    published version : %s', meta.get_chain_id(), meta.get_chain_version())
             nodes = meta.get_host_nodes(host)
             for node in nodes:
-                consoler.info(' \t\t node%s, rpc_port：%s, p2p_port：%s, channel_port：%s', str(node.get_index()), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
+                consoler.info(' \t\t %s, rpc_port：%s, p2p_port：%s, channel_port：%s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))

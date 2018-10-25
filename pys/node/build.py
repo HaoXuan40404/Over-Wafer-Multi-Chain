@@ -65,11 +65,11 @@ def build_node_dir(chain, node, fisco, port, index, cert_path=''):
     os.makedirs(node_dir + '/data')
     os.makedirs(node_dir + '/log')
 
-    # copy bootstrapnodes.json、genesis.json to data fir
+    # copy bootstrapnodes.json、genesis.json to correspond dir
     if os.path.exists(chain.data_dir() + '/bootstrapnodes.json'):
         shutil.copy(chain.data_dir() + '/bootstrapnodes.json', node_dir + '/data')
     if os.path.exists(chain.data_dir() + '/genesis.json'):
-        shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/data')
+        shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
         ca.gm_generator_node_ca(
@@ -239,7 +239,7 @@ def expand_host_dir(chain, node, port, fisco):
     try:
         # create node dir
         for i in range(node.get_node_num()):
-            build_node_dir(chain, node, fisco, port.to_port(i), index + i)
+            build_node_dir(chain, node, fisco, port.to_port(i), index + i + 1)
     except Exception as e:
         logger.error(' expand operation failed, chain is %s, node is %s, append_host is %s, e is %s ',
                      chain, node, append_host_dir, e)

@@ -69,9 +69,19 @@ class ConfigConf:
 
     def set_port(self, port):
         self.port = port
+    
+    def get_by_host_ip(self, host):
+        for node in self.nodes:
+            if node.get_host_ip() == host:
+                return node
+        return None
 
     def add_node(self, node):
+        for n in self.nodes:
+            if n.get_host_ip() == node.get_host_ip():
+                return False
         self.nodes.append(node)
+        return True
 
     def get_chain(self):
         return self.chain
@@ -126,10 +136,12 @@ class ConfigConf:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
                 index += 1
                 n.do_parser()
-                self.add_node(n)
             except Exception, err:
                 # logger.info('cfg parser end, result is %s', self)
                 break
+            else:
+                if not self.add_node(n):
+                    raise Exception(' duplicate host ip, host is ', n.get_host_ip())
         
         if len(self.get_nodes()) == 0:
             raise Exception('invalid cfg format, nodes empty')

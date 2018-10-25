@@ -101,7 +101,7 @@ def build_cfg(cc, fisco, cert_path = ''):
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 # create dir for every node on the server
-                acp.port_conflicts(node.get_host_ip(), port.to_port(index))
+                acp.port_conflicts_outside_chain(chain.get_id(), node.get_host_ip(), port.to_port(index))
 
         os.makedirs(dir)
 
