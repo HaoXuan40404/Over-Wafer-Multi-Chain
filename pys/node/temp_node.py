@@ -4,8 +4,6 @@ import os
 import shutil
 import time
 
-import config
-
 from pys import utils
 from pys import path
 from pys.log import logger
