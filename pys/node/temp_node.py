@@ -5,7 +5,6 @@ import shutil
 import time
 
 import config
-import commands
 
 from pys import utils
 from pys import path
@@ -98,14 +97,14 @@ def start_temp_node(dir, port):
         raise MCError(' channel port(%s) is in use.' % port.get_channel_port())
 
     cmd = 'bash %s/temp/node/start.sh' % dir
-    status, output = commands.getstatusoutput(cmd)
+    status, output = utils.getstatusoutput(cmd)
     logger.debug(' start status, status is %d, output is %s', status, output)
 
     # sleep for temp start
     time.sleep(10)
 
     cmd = 'bash %s/temp/node/check.sh' % dir
-    status, output = commands.getstatusoutput(cmd)
+    status, output = utils.getstatusoutput(cmd)
     logger.info('check status, status is %d, output is %s', status, output)
 
     if utils.valid_string(output) and (output.find('is running') != -1) and utils.port_in_use(port.get_channel_port()):
@@ -122,7 +121,7 @@ def stop_temp_node(dir):
     """
 
     cmd = 'bash %s/temp/node/stop.sh' % dir
-    status, output = commands.getstatusoutput(cmd)
+    status, output = utils.getstatusoutput(cmd)
     logger.debug('stop status, status is %d, output is %s', status, output)
 
 def export_genesis(dir):
@@ -136,7 +135,7 @@ def export_genesis(dir):
     """
 
     cmd = 'bash %s/temp/node/export.sh %s/%s' % (dir, dir, 'genesis.json')
-    status, output = commands.getstatusoutput(cmd)
+    status, output = utils.getstatusoutput(cmd)
     if not os.path.exists(dir + '/genesis.json'):
         logger.warn('export genesis.json failed, output is %s', output)
         raise MCError(' export genesis.json failed, dir is %s, output is %s.' % (dir, output))
@@ -164,7 +163,7 @@ def registerNode(dir, nodejson):
     """
 
     cmd = 'bash %s/temp/web3sdk/bin/web3sdk NodeAction registerNode file:%s' % (dir, nodejson)
-    status, output = commands.getstatusoutput(cmd)
+    status, output = utils.getstatusoutput(cmd)
 
     if status != 0:
         logger.warn('register status, dir is %s, nodejson is %s,status is %d, output is %s', dir, nodejson, status, output)

@@ -1,7 +1,7 @@
 #coding:utf-8
 
 import re
-import commands
+import subprocess
 from pys.log import logger
 from pys.log import consoler
 from pys.node.bootstrapsnode import P2pHosts
@@ -87,6 +87,25 @@ def replace(filepath, old, new):
             line = line.replace(old, new)
             f.write(line)
 
+def getstatusoutput(cmd):
+    """replace commands.getstatusoutput
+    
+    Arguments:
+        cmd {[string]}
+    """
+
+    p = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ret = p.communicate()
+    out = ret[0]
+    err = ret[1]
+    output = ''
+    if not out is None:
+        output = output + out.decode('utf-8')
+    if not err is None:
+        output = output + err.decode('utf-8')
+    return (p.returncode, output)
+
 def port_in_use(port):
     """using cmd nc to check if the port is occupied.
     
@@ -98,8 +117,7 @@ def port_in_use(port):
     """
 
     cmd = 'nc -z 127.0.0.1' + (' %d' % port)
-
-    status,output = commands.getstatusoutput(cmd)
+    status,output = getstatusoutput(cmd)
 
     logger.debug('port is %s, status is %s, output is %s', port, status, output)
 

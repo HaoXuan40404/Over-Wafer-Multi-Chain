@@ -6,6 +6,7 @@ import os
 from pys.exp import MCError
 from pys.log import logger
 from pys.log import consoler
+from pys import utils
 
 class Fisco:
     def __init__(self, fisco_path):
@@ -44,7 +45,7 @@ class Fisco:
             raise MCError(' fisco-bcos not exist, fisco-bcos is %s' % self.fisco_path)
         
         cmd = self.fisco_path + ' --version'
-        status,output = commands.getstatusoutput(cmd)
+        status,output = utils.getstatusoutput(cmd)
         if status != 0:
             logger.error(' fisco-bcos --version failed, fisco-bcos is %s, status is %d, output is %s', self.fisco_path, status, output)
             raise MCError('fisco-bcos --version failed , fisco-bcos is %s.' % self.fisco_path)

@@ -3,6 +3,7 @@ import commands
 import os
 import re
 
+from pys import utils
 from pys import path
 from pys.log import logger
 from pys.log import consoler
@@ -37,7 +38,7 @@ def mkdir_module(ip, dest):
         int -- success return True, else return False.
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh mkdir ' + ip + ' ' + dest)
     logger.debug('mkdir action , status %s, output %s' % (status, result))
    
@@ -62,7 +63,7 @@ def copy_module(ip, src, dest):
         bool -- true or false.
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh copy ' + ip + ' ' + src + ' ' + dest)
     logger.debug('copy action , status %s, output %s' % (status, result))
    
@@ -91,7 +92,7 @@ def unarchive_module(ip, src, dest):
     """
 
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = commautilsnds.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
     logger.debug('unarchive action , status %s, output %s' % (status, result))
    
@@ -117,7 +118,7 @@ def start_module(ip, dest):
         bool -- true or false
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh start ' + ip + ' ' + dest)
     logger.debug('start action , status %s, output %s' % (status, result))
     
@@ -144,7 +145,7 @@ def register_module(ip, dest, index):
         bool -- true or false
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh register ' + ip + ' ' + dest + ' ' + str(index))
     logger.debug(' register action, status %s, output %s' % (status, result))
     
@@ -169,7 +170,7 @@ def unregister_module(ip, dest, index):
         bool -- true or false
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh unregister ' + ip + ' ' + dest + ' ' + str(index))
     logger.debug(' unregister action, status %s, output %s' % (status, result))
     
@@ -193,7 +194,7 @@ def stop_module(ip, dest):
         bool -- true or false
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh stop ' + ip + ' ' + dest)
     logger.debug('stop action , status %s, output %s' % (status, result))
 
@@ -221,7 +222,7 @@ def check_module(ip, dest):
         bool -- true or false
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh check ' + ip + ' ' + dest)
     logger.debug('check action , status %s, output %s' % (status, result))
     
@@ -253,7 +254,7 @@ def telnet_module(ip, msg='HelloWorld!'):
         [bool] -- ansible useful echo return True, else False.
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh telnet ' + ip + ' ' + msg)
     logger.debug('telnet action , status %s, output %s' % (status, result))
     if status:
@@ -291,7 +292,7 @@ def monitor_module(ip, dest):
         dest {string} -- corresponding server dir path
     """
 
-    (status, result) = commands.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
     logger.debug('monitor action , status %s, output %s' % (status, result))
     if status:

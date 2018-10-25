@@ -2,6 +2,8 @@
 
 import shutil
 import os,commands
+
+from pys import utils
 from pys import path
 from pys.log import logger
 from pys.log import consoler
@@ -109,7 +111,7 @@ def generate_root_ca(dir):
 
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['out'] = dir
-    (status, result) = commands.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out')
+    (status, result) = utils.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out')
     if not status:
         consoler.info(' Generate root cert successful! dir is %s.', dir)
         logger.info(' Generate root cert successful! dir is %s.', dir)
@@ -133,7 +135,7 @@ def generator_agent_ca(dir, ca, agent):
     os.environ['out'] = dir
     os.environ['ca'] = ca
     os.environ['agent'] = agent
-    (status, result)= commands.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
+    (status, result)= utils.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
     if not status:
         consoler.info(' Generate %s cert successful! dir is %s.', agent, dir)
         logger.info(' Generate %s cert successful! dir is %s.', agent, dir)
@@ -157,7 +159,7 @@ def generator_node_ca(dir, node, agent):
     os.environ['agent'] = agent
     os.environ['node'] = node
     os.environ['out']= dir
-    (status, result)= commands.getstatusoutput('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
+    (status, result)= utils.getstatusoutput('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
     if not status:
         consoler.info(' Generate %s cert successful! dir is %s.', node, dir)
         logger.info(' Generate %s cert successful! dir is %s.', node, dir)
@@ -176,7 +178,7 @@ def generator_sdk_ca(dir):
 
     os.environ['out'] = dir
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    (status, result)= commands.getstatusoutput('bash $scripts/generate_sdk_cert.sh -d $out')
+    (status, result)= utils.getstatusoutput('bash $scripts/generate_sdk_cert.sh -d $out')
     if not  status:
         consoler.info(' Generate sdk cert successful! dir is %s/sdk.', dir)
         logger.info(' Generate sdk cert successful! dir is %s/sdk.', dir)
@@ -194,7 +196,7 @@ def gm_generate_root_ca(dir):
     
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['out'] = dir
-    (status, result)= commands.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out -g')
+    (status, result)= utils.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out -g')
     if not status:
         consoler.info(' Generate GM root cert successful! dir is %s.', dir)
         logger.info(' Generate GM root cert successful! dir is %s.', dir)
@@ -217,7 +219,7 @@ def gm_generator_agent_ca(dir, ca, agent):
     os.environ['out'] = dir
     os.environ['ca'] = ca
     os.environ['agent'] = agent
-    (status, result)= commands.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent -g')
+    (status, result)= utils.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent -g')
     if not status:
         consoler.info(' Generate GM %s cert successful! dir is %s.', agent, dir)
         logger.info(' Generate GM %s cert successful! dir is %s.', agent, dir)
@@ -239,7 +241,7 @@ def gm_generator_node_ca(dir, node, agent):
     os.environ['agent'] = agent
     os.environ['node'] = node
     os.environ['out']= dir
-    (status, result)= commands.getstatusoutput('bash $scripts/generate_node_cert.sh -a WB -d $agent -n $node -o $out -s sdk -g')
+    (status, result)= utils.getstatusoutput('bash $scripts/generate_node_cert.sh -a WB -d $agent -n $node -o $out -s sdk -g')
     if not status:
         consoler.info(' Generate GM %s cert successful! dir is %s.', node, dir)
         consoler.info(' Generate GM %s sdk cert successful! sdk dir is %s/sdk.', node, dir)
@@ -267,7 +269,7 @@ def new_generate_root_ca(dir, chain = '12345'):
     shutil.copy(sh_path + '/cert_tools.sh', temp_path)
     shutil.copy(sh_path + '/cert.cnf', temp_path)
     os.chdir(path.get_path() + '/cert_temp')
-    (status, result) = commands.getstatusoutput('./cert_tools.sh gen_chain_cert ' + chain)
+    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + chain)
     os.chdir(path.get_path())
     if not status:
         try:
@@ -310,7 +312,7 @@ def new_generator_agent_ca(dir, ca, agent):
     os.chdir(path.get_path() + '/cert_temp')
     shutil.copy(sh_path + '/cert_tools.sh', temp_path)
     shutil.copy(sh_path + '/cert.cnf', temp_path)
-    (status, result) = commands.getstatusoutput('./cert_tools.sh gen_agency_cert ' + agent)
+    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_agency_cert ' + agent)
     os.chdir(path.get_path())
     if not status:
         try: 
@@ -361,7 +363,7 @@ def new_generator_node_ca(agent, dir, node):
             os.chdir(path.get_path() + '/cert_temp')
             shutil.copy(sh_path + '/cert_tools.sh', temp_path)
             shutil.copy(sh_path + '/cert.cnf', temp_path)
-            (status, result)= commands.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent_name + ' ' + node)
+            (status, result)= utils.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent_name + ' ' + node)
             os.chdir(path.get_path())
         except Exception as e:
             consoler.error('  Generate %s cert failed! %s.',agent_name, e)
@@ -420,7 +422,7 @@ def new_generator_sdk_ca(agency_dir,sdk_dir):
             shutil.copy(sh_path + '/cert_tools.sh', temp_path)
             shutil.copy(sh_path + '/cert.cnf', temp_path)
             os.chdir(path.get_path() + '/cert_temp')
-            (status, result)= commands.getstatusoutput('./cert_tools.sh  gen_sdk_cert ' + agent_name + ' sdk')
+            (status, result)= utils.getstatusoutput('./cert_tools.sh  gen_sdk_cert ' + agent_name + ' sdk')
             os.chdir(path.get_path())
         except Exception as e:
             consoler.error('  Copy %s cert failed! %s.',agent_name, e)
@@ -472,7 +474,7 @@ def check_cert_complete(cc, cert_path):
                 consoler.info(' chain:%s, version:%s, host_ip:%s, index %s .',chain_id ,chain_version, node.get_host_ip(), index)
                 check_path = cert_path + '/' + str(chain_id) + '/' + str(chain_version) + '/' + str(node.get_host_ip()) + '/node' + str(index)
                 if check_cert_file(check_path):
-                    (status, result)= commands.getstatusoutput('bash' + ' ./scripts/ca/cert_generate.sh ' + check_path + ' ' + agency)
+                    (status, result)= utils.getstatusoutput('bash' + ' ./scripts/ca/cert_generate.sh ' + check_path + ' ' + agency)
                     if not status:
                         consoler.info('  Init cert success! %s.',result)
                     else:
