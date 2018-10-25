@@ -25,13 +25,16 @@ def telnet_ansible(server):
     """
 
     if server[0] == 'all':
-        ansible.telnet_module('all')
-    else:
-        for i in range(len(server)):
-            if utils.valid_ip(server[i]):
-                ansible.telnet_module(server[i])
+        server = ['all']
+
+    for i in range(len(server)):
+        if utils.valid_ip(server[i]) or server[i] == 'all':
+            if ansible.telnet_module(server[i]):
+                consoler.info(' telnet test success, host is %s.', server[i])
             else:
-                consoler.error('skip host %s, invalid host format.', server[i])
+                consoler.error(' telnet test failed, host is %s.', server[i])
+        else:
+            consoler.error(' Not invalid host, skip, host is %s.', server[i])
 
 def valid_cmd(chain):
     """[Determine if the cmd is valid or not
