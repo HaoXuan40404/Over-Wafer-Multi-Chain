@@ -175,7 +175,7 @@ class ChainPort:
         return self.chain_id
 
     def get_by_chain_version(self, version):
-        if version self.ports:
+        if version in self.ports:
             return self.ports[version]
         raise MCError(' not found, chain id is %s, chain version is %s' %
                       (self.chain_id, version))
