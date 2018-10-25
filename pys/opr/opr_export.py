@@ -29,7 +29,7 @@ def export_package(chain_id, chain_version, dest):
 
                 utils.getstatusoutput('cp -r ' + dir + '/' + host + ' ' + dest + '/')
                 utils.getstatusoutput('cp -r ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
-                consoler.info(' Export chain_id(%s) chain_version(%s) success.')
+                consoler.info(' Export chain_id(%s) chain_version(%s) success.', chain_id, chain_version)
         else:
             consoler.error(
                 ' No package build for chain_id(%s):chain_version(%s). ', chain_id, chain_version)
