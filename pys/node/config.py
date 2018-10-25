@@ -21,7 +21,7 @@ KEYSTOREDIR = './keystore/'
 DATADIR = './data/'
 LOGVERBOSITY = '4'
 COVERLOG = 'OFF'
-EVENTLOG = 'ON'
+EVENTLOG = 'OFF'
 STATLOG = 'ON'
 LOGCONF = './log.conf'
 
