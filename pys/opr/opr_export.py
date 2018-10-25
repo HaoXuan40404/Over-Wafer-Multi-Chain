@@ -27,8 +27,8 @@ def export_package(chain_id, chain_version, dest):
                     logger.debug('not invalid host_ip ' + host)
                     continue
 
-                utils.getstatusoutput('cp ' + dir + '/' + host + ' ' + dest + '/')
-                utils.getstatusoutput('cp ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
+                utils.getstatusoutput('cp -r ' + dir + '/' + host + ' ' + dest + '/')
+                utils.getstatusoutput('cp -r ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
 
                 """
                 for file_common in os.listdir(dir + '/common'):

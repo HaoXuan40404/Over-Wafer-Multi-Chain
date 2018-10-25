@@ -93,7 +93,7 @@ def getstatusoutput(cmd):
     Arguments:
         cmd {[string]}
     """
-    logger.debug(' cmd is %s', cmd)
+
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ret = p.communicate()
@@ -104,6 +104,9 @@ def getstatusoutput(cmd):
         output = output + out.decode('utf-8')
     if not err is None:
         output = output + err.decode('utf-8')
+
+    logger.debug(' cmd is %s, status is %s, output is %s', cmd, str(p.returncode), output)
+
     return (p.returncode, output)
 
 def port_in_use(port):
