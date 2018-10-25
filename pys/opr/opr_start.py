@@ -54,6 +54,6 @@ def start_server(chain_id):
         return 
 
     logger.info('start action, chain_id is ' + chain_id)
-    for k in mm.get_nodes().iterkeys():
+    for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.start_module(k, ansible.get_dir() + '/' + chain_id)

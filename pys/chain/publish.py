@@ -89,7 +89,7 @@ def publish_server(chain_id, chain_version, force=False):
         ret = push_package(dir, host, chain_id, chain_version, mm, force)
         if ret:
             hp = HostPort(chain_id, chain_version, host)
-            for node_dir, p in hp.get_ports().iteritems():
+            for node_dir, p in hp.get_ports().items():
                 logger.debug(' node_dir is %s, port is %s', node_dir, p)
                 if not mm.host_node_exist(host, node_dir):
                     mm.append(meta.MetaNode(host, p.get_rpc_port(), p.get_p2p_port(), p.get_channel_port(), node_dir))

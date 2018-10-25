@@ -114,7 +114,7 @@ def cmd_server(chain_id, cmd):
         return 
 
     logger.info('cmd action, chain_id is ' + chain_id)
-    for k in mm.get_nodes().iterkeys():
+    for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.cmd_module(k, cmd)
 
@@ -162,7 +162,7 @@ def file_server(chain_id, src, dest):
         return 
 
     logger.info('cmd action, chain_id is ' + chain_id)
-    for k in mm.get_nodes().iterkeys():
+    for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.copy_module(k, src, dest)
 

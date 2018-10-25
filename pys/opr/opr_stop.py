@@ -62,6 +62,6 @@ def stop_server(chain_id):
         return 
 
     logger.info('stop action, chain_id is ' + chain_id)
-    for k in mm.get_nodes().iterkeys():
+    for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.stop_module(k, ansible.get_dir() + '/' + chain_id)
