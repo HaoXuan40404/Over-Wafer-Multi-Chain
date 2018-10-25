@@ -40,7 +40,7 @@ def chain_build(cfg, fisco_path, cert_path = ''):
         ccs = ConfigConfs(cfg).get_ccs()
         # build all chain
         if len(ccs) != 0:
-            for cc in ccs.itervalues():
+            for cc in ccs.values():
                 try:
                     chain_id = cc.get_chain().get_id()
                     chain_version = cc.get_chain().get_version()

@@ -214,8 +214,8 @@ class AllChainPort:
 
     def get_all_ports_by_host(self, host):
         hps = []
-        for cp in self.get_ports().itervalues():
-            for cvp in cp.get_ports().itervalues():
+        for cp in self.get_ports().values():
+            for cvp in cp.get_ports().values():
                 try:
                     hp = cvp.get_by_host(host)
                     logger.debug(' host is %s, hp is %s', host, hp)
@@ -231,7 +231,7 @@ class AllChainPort:
             if (not (chain_id == hp.get_chain_id() and chain_version == hp.get_chain_version())):
                 continue
 
-            for node in hp.get_ports().itervalues():
+            for node in hp.get_ports().values():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
                         ' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
@@ -254,7 +254,7 @@ class AllChainPort:
         for hp in hps:
             if chain_id == hp.get_chain_id():
                 continue
-            for node in hp.get_ports().itervalues():
+            for node in hp.get_ports().values():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
                         ' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
