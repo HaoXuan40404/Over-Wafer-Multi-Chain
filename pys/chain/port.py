@@ -225,9 +225,11 @@ class AllChainPort:
         logger.debug('host is %s, len is %d', host, len(hps))
         return hps
 
-    def port_conflicts(self, host, port):
+    def port_conflicts(self, chain_id, host, port):
         hps = self.get_all_ports_by_host(host)
         for hp in hps:
+            if chain_id == hp.get_chain_id():
+                continue
             for node in hp.get_ports().itervalues():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
