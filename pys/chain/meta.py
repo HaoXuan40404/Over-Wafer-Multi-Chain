@@ -43,7 +43,6 @@ class MetaNode:
     def __repr__(self):
         return 'host %s, version %s, node %s, rpc %s, p2p %s, channel %s' % (self.host_ip, self.version, self.node, self.rpc_port, self.p2p_port, self.channel_port)
 
-
 class Meta:
 
     def __init__(self, chain_id):
@@ -74,10 +73,10 @@ class Meta:
                     logger.debug(
                         ' host is %s, node is %s, n is %s', host_ip, node, n)
                     return n
-            logger.debug(' node not exist, node is %s.', node)
-            raise MCError(' Node not exist in the chain, node is %s' % node)
-        logger.debug(' host not exist, host is %s, host is %s.', host_ip, node)
-        raise MCError(' Host not exist in the chain, host is %s' % host_ip)
+            logger.debug(' node not exist, node is %s ', node)
+            raise MCError(' node not exist in the chain, node is %s' % node)
+        logger.debug(' host not exist, host is %s.', host_ip)
+        raise MCError(' host not exist in the chain, host is %s' % host_ip)
     
     def host_node_exist(self, host_ip, node):
         try:
