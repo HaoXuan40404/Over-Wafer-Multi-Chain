@@ -8,7 +8,7 @@ from pys import path
 from pys.log import logger
 from pys.log import consoler
 from pys.chain.parser import ConfigConfs
-import ConfigParser
+import configparser
 from pys.exp import MCError
 
 class CA:
@@ -463,7 +463,7 @@ def check_cert_complete(cc, cert_path):
         [bool] -- [true or false]
     """
 
-    cf = ConfigParser.ConfigParser()
+    cf = configparser.ConfigParser()
     cf.read('./conf/mchain.conf')
     agency = cf.get('agent','agent_name')
     try:
