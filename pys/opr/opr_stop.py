@@ -1,6 +1,6 @@
 # coding:utf-8
 import os
-
+import sys
 from pys import ansible, utils
 from pys.chain import data
 from pys.chain.meta import *
@@ -16,7 +16,8 @@ def stop_chain(chain):
 
     if chain[0] == 'all':
         consoler.info('You want to stop all node,are you sure? yes or no? y/n')
-        choice = raw_input('Your choice is: ')
+        consoler.info('Your choice is : ')
+        choice = sys.stdin.readline().strip('\n')
         if ((choice == 'yes') | (choice == 'Yes') | (choice == 'Y') | (choice == 'y')):
             dir = data.meta_dir_base()
             if os.path.exists(dir):
