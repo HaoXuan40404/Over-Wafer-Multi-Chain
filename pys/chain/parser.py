@@ -31,7 +31,7 @@ class NodeEle:
         if not utils.valid_ip(l[1]):
             raise Exception(" node_desc invalid format invalid p2p_ip ", l[1])
             
-        if l[2] <= 0:
+        if int(l[2]) <= 0:
             raise Exception(" node_desc invalid format node_num lt 0 ", l[2])
         self.host_ip = l[0]
         self.p2p_ip = l[1]
@@ -137,7 +137,7 @@ class ConfigConf:
                 index += 1
                 n.do_parser()
             except Exception as e:
-                # logger.info('cfg parser end, result is %s', self)
+                logger.info('cfg parser end, e is %s, result is %s', e, self)
                 break
             else:
                 if not self.add_node(n):
