@@ -418,7 +418,7 @@ def new_generator_sdk_ca(agency_dir,sdk_dir):
             get_agent = dir.split('/')
             agent_name = get_agent[len(get_agent)-1]
             shutil.copytree(dir, temp_path +  '/' +agent_name)
-            print "name is "+agent_name
+            logger.debug("name is "+agent_name)
             shutil.copy(sh_path + '/cert_tools.sh', temp_path)
             shutil.copy(sh_path + '/cert.cnf', temp_path)
             os.chdir(path.get_path() + '/cert_temp')
