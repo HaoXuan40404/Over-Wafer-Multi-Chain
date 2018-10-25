@@ -41,7 +41,7 @@ def pub_list(chains):
         for host, nodes in nodes.iteritems():
             consoler.info('\t host => %s', host)
             for node in nodes:
-                consoler.info('\t\t node => %s', node)
+                consoler.info('\t\t node => %s', node.get_node())
 
     logger.info('list end.')
 
