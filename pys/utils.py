@@ -93,7 +93,7 @@ def getstatusoutput(cmd):
     Arguments:
         cmd {[string]}
     """
-
+    logger.debug(' cmd is %s', cmd)
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ret = p.communicate()
