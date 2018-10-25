@@ -43,7 +43,7 @@ def expand_on_exist_chain(cc):
         for index in range(node.get_node_num()):
             # create dir for every node on the server
             acp.port_conflicts_outside_chain(chain.get_id(), node.get_host_ip(), port.to_port(index))
-            acp.port_conflicts_inside_chain(chain.get_id(), node.get_host_ip(), port.to_port(index))
+            acp.port_conflicts_inside_chain(node.get_host_ip(), port.to_port(index) ,chain.get_id(), chain.get_version())
 
     fisco = Fisco(chain.data_dir() + '/' + 'common' + '/' + 'fisco-bcos')
     
@@ -87,7 +87,7 @@ def expand_on_nonexist_chain(cc, fisco_path, genesisjson, bootstrapnodesjson):
         for index in range(node.get_node_num()):
             # create dir for every node on the server
             acp.port_conflicts_outside_chain(chain.get_id(), node.get_host_ip(), port.to_port(index))
-            acp.port_conflicts_inside_chain(chain.get_id(), node.get_host_ip(), port.to_port(index))
+            acp.port_conflicts_inside_chain(node.get_host_ip(), port.to_port(index) ,chain.get_id(), chain.get_version())
 
     try:
         # create host dir
