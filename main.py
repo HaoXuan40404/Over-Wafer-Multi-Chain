@@ -51,7 +51,7 @@ def usage():
                         help='version of multi-chain')
     parser.add_argument('--init_ansible', action='store_true',
                         help='Output => Init ansible hosts need sudo.')
-    parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
+    parser.add_argument('-b', '--build', nargs='+', metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
                         help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
@@ -93,6 +93,8 @@ def usage():
                                                         './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
+    parser.add_argument('--cert_check', nargs=2, metavar=('./config.conf or ./conf/',
+                                                     './path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-f', '--force', action='store_true',
                         help='output => effect with --publish.')
     args = parser.parse_args()
@@ -100,11 +102,16 @@ def usage():
         version.version()
     elif args.build:
         consoler.info(' build operation begin.')
-        build.chain_build(args.build[0], args.build[1])
+        if len(args.build) == 2:
+            build.chain_build(args.build[0], args.build[1])
+        elif args.build[2] == 'cert' and len(args.build) == 4:
+            build.chain_build(args.build[0], args.build[1],args.build[2])
+        else:
+            consoler.error('invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
-        expand.chain_expand(args.expand[0], args.expand[1:])
+        expand.chain_expand(args.expand[0], args.expand[1])
         consoler.info(' expand operation end.')
     elif args.check:
         consoler.info(' check operation begin.')
@@ -207,6 +214,12 @@ def usage():
         consoler.info(' ls_port operation begin.')
         opr_list.ls_port(args.ls_port)
         consoler.info(' ls_port operation end.')
+    elif args.cert_check:
+        consoler.info(' cert_check operation begin.')
+        cfg = args.cert_check[0]
+        cert_path = args.cert_check[1]
+        ca.check_cert_complete(cfg, cert_path)
+        consoler.info(' cert_check operation end.')
     else:
         consoler.error(
             'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')

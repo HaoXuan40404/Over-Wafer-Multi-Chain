@@ -5,6 +5,9 @@ import os,commands
 from pys import path
 from pys.log import logger
 from pys.log import consoler
+from pys.chain.parser import ConfigConfs
+import ConfigParser
+from pys.exp import MCError
 
 class CA:
     '''
@@ -398,7 +401,7 @@ def new_generator_node_ca(agent, dir, node):
     shutil.rmtree(temp_path)
 
 def new_generator_sdk_ca(agency_dir,sdk_dir):
-    """[generate sdkcert ]
+    """[generate sdkcert]
     
     Arguments:
         dir {[path]} -- [agency cert path]
@@ -445,4 +448,88 @@ def new_generator_sdk_ca(agency_dir,sdk_dir):
         consoler.error('  Generate sdk cert failed! Result is %s', result)
         logger.error(' Generate sdk cert failed! Result is %s', result)
     shutil.rmtree(temp_path)
+
+
+def check_cert_complete(cc, cert_path):
+    """[check node cert]
+    
+    Arguments:
+        cc {[config]} -- [config.conf, e.g.sample_12345_v1.0.conf]
+        cert_path {[dir]} -- [where save cert in]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    cf = ConfigParser.ConfigParser()
+    cf.read('./conf/mchain.conf')
+    agency = cf.get('agent','agent_name')
+    try:
+        chain_id = cc.get_chain().get_id()
+        chain_version = cc.get_chain().get_version()
+        for node in cc.get_nodes():
+            for index in range(0, node.get_node_num()):
+                consoler.info(' chain:%s, version:%s, host_ip:%s, index %s .',chain_id ,chain_version, node.get_host_ip(), index)
+                check_path = cert_path + '/' + str(chain_id) + '/' + str(chain_version) + '/' + str(node.get_host_ip()) + '/node' + str(index)
+                if check_cert_file(check_path):
+                    (status, result)= commands.getstatusoutput('bash' + ' ./scripts/ca/cert_generate.sh ' + check_path + ' ' + agency)
+                    if not status:
+                        consoler.info('  Init cert success! %s.',result)
+                    else:
+                        consoler.error('Init cert failed, %s.',result)
+                        break
+                else:
+                    consoler.error('cant find cert in %s.', check_path)
+                    break
+    except Exception as e:
+        logger.error(e)
+        consoler.error(' \t %s', e)
+    return 0
+
+
+def check_cert_file(path):
+    """[check node cert exist]
+    
+    Arguments:
+        path {[dir -> node cert]} -- [where node cert put]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    result = os.path.exists(path + '/agency.crt') and os.path.exists(path + '/ca.crt')  and os.path.exists(path + '/node.key')\
+        and os.path.exists(path + '/node.pubkey') and os.path.exists(path + '/node.crt')
+    return result
+
+
+def check_cert_sdk(path):
+    """[check sdk cert exist]
+    
+    Arguments:
+        path {[dir -> sdk cert]} -- [where sdk cert put]
+    
+    Raises:
+        MCError -- [catch sdk Init status]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    result = os.path.exists(path + '/sdk/sdk.crt') and os.path.exists(path + '/sdk/ca.crt')  and os.path.exists(path + '/sdk/client.keystore')\
+        and os.path.exists(path + '/sdk/keystore.p12') and os.path.exists(path + '/sdk/sdk.csr') and os.path.exists(path + '/sdk/sdk.key') and os.path.exists(path + '/sdk/sdk.param')\
+        and os.path.exists(path + '/sdk/sdk.private') and os.path.exists(path + '/sdk/sdk.pubkey') 
+    try:
+        if result:
+            consoler.info('  Init sdk cert success!')
+        else:
+            logger.error('  Init sdk cert failed!')
+            raise MCError('  Init sdk cert failed!')
+    except MCError as me:
+        logger.error(me)
+        consoler.error(me)
+    return result    
+
+
+
+
 
