@@ -208,7 +208,7 @@ class AllChainPort:
         return ' ports is %s' % (self.ports)
 
     def get_by_chain_id(self, chain_id):
-        if chain_id self.ports:
+        if chain_id in self.ports:
             return self.ports[chain_id]
         raise MCError(' not found, chain id is %s' % (chain_id))
 
