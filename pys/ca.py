@@ -1,7 +1,7 @@
 #coding:utf-8
 
 import shutil
-import os,commands
+import os
 
 from pys import utils
 from pys import path

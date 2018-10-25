@@ -1,7 +1,6 @@
 #coding:utf-8
 
 import re
-import commands
 import os
 from pys.exp import MCError
 from pys.log import logger
