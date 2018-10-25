@@ -27,8 +27,9 @@ def export_package(chain_id, chain_version, dest):
                     logger.debug('not invalid host_ip ' + host)
                     continue
 
-                shutil.copytree(dir + '/' + host, dest + '/' + host)
-                shutil.copytree(dir + '/' + 'common' + '/', dest + '/' + host + '/')
+                utils.getstatusoutput('cp ' + dir + '/' + host + ' ' + dest + '/')
+                utils.getstatusoutput('cp ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
+
                 """
                 for file_common in os.listdir(dir + '/common'):
                     if os.path.isdir(dir + '/common/' + file_common):
