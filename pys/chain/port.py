@@ -224,8 +224,32 @@ class AllChainPort:
                     pass
         logger.debug('host is %s, len is %d', host, len(hps))
         return hps
+    
+    def port_conflicts_inside_chain(self, host, port, chain_id , chain_version):
+        hps = self.get_all_ports_by_host(host)
+        for hp in hps:
+            if (not (chain_id == hp.get_chain_id() and chain_version == hp.get_chain_version())):
+                continue
 
-    def port_conflicts(self, chain_id, host, port):
+            for node in hp.get_ports().itervalues():
+                if port.in_use(node.get_rpc_port()):
+                    logger.info(
+                        ' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
+                    raise MCError(' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s' % (
+                        str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
+
+                if port.in_use(node.get_p2p_port()):
+                    logger.info(
+                        ' p2p port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_p2p_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
+                    raise MCError(' p2p port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s' % (
+                        str(node.get_p2p_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
+                if port.in_use(node.get_channel_port()):
+                    logger.info(
+                        ' channel port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_channel_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
+                    raise MCError(' channel port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s' % (
+                        str(node.get_channel_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
+
+    def port_conflicts_outside_chain(self, chain_id, host, port):
         hps = self.get_all_ports_by_host(host)
         for hp in hps:
             if chain_id == hp.get_chain_id():
