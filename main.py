@@ -57,9 +57,9 @@ def usage():
                         help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version eg.',
                                                          'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
-    parser.add_argument('-s', '--stop', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
                                                       'chain_id:host_ip'), help='Output => stop node')
-    parser.add_argument('-S', '--start', nargs='+', metavar=('all or chain_id or',
+    parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
                                                        'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
                                                        'node'), help='Output => register one node already published')
