@@ -36,7 +36,7 @@ def pub_list(chains):
                 meta_list.append(m)
 
     for m in meta_list:
-        consoler.info(' => chain id ： %s' % m.get_chain_id())
+        consoler.info(' => chain id ：%s    published version : %s', m.get_chain_id(), m.get_chain_version())
         nodes = m.get_nodes()
         for node in nodes.iterkeys():
             consoler.info('\t host => %s' % node)
@@ -102,7 +102,7 @@ def ls_port(hosts):
             continue
         
         for meta in metas:
-            consoler.info(' \t => chain id is %s ', meta.get_chain_id())
+            consoler.info(' \t => chain id ：%s    published version : %s', meta.get_chain_id(), meta.get_chain_version())
             nodes = meta.get_host_nodes(host)
             for node in nodes:
                 consoler.info(' \t\t %s, rpc_port：%s, p2p_port：%s, channel_port：%s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))

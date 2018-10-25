@@ -14,9 +14,8 @@ from pys.chain.port import Port
 
 class MetaNode:
 
-    def __init__(self, version, host_ip, rpc_port, p2p_port, channel_port, node):
+    def __init__(self, host_ip, rpc_port, p2p_port, channel_port, node):
         self.host_ip = host_ip
-        self.version = version
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
         self.channel_port = channel_port
@@ -34,9 +33,6 @@ class MetaNode:
     def get_node(self):
         return self.node
     
-    def get_version(self):
-        return self.version
-    
     def get_host(self):
         return self.host_ip
 
@@ -45,13 +41,20 @@ class MetaNode:
 
 class Meta:
 
-    def __init__(self, chain_id):
+    def __init__(self, chain_id, chain_version = ''):
         self.chain_id = chain_id
+        self.chain_version = chain_version
         self.nodes = {}
         self.load()
 
     def get_chain_id(self):
         return self.chain_id
+    
+    def get_chain_version(self):
+        return self.chain_version
+
+    def set_chain_version(self, chain_version):
+        self.chain_version = chain_version
 
     def get_host_nodes(self, host_ip):
 
@@ -102,6 +105,7 @@ class Meta:
         return self.nodes
 
     def clear(self):
+        self.chain_version = ''
         self.nodes = {}
 
     def to_json(self):
@@ -147,11 +151,14 @@ class Meta:
         try:
             with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
                 jsondata = json.load(f)
+
+                if jsondata.has_key('chain_version'):
+                    self.chain_version = str(jsondata['chain_version'])
+
                 if jsondata.has_key('nodes'):
                     for hm in jsondata['nodes'].values():
                         for v in hm:
-                            mn = MetaNode(v['version'], v['host_ip'], v['rpc_port'],
-                                          v['p2p_port'], v['channel_port'], v['node'])
+                            mn = MetaNode(v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'], v['node'])
                             logger.info(
                                 'load from meta.json, meta node is %s', mn)
                             self.append(mn)
@@ -185,24 +192,6 @@ class AllMeta:
                 self.metas[chain_id] = meta
             except Exception as e:
                 pass
-
-"""
-def port_conflicts(host, port, am = None):
-    
-    metas = get_meta_ports_by_host(host, am)
-    for meta in metas:
-        nodes = meta.get_host_nodes(host)
-        for node in nodes:
-            if port.in_use(node.get_rpc_port()):
-                logger.info(' rpc port in use, port is %s, node is %s', port, node)
-                return node
-            if port.in_use(node.get_p2p_port()):
-                logger.info(' p2p port in use, port is %s, node is %s', port, node)
-                return node
-            if port.in_use(node.get_channel_port()):
-                logger.info(' channel port in use, port is %s, node is %s', port, node)
-                return node
-"""
     
 def get_meta_ports_by_host(host, am = None):
 

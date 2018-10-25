@@ -47,25 +47,41 @@ def publish_chain(chains, force = False):
             publish_server(chain.get_id(), chain.get_version(), force)
 
 
-def publish_server(chain_id, chain_version, force = False):
+def publish_server(chain_id, chain_version, force=False):
     """publish one chain.
 
     Arguments:
         chain_id {string} -- chain id.
         chain_version {string} -- chain version.
-        force {bool} 
+        force {bool}
     """
 
     chain = Chain(chain_id, chain_version)
     dir = chain.data_dir()
     if not os.path.isdir(dir):
-        consoler.info(' No build version exist for chain_id:%s chain_version:%s, do nothing.', chain_id, chain_version)
-        logger.warn(' No build version exist for chain_id:%s chain_version:%s, do nothing.', chain_id, chain_version)
+        consoler.info(
+            ' No build version exist for chain_id:%s chain_version:%s, do nothing.', chain_id, chain_version)
+        logger.warn(
+            ' No build version exist for chain_id:%s chain_version:%s, do nothing.', chain_id, chain_version)
         return
-    
-    consoler.info(' publish package for chain %s version %s begin.', chain_id, chain_version)
 
     mm = meta.Meta(chain_id)
+    if force:
+        # force is set, publish this chain again.
+        mm.clear()
+        mm.set_chain_version(chain_version)
+    else:
+        if mm.exist():
+            if chain_version != mm.get_chain_version():
+                consoler.error(
+                    ' chain %s already publish %s version, if you want publish annother version, --force/-f need to be set. ')
+                return
+        else:
+            mm.set_chain_version(chain_version)
+
+    consoler.info(' publish package for chain %s version %s begin.',
+                  chain_id, chain_version)
+
     for host in os.listdir(dir):
         if not utils.valid_ip(host):
             logger.debug(' skip, not invalid host_ip ' + host)
@@ -76,14 +92,12 @@ def publish_server(chain_id, chain_version, force = False):
             for node_dir, p in hp.get_ports().iteritems():
                 logger.debug(' node_dir is %s, port is %s', node_dir, p)
                 if not mm.host_node_exist(host, node_dir):
-                    mm.append(meta.MetaNode(chain_version, host, p.get_rpc_port(
-                    ), p.get_p2p_port(), p.get_channel_port(), node_dir))
-            consoler.info(' \t push package : %s  success.', host)
+                    mm.append(meta.MetaNode(host, p.get_rpc_port(), p.get_p2p_port(), p.get_channel_port(), node_dir))
+            consoler.info(' \t push package : %s success.', host)
         else:
             consoler.error(' \t push package : %s  failed.', host)
     # record meta info, write meta.json file
     mm.write_to_file()
-
     consoler.info(' publish package for chain %s version %s end.', chain_id, chain_version)
 
 def push_package(dir, host, chain_id, version, meta, force = True):
