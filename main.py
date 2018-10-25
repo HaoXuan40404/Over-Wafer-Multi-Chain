@@ -51,7 +51,7 @@ def usage():
                         help='version of multi-chain')
     parser.add_argument('--init_ansible', action='store_true',
                         help='Output => Init ansible hosts need sudo.')
-    parser.add_argument('-b', '--build', nargs='+', metavar=('./config.conf or ./conf/',
+    parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                      'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
                         help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
