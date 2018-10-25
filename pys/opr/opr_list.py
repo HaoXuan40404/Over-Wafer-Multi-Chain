@@ -38,8 +38,10 @@ def pub_list(chains):
     for m in meta_list:
         consoler.info(' => chain id ：%s    published version : %s', m.get_chain_id(), m.get_chain_version())
         nodes = m.get_nodes()
-        for node in nodes.iterkeys():
-            consoler.info('\t host => %s' % node)
+        for host, nodes in nodes.iteritems():
+            consoler.info('\t host => %s', host)
+            for node in nodes:
+                consoler.info('\t\t node => %s', node)
 
     logger.info('list end.')
 
