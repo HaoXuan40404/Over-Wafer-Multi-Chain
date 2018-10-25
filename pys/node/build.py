@@ -9,9 +9,6 @@ from pys.chain.package import HostNodeDirs
 from pys.exp import MCError
 from pys.log import logger
 from pys.node import config
-# import sys
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
 
 
 def build_node_dir(chain, node, fisco, port, index, cert_path=''):

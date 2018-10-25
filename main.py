@@ -73,8 +73,8 @@ def usage():
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
     parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or',
                                                           'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
-    parser.add_argument('-E', '--export', nargs=2, metavar=('chain_id',
-                                                      'dest_path'), help='Output =>  export publish package.')
+    parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
+                                                      'dest_path'), help='Output =>  export build package.')
     parser.add_argument('-l', '--ls_port', nargs='+', metavar=('host_ip'),
                         help='Output =>  ls all publish port')
     parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
@@ -96,7 +96,7 @@ def usage():
     parser.add_argument('--cert_check', nargs=2, metavar=('./config.conf or ./conf/',
                                                      './path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-f', '--force', action='store_true',
-                        help='output => effect with --publish.')
+                        help='output => effect with --publish/-p.')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -206,9 +206,7 @@ def usage():
         consoler.info(' ansible init success.')
     elif args.export:
         consoler.info(' export operation begin.')
-        export_list = args.export[0]
-        dest = args.export[1]
-        opr_export.export_package(export_list, dest)
+        opr_export.export_package(args.export[0], args.export[1], args.export[2])
         consoler.info(' export operation end.')
     elif args.ls_port:
         consoler.info(' ls_port operation begin.')

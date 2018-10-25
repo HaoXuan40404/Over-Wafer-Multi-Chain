@@ -2,31 +2,44 @@
 import os
 import shutil
 from pys import utils
+from pys.chain.chain import Chain
 from pys.chain import data
 from pys.log import consoler, logger
 from pys.opr import opr_tools
 
-def export_package(export_list, dest):
-    """[export package into dest]
+def export_package(chain_id, chain_version, dest):
+    """export chain_id:chain_version install package
     
     Arguments:
-        export_list {[list]} -- [chain_id:version]
-        dest {[mkdir]} -- [destination]
+        chain_id {[string]} -- chain id
+        chain_version {[string]} -- chain version
+        dest {[string]} -- dest
     """
 
-    chain_get = opr_tools.valid_cmd(export_list)
-    
-    if utils.valid_chain_id(chain_get[0]):
-        dir = data.package_dir(chain_get[0], chain_get[1])
-        for host in os.listdir(dir):
-            if utils.valid_ip(host):
+    if utils.valid_chain_id(chain_id):
+        chain = Chain(chain_id, chain_version)
+        if chain.exist():
+            if not os.path.exists(dest):
+                os.makedirs(dest)
+            dir = chain.data_dir()
+            for host in os.listdir(dir):
+                if not utils.valid_ip(host):
+                    logger.debug('not invalid host_ip ' + host)
+                    continue
+
                 shutil.copytree(dir + '/' + host, dest + '/' + host)
+                shutil.copytree(dir + '/' + 'common' + '/', dest + '/' + host + '/')
+                """
                 for file_common in os.listdir(dir + '/common'):
                     if os.path.isdir(dir + '/common/' + file_common):
-                        shutil.copytree(dir + '/common/' + file_common, dest + '/' + host + '/' + file_common)      
+                        shutil.copytree(
+                            dir + '/common/' + file_common, dest + '/' + host + '/' + file_common)
                     elif os.path.isfile(dir + '/common/' + file_common):
-                        shutil.copy(dir + '/common/' + file_common, dest + '/' + host + '/')
-            else:
-                logger.debug('not invalid host_ip ' + host)    
+                        shutil.copy(dir + '/common/' + file_common,
+                                    dest + '/' + host + '/')
+                                    """
+        else:
+            consoler.error(
+                ' No package build for chain_id(%s):chain_version(%s). ', chain_id, chain_version)
     else:
-        consoler.error('invalid chain_id format. %s %s', chain_get[0], chain_get[1])
+        consoler.error(' Not invalid chain_id, chain_id is %s', chain_id)
