@@ -177,7 +177,7 @@ class ConfigConfs:
     
     def exist(self, chain):
         key = chain.get_id() + '_' + chain.get_version()
-        return self.ccs.has_key(key)
+        return key self.ccs
     
     def get_cfg(self):
         return self.cfg

@@ -64,7 +64,7 @@ class HostPort:
         return ' chain id is %s, chain version is %s, host is %s, ports is %s' % (self.chain_id, self.chain_version, self.host, self.ports)
 
     def get_by_index(self, index):
-        if self.ports.has_key(index):
+        if index in self.ports:
             return self.ports[index]
         raise MCError(' not found, chain id is %s, chain version is %s, host is %s, index is %d' % (
             self.chain_id, self.chain_version, self.host, index))
@@ -129,7 +129,7 @@ class ChainVerPort:
         return self.chain_version
 
     def get_by_host(self, host):
-        if self.ports.has_key(host):
+        if host in self.ports:
             return self.ports[host]
         raise MCError(' not found, chain id is %s, chain version is %s, host is %s' % (
             self.chain_id, self.chain_version, host))
@@ -175,7 +175,7 @@ class ChainPort:
         return self.chain_id
 
     def get_by_chain_version(self, version):
-        if self.ports.has_key(version):
+        if version self.ports:
             return self.ports[version]
         raise MCError(' not found, chain id is %s, chain version is %s' %
                       (self.chain_id, version))
@@ -208,7 +208,7 @@ class AllChainPort:
         return ' ports is %s' % (self.ports)
 
     def get_by_chain_id(self, chain_id):
-        if self.ports.has_key(chain_id):
+        if chain_id self.ports:
             return self.ports[chain_id]
         raise MCError(' not found, chain id is %s' % (chain_id))
 
