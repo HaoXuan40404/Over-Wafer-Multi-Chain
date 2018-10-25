@@ -74,7 +74,7 @@ def publish_server(chain_id, chain_version, force=False):
         if mm.exist():
             if chain_version != mm.get_chain_version():
                 consoler.error(
-                    ' chain %s already publish %s version, if you want publish annother version, --force/-f need to be set. ')
+                    ' chain %s already publish %s version, if you want publish annother version, --force/-f need to be set. ', chain_id, mm.get_chain_version())
                 return
         else:
             mm.set_chain_version(chain_version)
