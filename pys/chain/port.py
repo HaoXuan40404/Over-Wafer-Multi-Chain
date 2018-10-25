@@ -234,18 +234,18 @@ class AllChainPort:
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
                         ' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
-                    raise MCError(' rpc port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s' % (
+                    raise MCError(' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s' % (
                         str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
 
                 if port.in_use(node.get_p2p_port()):
                     logger.info(
                         ' p2p port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_p2p_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
-                    raise MCError(' p2p port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s' % (
+                    raise MCError(' p2p port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s' % (
                         str(node.get_p2p_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
                 if port.in_use(node.get_channel_port()):
                     logger.info(
                         ' channel port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_channel_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
-                    raise MCError(' channel port(%s) in use, host is %s, chain id is %s, chain version is %s, port is %s' % (
+                    raise MCError(' channel port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s' % (
                         str(node.get_channel_port()), host, hp.get_chain_id(), hp.get_chain_version(), port))
 
     def load(self):
