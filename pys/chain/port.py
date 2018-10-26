@@ -64,7 +64,7 @@ class HostPort:
         return ' chain id is %s, chain version is %s, host is %s, ports is %s' % (self.chain_id, self.chain_version, self.host, self.ports)
 
     def get_by_index(self, index):
-        if self.ports.has_key(index):
+        if index in self.ports:
             return self.ports[index]
         raise MCError(' not found, chain id is %s, chain version is %s, host is %s, index is %d' % (
             self.chain_id, self.chain_version, self.host, index))
@@ -129,7 +129,7 @@ class ChainVerPort:
         return self.chain_version
 
     def get_by_host(self, host):
-        if self.ports.has_key(host):
+        if host in self.ports:
             return self.ports[host]
         raise MCError(' not found, chain id is %s, chain version is %s, host is %s' % (
             self.chain_id, self.chain_version, host))
@@ -175,7 +175,7 @@ class ChainPort:
         return self.chain_id
 
     def get_by_chain_version(self, version):
-        if self.ports.has_key(version):
+        if version in self.ports:
             return self.ports[version]
         raise MCError(' not found, chain id is %s, chain version is %s' %
                       (self.chain_id, version))
@@ -208,14 +208,14 @@ class AllChainPort:
         return ' ports is %s' % (self.ports)
 
     def get_by_chain_id(self, chain_id):
-        if self.ports.has_key(chain_id):
+        if chain_id in self.ports:
             return self.ports[chain_id]
         raise MCError(' not found, chain id is %s' % (chain_id))
 
     def get_all_ports_by_host(self, host):
         hps = []
-        for cp in self.get_ports().itervalues():
-            for cvp in cp.get_ports().itervalues():
+        for cp in self.get_ports().values():
+            for cvp in cp.get_ports().values():
                 try:
                     hp = cvp.get_by_host(host)
                     logger.debug(' host is %s, hp is %s', host, hp)
@@ -231,7 +231,7 @@ class AllChainPort:
             if (not (chain_id == hp.get_chain_id() and chain_version == hp.get_chain_version())):
                 continue
 
-            for node in hp.get_ports().itervalues():
+            for node in hp.get_ports().values():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
                         ' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)
@@ -254,7 +254,7 @@ class AllChainPort:
         for hp in hps:
             if chain_id == hp.get_chain_id():
                 continue
-            for node in hp.get_ports().itervalues():
+            for node in hp.get_ports().values():
                 if port.in_use(node.get_rpc_port()):
                     logger.info(
                         ' rpc port(%s) used by annother chain, host is %s, chain id is %s, chain version is %s, port is %s', str(node.get_rpc_port()), host, hp.get_chain_id(), hp.get_chain_version(), port)

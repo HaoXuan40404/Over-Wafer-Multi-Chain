@@ -58,7 +58,7 @@ class Meta:
 
     def get_host_nodes(self, host_ip):
 
-        if self.nodes.has_key(host_ip):
+        if host_ip in self.nodes:
             host_nodes = self.nodes[host_ip]
             logger.info(' get host nodes, host is %s, hm is %s',
                         host_ip, host_nodes)
@@ -69,7 +69,7 @@ class Meta:
     
     def get_host_node(self, host_ip, node):
 
-        if self.nodes.has_key(host_ip):
+        if host_ip in self.nodes:
             host_nodes = self.nodes[host_ip]
             for n in host_nodes:
                 if node == n.node:
@@ -91,7 +91,7 @@ class Meta:
     def append(self, m):
         if self.host_node_exist(m.host_ip, m.node):
             return False
-        if self.nodes.has_key(m.host_ip):
+        if m.host_ip in self.nodes:
             host_nodes = self.nodes[m.host_ip]
             host_nodes.append(m)
         else:
@@ -152,10 +152,10 @@ class Meta:
             with open(data.meta_dir(self.chain_id) + '/meta.json', 'r') as f:
                 jsondata = json.load(f)
 
-                if jsondata.has_key('chain_version'):
+                if 'chain_version' in jsondata:
                     self.chain_version = str(jsondata['chain_version'])
 
-                if jsondata.has_key('nodes'):
+                if 'nodes' in jsondata:
                     for hm in jsondata['nodes'].values():
                         for v in hm:
                             mn = MetaNode(v['host_ip'], v['rpc_port'], v['p2p_port'], v['channel_port'], v['node'])
@@ -178,7 +178,7 @@ class AllMeta:
         return self.metas
 
     def get_meta_by_chain_id(self, chain_id):
-        if self.metas.has_key(chain_id):
+        if chain_id in self.metas:
             return self.metas[chain_id]
         # raise or not ???
         raise MCError(' not found meta, chain_id is %s' % (chain_id))
@@ -199,7 +199,7 @@ def get_meta_ports_by_host(host, am = None):
         am = AllMeta()
 
     metas = []
-    for meta in am.get_metas().itervalues():
+    for meta in am.get_metas().values():
         try:
             host_nodes = meta.get_host_nodes(host)
             if len(host_nodes) == 0:

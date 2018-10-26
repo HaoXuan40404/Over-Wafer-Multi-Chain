@@ -28,7 +28,7 @@ def init():
 
     logger.info('main init ,pwd is %s', pwd)
 
-    # parser mchain.conf for project initialize 
+    # parser mchain.conf for project initialize
     mconf.parser(pwd + '/conf/mchain.conf')
 
     # init agent name
@@ -47,56 +47,56 @@ def usage():
 
     parser = argparse.ArgumentParser(
         description='Description of multi-chain usage.')
-    parser.add_argument('-v', '--version', action='store_true',
-                        help='version of multi-chain')
-    parser.add_argument('--init_ansible', action='store_true',
-                        help='Output => Init ansible hosts need sudo.')
-    parser.add_argument('-b', '--build', nargs='+', metavar=('./config.conf or ./conf/',
-                                                     'fisco_path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
+    parser.add_argument('-v', '--version',
+                        action='store_true', help='version of OWMC.')
+    parser.add_argument('-i', '--init_ansible', action='store_true',
+                        help=' initialize the anhosthost configuration file, the current user needs sudo permissions.')
+    parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
+                                                           'fisco_path'), help=' build chain package according to the input config.')
     parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
                         help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version eg.',
-                                                         'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
-    parser.add_argument('-s', '--stop', nargs='+', metavar=('all or chain_id or',
-                                                      'chain_id:host_ip'), help='Output => stop node')
-    parser.add_argument('-S', '--start', nargs='+', metavar=('all or chain_id or',
-                                                       'chain_id:host_ip'), help='Output => start node')
+                                                               'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
+    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
+                                                            'chain_id:host_ip'), help='Output => stop node')
+    parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
+                                                             'chain_id:host_ip'), help='Output => start node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
-                                                       'node'), help='Output => register one node already published')
+                                                              'node'), help='Output => register one node already published')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
-                                                       'node'), help='Output => unregister one node already published')
+                                                                'node'), help='Output => unregister one node already published')
     parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
-                                                         'chain_id:host_ip'), help='Output => monitor node')
+                                                               'chain_id:host_ip'), help='Output => monitor node')
     parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
-                                                       'chain_id:host_ip'), help='Output => check servers status')
+                                                             'chain_id:host_ip'), help='Output => check servers status')
     parser.add_argument('-K', '--pkg_list', nargs='+', metavar=('all or chain_id or',
-                                                          'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
+                                                                'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
     parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or',
-                                                          'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
-    parser.add_argument('-E', '--export', nargs=2, metavar=('chain_id',
-                                                      'dest_path'), help='Output =>  export publish package.')
+                                                                'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
+    parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
+                                                            'dest_path'), help='Output =>  export build package.')
     parser.add_argument('-l', '--ls_port', nargs='+', metavar=('host_ip'),
                         help='Output =>  ls all publish port')
-    parser.add_argument('--telnet', nargs='+', metavar=('all or host_ip or',
-                                                        'host_ip1 host_ip2'), help='Output => test ansible of servers is useful or not')
+    parser.add_argument('-t', '--telnet', nargs='+', metavar=(
+        '\'all\' or host_ip or chain_id'), help='test if ansible usable.')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='Output => check build environment of server of the chain.')
-    parser.add_argument('--cmd_push', nargs='+', metavar=('all:"cmd_1 cmd_2" or chain_id:"cmd_1 cmd_2" or',
-                                                          'hostip:"cmd_1 cmd_2" or "chain:"./test.sh""'), help='Output =>  execute commands to Input.')
-    parser.add_argument('--file_push', nargs='+', metavar=('all:scr_path:dest_path or chain_id:scr_path:dest_path or',
-                                                           'chain_id:scr_path:dest_path or host_ip:scr_path:dest_path'), help='Output =>  push a file to Input.')
+    parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
+                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server, can be host ip or chain id or \'all\'.')
+    parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
+                                                               'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
                                                         './chain_ca_dir', 'Agency_Name'), help='Output => the cert of agency that set on the SET directory')
     parser.add_argument('--nodeca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                        './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
+                                                      './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
     parser.add_argument('--cert_check', nargs=2, metavar=('./config.conf or ./conf/',
-                                                     './path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
+                                                          './path'), help='Output => package. Build all package under directory ./data/chain/ according to the input.')
     parser.add_argument('-f', '--force', action='store_true',
-                        help='output => effect with --publish.')
+                        help='output => effect with --publish/-p.')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -105,9 +105,10 @@ def usage():
         if len(args.build) == 2:
             build.chain_build(args.build[0], args.build[1])
         elif args.build[2] == 'cert' and len(args.build) == 4:
-            build.chain_build(args.build[0], args.build[1],args.build[2])
+            build.chain_build(args.build[0], args.build[1], args.build[2])
         else:
-            consoler.error('invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
+            consoler.error(
+                'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
@@ -125,11 +126,13 @@ def usage():
         consoler.info(' publish operation end.')
     elif args.register:
         consoler.info(' register operation begin.')
-        opr_register.register(args.register[0], args.register[1], args.register[2])
+        opr_register.register(
+            args.register[0], args.register[1], args.register[2])
         consoler.info(' register operation end.')
     elif args.unregister:
         consoler.info(' unregister operation begin.')
-        opr_register.unregister(args.unregister[0], args.unregister[1], args.unregister[2])
+        opr_register.unregister(
+            args.unregister[0], args.unregister[1], args.unregister[2])
         consoler.info(' unregister operation end.')
     elif args.start:
         consoler.info(' start operation begin.')
@@ -156,16 +159,16 @@ def usage():
         chain = args.pkg_list
         opr_list.pkg_list(chain)
         consoler.info(' pkg_list operation end.')
-    elif args.cmd_push:
-        consoler.info(' cmd_push operation begin.')
-        chain = args.cmd_push
-        opr_tools.cmd_push(chain)
-        consoler.info(' cmd_push operation end.')
-    elif args.file_push:
-        consoler.info(' file_push operation begin.')
-        chain = args.file_push
-        opr_tools.file_push(chain)
-        consoler.info(' file_push operation end.')
+    elif args.do_cmd:
+        consoler.info(' do_cmd operation begin.')
+        params = args.do_cmd
+        opr_tools.do_cmd(params[0], params[1])
+        consoler.info(' do_cmd operation end.')
+    elif args.push_file:
+        consoler.info(' push_file operation begin.')
+        params = args.push_file
+        opr_tools.push_file(params[0], params[1], params[2])
+        consoler.info(' push_file operation end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
@@ -189,7 +192,7 @@ def usage():
         consoler.info(' sdk cert begin.')
         sdk_dir = args.sdkca[0]
         agency_dir = args.sdkca[1]
-        ca.new_generator_sdk_ca(agency_dir,sdk_dir)
+        ca.new_generator_sdk_ca(agency_dir, sdk_dir)
         consoler.info(' sdk cert end.')
     elif args.env_check:
         consoler.info(' env_check operation begin.')
@@ -206,9 +209,8 @@ def usage():
         consoler.info(' ansible init success.')
     elif args.export:
         consoler.info(' export operation begin.')
-        export_list = args.export[0]
-        dest = args.export[1]
-        opr_export.export_package(export_list, dest)
+        opr_export.export_package(
+            args.export[0], args.export[1], args.export[2])
         consoler.info(' export operation end.')
     elif args.ls_port:
         consoler.info(' ls_port operation begin.')

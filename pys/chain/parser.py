@@ -8,6 +8,7 @@ import os
 
 from pys import utils
 from pys.log import logger, consoler
+
 from pys.chain.chain import Chain
 from pys.chain.port import Port
 from pys.exp import MCError
@@ -23,7 +24,7 @@ class NodeEle:
 
         l = self.node_desc.split()
 
-        if len(l) != 3:
+        if len(l) < 3:
             raise Exception(" node_desc invalid format ", self.node_desc)
 
         if not utils.valid_ip(l[0]):
@@ -31,13 +32,13 @@ class NodeEle:
         if not utils.valid_ip(l[1]):
             raise Exception(" node_desc invalid format invalid p2p_ip ", l[1])
             
-        if l[2] <= 0:
+        if int(l[2]) <= 0:
             raise Exception(" node_desc invalid format node_num lt 0 ", l[2])
         self.host_ip = l[0]
         self.p2p_ip = l[1]
         self.node_num = int(l[2])
 
-        logger.info(' cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
+        logger.info(' cfg parser host ip is %s, p2p ip is %s, node_num is %d.', self.host_ip, self.p2p_ip, self.node_num)
 
     def get_host_ip(self):
         return self.host_ip
@@ -136,8 +137,8 @@ class ConfigConf:
                 n = NodeEle(cf.get('nodes', 'node%u' % index))
                 index += 1
                 n.do_parser()
-            except Exception, err:
-                # logger.info('cfg parser end, result is %s', self)
+            except Exception as e:
+                logger.info('cfg parser end, e is %s, result is %s', e, self)
                 break
             else:
                 if not self.add_node(n):
@@ -177,7 +178,7 @@ class ConfigConfs:
     
     def exist(self, chain):
         key = chain.get_id() + '_' + chain.get_version()
-        return self.ccs.has_key(key)
+        return key in self.ccs
     
     def get_cfg(self):
         return self.cfg

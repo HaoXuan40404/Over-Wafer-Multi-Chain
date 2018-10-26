@@ -105,13 +105,11 @@ function cmd_module()
     done
     local package_config=$1
 
-    if [ -f $msg ];then
-        ansible ${package_config} -m shell -a "$msg"
-    else
+    if [ -f $msg 2> /dev/null ];then
         ansible ${package_config} -m script -a "$msg"
+    else
+        ansible ${package_config} -m shell -a "$msg"
     fi
-
-    
 }
 
 

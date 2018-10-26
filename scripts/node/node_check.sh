@@ -3,7 +3,7 @@
 	cd $dirpath
     curdir=$PWD
     node=$(basename ${curdir})
-    weth_pid=`ps aux|grep "$curdir/config.json"|grep -v grep|awk '{print $2}'`
+    weth_pid=`ps aux|grep "$curdir/config.json"|grep "fisco-bcos"|grep -v grep|awk '{print $2}'`
     if [ ! -z $weth_pid ];then
         echo "${node} is running."
     else

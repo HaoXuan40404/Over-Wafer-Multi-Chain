@@ -9,7 +9,7 @@ channelPort=`cat ${curdir}/config.json | grep channelPort |grep -v grep|awk '{pr
 rpcport=`cat ${curdir}/config.json | grep rpcport |grep -v grep|awk '{print $2}' | tr -cd "[0-9]"`
 p2pport=`cat ${curdir}/config.json | grep p2pport |grep -v grep|awk '{print $2}' | tr -cd "[0-9]"`
 ulimit -c unlimited
-weth_pid=`ps aux|grep "${curdir}/config.json"|grep -v grep|awk '{print $2}'`
+weth_pid=`ps aux|grep "${curdir}/config.json"|grep "fisco-bcos"|grep -v grep|awk '{print $2}'`
 if [ ! -z $weth_pid ];then
     echo "${node} is running, pid is $weth_pid."
 else 
