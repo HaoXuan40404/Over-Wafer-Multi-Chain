@@ -8,6 +8,7 @@ import os
 
 from pys import utils
 from pys.log import logger, consoler
+
 from pys.chain.chain import Chain
 from pys.chain.port import Port
 from pys.exp import MCError
@@ -23,7 +24,7 @@ class NodeEle:
 
         l = self.node_desc.split()
 
-        if len(l) != 3:
+        if len(l) < 3:
             raise Exception(" node_desc invalid format ", self.node_desc)
 
         if not utils.valid_ip(l[0]):
@@ -37,7 +38,7 @@ class NodeEle:
         self.p2p_ip = l[1]
         self.node_num = int(l[2])
 
-        logger.info(' cfg parser host ip is %s, p2p ip is %s, node_num is %d', self.host_ip, self.p2p_ip, self.node_num)
+        logger.info(' cfg parser host ip is %s, p2p ip is %s, node_num is %d.', self.host_ip, self.p2p_ip, self.node_num)
 
     def get_host_ip(self):
         return self.host_ip
