@@ -74,46 +74,34 @@ def valid_file(chain):
         logger.error('%s is not a valid cmd', e)
         return False
 
-def cmd_push(chain):
-    """[Execute commands on multi servers]
+def cmd_push(dst, cmd):
+    """do cmd on remote server, dst can be one server, one chain or all server
     
     Arguments:
-        chain {[list]} -- [chain_id:"cmd using":"split chain and cmd，e.g."chain:"cmd. 
-        using '\"' includes command  e.g. "cmd1 cmd2"]
+        dst {string} -- host ip or chain id or 'all'
+        cmd {string} -- shell cmd or shell file
     """
 
-    if valid_cmd(chain[0])[0] == 'all':
-        dir = data.meta_dir_base()
-        if os.path.exists(dir):
-            for chain_id in os.listdir(dir):
-                cmd_server(chain_id,valid_cmd(chain[0])[1])
-        else:
-            consoler.info(' No input chain exist, do nothing.')
+    if dst == 'all': 
+        ansible.cmd_module('all', cmd)
+    elif utils.valid_chain_id(dst):
+        do_cmd_chain(dst, cmd)
+    elif utils.valid_ip(dst):
+        ansible.cmd_module(dst, cmd)
     else:
-        for i in range(len(chain)):
-            chain_get = valid_cmd(chain[i])
-            if len(chain_get) == 2:
-                if utils.valid_chain_id(chain_get[0]):
-                    cmd_server(chain_get[0],chain_get[1])
-                elif utils.valid_ip(chain_get[0]):
-                    ansible.cmd_module(chain_get[0],chain_get[1])
-                else:
-                    consoler.info(' skip, invalid cmd, cmd is %s %s', chain_get[0], chain_get[1])
-            else:
-                consoler.info(' skip, invalid format, not chain_id:host, input %s', chain_get)
+        consoler.error(' invalid docmd dst, dst is %s, dst should be invalid chain_id or invali host ip or \'all\'.', dst)
 
-def cmd_server(chain_id, cmd):
+def do_cmd_chain(chain_id, cmd):
     """[Execute commands on a chain]
     
     Arguments:
-        chain_id {[string]} -- [chain_id:version]
+        chain_id {[string]} -- chain_id
     """
 
     mm = Meta(chain_id)
-
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
-        consoler.warn('chain is not published, can not cmd action, chain_id is %s', chain_id)
+        consoler.error('chain is not published, can not cmd action, chain_id is %s', chain_id)
         return 
 
     logger.info('cmd action, chain_id is ' + chain_id)

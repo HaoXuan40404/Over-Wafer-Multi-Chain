@@ -81,7 +81,7 @@ def usage():
         '\'all\' or host_ip or chain_id'), help='test if ansible usable.')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='Output => check build environment of server of the chain.')
-    parser.add_argument('--cmd_push', nargs='+', metavar=('all:"cmd_1 cmd_2" or chain_id:"cmd_1 cmd_2" or',
+    parser.add_argument('--do_cmd', nargs=2, metavar=('all:"cmd_1 cmd_2" or chain_id:"cmd_1 cmd_2" or',
                                                           'hostip:"cmd_1 cmd_2" or "chain:"./test.sh""'), help='Output =>  execute commands to Input.')
     parser.add_argument('--file_push', nargs='+', metavar=('all:scr_path:dest_path or chain_id:scr_path:dest_path or',
                                                            'chain_id:scr_path:dest_path or host_ip:scr_path:dest_path'), help='Output =>  push a file to Input.')
@@ -159,11 +159,11 @@ def usage():
         chain = args.pkg_list
         opr_list.pkg_list(chain)
         consoler.info(' pkg_list operation end.')
-    elif args.cmd_push:
-        consoler.info(' cmd_push operation begin.')
-        chain = args.cmd_push
-        opr_tools.cmd_push(chain)
-        consoler.info(' cmd_push operation end.')
+    elif args.do_cmd:
+        consoler.info(' do_cmd operation begin.')
+        params = args.cmd_push
+        opr_tools.cmd_push(params[0], params[1])
+        consoler.info(' do_cmd operation end.')
     elif args.file_push:
         consoler.info(' file_push operation begin.')
         chain = args.file_push

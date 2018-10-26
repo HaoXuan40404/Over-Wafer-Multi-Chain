@@ -267,11 +267,11 @@ def telnet_module(ip, msg='HelloWorld!'):
 
 
 
-def cmd_module(ip, msg):
+def cmd_module(ip, cmd):
     """Using ansible.sh cmd_module, execute commands on the corresponding server.
 
     Arguments:
-        ip {string} -- corresponding server host ip
+        ip {string} -- server host ip
 
     Keyword Arguments:
         msg {string} -- execute commands
@@ -279,9 +279,21 @@ def cmd_module(ip, msg):
     Returns:
         [bool] -- true or false
     """
-    msg = '"' + msg + '"'
+    cmd = '"' + cmd + '"'
     os.system('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh cmd ' + ip + ' ' + msg)
+                                                '/scripts/ansible.sh cmd ' + ip + ' ' + cmd)
+    
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
+                                                '/scripts/ansible.sh cmd ' + ip + ' ' + dest)
+    logger.debug(' cmd action , status %s, output %s' % (status, result))
+    if status:
+        consoler.error(' ansible cmd failed, host is %s, output is %s', ip, result)
+    elif not (result.find('SUCCESS') + 1):
+        consoler.error(' ansible cmd failed, host is %s, output is %s', ip, result)
+    else:
+        consoler.info(' ansible cmd success, host is %s, result is %s.', ip, result)
+        return True
+    return False
 
 
 def monitor_module(ip, dest):
