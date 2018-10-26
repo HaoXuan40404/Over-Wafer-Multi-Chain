@@ -70,14 +70,16 @@ def push_file(host, src, dst):
     """
 
     if not os.path.exists(src):
-        consoler.error(' src is not exist, src is %s', src)
+        consoler.error(' src is not exist, src is %s.', src)
         return
 
     logger.info(' host is %s, src is %s, dst is %s', host, src, dst)
 
     if host == 'all':
-        mkdir_and_push(host, src, dst)
+        if mkdir_and_push(host, src, dst):
+            consoler.info(' push %s to %s of all server success.', src, dst)
     elif utils.valid_chain_id(host):
+        consoler.info(' => push %s to %s of chain %s.', src, dst, host)
         mm = Meta(dst)
         if not mm.exist():
             consoler.error(' chain is not published, can not push file action, chain_id is %s', host)
@@ -85,7 +87,9 @@ def push_file(host, src, dst):
             consoler.info(' => do cmd, chain id is %s', host)
             for k in mm.get_nodes().keys():
                 logger.debug(' host is %s', k)
-                mkdir_and_push(host, src, dst)
+                if mkdir_and_push(k, src, dst):
+                    consoler.info(' \t\t push %s to %s of %s server success.', src, dst, k)
+        consoler.info(' => push %s to %s of chain %s end.', src, dst, host)
     elif utils.valid_ip(host):
         mkdir_and_push(host, src, dst)
     else:
