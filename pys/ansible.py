@@ -291,7 +291,7 @@ def cmd_module(ip, cmd):
     elif not (result.find('SUCCESS') + 1):
         consoler.error(' ansible cmd failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible cmd success, host is %s.', ip)
+        consoler.info(' ansible cmd success, host is %s, cmd is %s.', ip, cmd)
         return True
     return False
 
