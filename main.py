@@ -81,10 +81,10 @@ def usage():
         '\'all\' or host_ip or chain_id'), help='test if ansible usable.')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='Output => check build environment of server of the chain.')
-    parser.add_argument('-d', '--do_cmd', nargs=2, metavar=('docmd dst server, can be host ip or chain id or \'all\'',
-                                                          'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='Output =>  execute commands to Input.')
-    parser.add_argument('--file_push', nargs='+', metavar=('all:scr_path:dest_path or chain_id:scr_path:dest_path or',
-                                                           'chain_id:scr_path:dest_path or host_ip:scr_path:dest_path'), help='Output =>  push a file to Input.')
+    parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
+                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server, can be host ip or chain id or \'all\'.')
+    parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
+                                                               'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
                         help='Output => the cert of chain that set on the SET directory')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
@@ -162,13 +162,13 @@ def usage():
     elif args.do_cmd:
         consoler.info(' do_cmd operation begin.')
         params = args.do_cmd
-        opr_tools.cmd_push(params[0], params[1])
+        opr_tools.do_cmd(params[0], params[1])
         consoler.info(' do_cmd operation end.')
-    elif args.file_push:
-        consoler.info(' file_push operation begin.')
-        chain = args.file_push
-        opr_tools.file_push(chain)
-        consoler.info(' file_push operation end.')
+    elif args.push_file:
+        consoler.info(' push_file operation begin.')
+        params = args.push_file
+        opr_tools.push_file(params[0], params[1], params[2])
+        consoler.info(' push_file operation end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
