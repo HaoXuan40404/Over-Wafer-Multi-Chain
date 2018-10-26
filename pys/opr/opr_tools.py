@@ -91,7 +91,8 @@ def push_file(host, src, dst):
                     consoler.info(' \t\t push %s to %s of %s server success.', src, dst, k)
         consoler.info(' => push %s to %s of chain %s end.', src, dst, host)
     elif utils.valid_ip(host):
-        mkdir_and_push(host, src, dst)
+        if mkdir_and_push(host, src, dst):
+            consoler.info(' push %s to %s of %s server success.', src, dst, host)
     else:
         consoler.error(' invalid push file host, host is %s, dst should be invalid chain_id or invali host ip or \'all\'.', host)
 
