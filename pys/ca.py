@@ -472,7 +472,7 @@ def check_cert_complete(cc, cert_path):
         for node in cc.get_nodes():
             for index in range(0, node.get_node_num()):
                 consoler.info(' chain:%s, version:%s, host_ip:%s, index %s .',chain_id ,chain_version, node.get_host_ip(), index)
-                check_path = cert_path + '/' + str(chain_id) + '/' + str(chain_version) + '/' + str(node.get_host_ip()) + '/node' + str(index)
+                check_path = cert_path[0] + '/' + str(chain_id) + '/' + str(chain_version) + '/' + str(node.get_host_ip()) + '/node' + str(index)
                 if check_cert_file(check_path):
                     (status, result)= utils.getstatusoutput('bash' + ' ./scripts/ca/cert_generate.sh ' + check_path + ' ' + agency)
                     if not status:
