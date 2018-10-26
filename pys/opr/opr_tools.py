@@ -101,10 +101,11 @@ def do_cmd_chain(chain_id, cmd):
     mm = Meta(chain_id)
     if not mm.exist():
         logger.warn('chain meta is not exist, maybe the chain is not published, chain_id is %s', chain_id)
-        consoler.error('chain is not published, can not cmd action, chain_id is %s', chain_id)
+        consoler.error(' chain is not published, can not cmd action, chain_id is %s', chain_id)
         return 
 
     logger.info('cmd action, chain_id is ' + chain_id)
+    consoler.info(' => do cmd on chain %s', chain_id)
     for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.cmd_module(k, cmd)

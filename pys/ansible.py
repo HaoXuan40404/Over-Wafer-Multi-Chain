@@ -284,7 +284,7 @@ def cmd_module(ip, cmd):
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + cmd)
     
     (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh cmd ' + ip + ' ' + dest)
+                                                '/scripts/ansible.sh cmd ' + ip + ' ' + cmd)
     logger.debug(' cmd action , status %s, output %s' % (status, result))
     if status:
         consoler.error(' ansible cmd failed, host is %s, output is %s', ip, result)
