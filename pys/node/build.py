@@ -11,7 +11,7 @@ from pys.log import logger
 from pys.node import config
 
 
-def build_node_dir(chain, node, fisco, port, index, cert_path=''):
+def build_node_dir(chain, node, fisco, port, index, cert_path):
     """create node${index} dir.
     
     Arguments:
@@ -74,21 +74,21 @@ def build_node_dir(chain, node, fisco, port, index, cert_path=''):
     else:
         # ca.generator_node_ca(node_dir + '/data',
         #                      node.get_p2p_ip(), ca.get_agent_ca_path())
-        if cert_path == '':
+        if not bool(cert_path):
             ca.new_generator_node_ca(ca.get_agent_ca_path(),
                                 node_dir + '/data', 'node' + str(index))
         else:
             try:
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/agency.crt', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.csr', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.json', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.key', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.nodeid', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.private', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.pubkey', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.serial', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/ca.crt', node_dir + '/data')
-                shutil.copy(cert_path + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.crt', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/agency.crt', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.csr', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.json', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.key', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.nodeid', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.private', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.pubkey', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.serial', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/ca.crt', node_dir + '/data')
+                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.crt', node_dir + '/data')
             except Exception as e:
                 logger.error(' Copy cert failed! %s.', e)
                 return 1
@@ -96,7 +96,7 @@ def build_node_dir(chain, node, fisco, port, index, cert_path=''):
 
     logger.info(' build_node_dir end. ')
 
-def build_host_dir(chain, node, port, fisco, temp=None, cert_path = ''):
+def build_host_dir(chain, node, port, fisco, temp=None, cert_path):
     """build install pacakge of one server.
     
     Arguments:
@@ -121,10 +121,7 @@ def build_host_dir(chain, node, port, fisco, temp=None, cert_path = ''):
 
     for index in range(node.get_node_num()):
         # create dir for every node on the server
-        if cert_path == '':
-            build_node_dir(chain, node, fisco, port.to_port(index), index)
-        else:
-            build_node_dir(chain, node, fisco, port.to_port(index), index, cert_path)
+         build_node_dir(chain, node, fisco, port.to_port(index), index, cert_path)
         # register node info to node manager contract
         if not temp is None:
             if fisco.is_gm():
@@ -136,7 +133,7 @@ def build_host_dir(chain, node, port, fisco, temp=None, cert_path = ''):
 
     logger.info('build_host_dir end.')
 
-def build_common_dir(chain, fisco,cert_path =''):
+def build_common_dir(chain, fisco,cert_path):
     """build common directory for version of the chain
     
     Arguments:
@@ -175,7 +172,7 @@ def build_common_dir(chain, fisco,cert_path =''):
                     com_dir + '/web3sdk/conf')
     else:
         # web3sdk
-        if cert_path == '':
+        if not bool(cert_path):
             shutil.copytree(path.get_path() + '/tpl/web3sdk', com_dir + '/web3sdk')
             # copy ca.crt to web3sdk conf dir
             shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt',
@@ -184,10 +181,10 @@ def build_common_dir(chain, fisco,cert_path =''):
             shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore',
                         com_dir + '/web3sdk/conf')
         else:
-            shutil.copytree(cert_path + '/sdk',  com_dir + '/web3sdk')
-            shutil.copy(cert_path + '/sdk/ca.crt',
+            shutil.copytree(cert_path[0] + '/sdk',  com_dir + '/web3sdk')
+            shutil.copy(cert_path[0] + '/sdk/ca.crt',
                         com_dir + '/web3sdk/conf')
-            shutil.copy(cert_path + '/sdk/client.keystore',
+            shutil.copy(cert_path[0] + '/sdk/client.keystore',
                         com_dir + '/web3sdk/conf')
 
 

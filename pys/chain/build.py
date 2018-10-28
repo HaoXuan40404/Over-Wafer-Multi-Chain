@@ -18,7 +18,7 @@ from pys.node.fisco_version import Fisco
 from pys.chain.port import AllChainPort
 
 
-def chain_build(cfg, fisco_path, cert_path = ''):
+def chain_build(cfg, fisco_path, cert_path):
     """parser input config file, build install pacakge by 
 
     Arguments:
@@ -46,11 +46,11 @@ def chain_build(cfg, fisco_path, cert_path = ''):
                     chain_version = cc.get_chain().get_version()
                     consoler.info(
                         ' build install package for chain %s version %s.', chain_id, chain_version)
-                    if cert_path == '':
+                    if not bool(cert_path)
                         build_cfg(cc, fisco)
                     else:
-                        if ( not  ca.check_cert_complete(cc, cert_path)) and ca.check_cert_sdk(cert_path + '/sdk'):
-                            build_cfg(cc, fisco, cert_path)
+                        if ( not  ca.check_cert_complete(cc, cert_path[0])) and ca.check_cert_sdk(cert_path[0] + '/sdk'):
+                            build_cfg(cc, fisco, cert_path[0])
                         else:
                             consoler.error('Init cert failed.')
                             continue
@@ -70,7 +70,7 @@ def chain_build(cfg, fisco_path, cert_path = ''):
     logger.info(' chain build end.')
 
 
-def build_cfg(cc, fisco, cert_path = ''):
+def build_cfg(cc, fisco, cert_path):
     """build all install package for one chain base on cc 
 
     Arguments:
@@ -109,10 +109,8 @@ def build_cfg(cc, fisco, cert_path = ''):
         utils.create_bootstrapnodes(cc.get_nodes(), port, dir)
 
         # create common dir
-        if cert_path == '':
-            build.build_common_dir(chain, fisco)
-        else:
-            build.build_common_dir(chain, fisco, cert_path)
+  
+        build.build_common_dir(chain, fisco, cert_path)
         if fisco.is_gm():
             # create temp node for export genesis.json file
             temp_node.GM_temp_node_build(dir, port, fisco)
@@ -124,10 +122,7 @@ def build_cfg(cc, fisco, cert_path = ''):
 
         # build install dir for every server
         for node in cc.get_nodes():
-            if cert_path == '':
-                build.build_host_dir(chain, node, port, fisco, temp_node)
-            else:
-                build.build_host_dir(chain, node, port, fisco, temp_node, cert_path)
+            build.build_host_dir(chain, node, port, fisco, temp_node, cert_path)
 
         # stop temp node and export for genesis.json file
         temp_node.stop_temp_node(dir)
