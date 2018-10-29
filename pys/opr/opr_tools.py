@@ -80,7 +80,7 @@ def push_file(host, src, dst):
             consoler.info(' push %s to %s of all server success.', src, dst)
     elif utils.valid_chain_id(host):
         consoler.info(' => push %s to %s of chain %s.', src, dst, host)
-        mm = Meta(dst)
+        mm = Meta(host)
         if not mm.exist():
             consoler.error(' chain is not published, can not push file action, chain_id is %s', host)
         else:
