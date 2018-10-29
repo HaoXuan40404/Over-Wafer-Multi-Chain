@@ -76,14 +76,14 @@ def usage():
     parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
                                                             'dest_path'), help='export build package.')
     parser.add_argument('-l', '--ls_host', nargs='+', metavar=('host_ip'),
-                        help='Output =>  ls published packages\' port')
+                        help='ls published packages\' port')
     parser.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
-    parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
+    parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                             'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server')
-    parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
+    parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
                         help='generate root cert')
