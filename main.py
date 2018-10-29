@@ -46,57 +46,57 @@ def usage():
     """
 
     parser = argparse.ArgumentParser(
-        description='Description of multi-chain usage.')
+        description='OWMC Description usage.')
     parser.add_argument('-v', '--version',
-                        action='store_true', help='version of OWMC.')
-    parser.add_argument('-i', '--init_ansible', action='store_true',
-                        help=' initialize the anhosthost configuration file, the current user needs sudo permissions.')
+                        action='store_true', help='show OWMC\'s version')
+    parser.add_argument('-i', '--init', action='store_true',
+                        help=' initialize ansible configuration file, need sudo permissions')
     parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
-                                                           'fisco_path'), help=' build chain package according to the input config.')
+                                                           'fisco_path'), help=' build chain packages')
     parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
-                        help='Output => package. Expand all package under directory ./data/chain/ according to the input.')
-    parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version eg.',
-                                                               'chain_id_1:version_1 chain_id_2:version_1 chain_id_3:version_2.etc.'), help='Output => publish all package to servers')
+                        help='build expand packages')
+    parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
+                                                               ), help='publish packages')
     parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
-                                                            'chain_id:host_ip'), help='Output => stop node')
+                                                            'chain_id:host_ip'), help='stop node')
     parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
-                                                             'chain_id:host_ip'), help='Output => start node')
+                                                             'chain_id:host_ip'), help='start node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
-                                                              'node'), help='Output => register one node already published')
+                                                              'node'), help='register node')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
-                                                                'node'), help='Output => unregister one node already published')
+                                                                'node'), help='unregister node')
     parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
-                                                               'chain_id:host_ip'), help='Output => monitor node')
+                                                               'chain_id:host_ip'), help='monitor node')
     parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
-                                                             'chain_id:host_ip'), help='Output => check servers status')
-    parser.add_argument('-K', '--pkg_list', nargs='+', metavar=('all or chain_id or',
-                                                                'chain_id_1 chain_id_2'), help='Output =>  list all build package info.')
-    parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or',
-                                                                'chain_id_1 chain_id_2'), help='Output =>  list all publish info.')
+                                                             'chain_id:host_ip'), help='check servers status')
+    parser.add_argument('-K', '--pkg_list', nargs='+', metavar=('all or chain_id'
+                                                                ), help='list build packages info.')
+    parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or'
+                                                                ), help='list published packages info.')
     parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
-                                                            'dest_path'), help='Output =>  export build package.')
-    parser.add_argument('-l', '--ls_port', nargs='+', metavar=('host_ip'),
-                        help='Output =>  ls all publish port')
+                                                            'dest_path'), help='export build package.')
+    parser.add_argument('-l', '--ls_host', nargs='+', metavar=('host_ip'),
+                        help='Output =>  ls published packages\' port')
     parser.add_argument('-t', '--telnet', nargs='+', metavar=(
-        '\'all\' or host_ip or chain_id'), help='test if ansible usable.')
+        '\'all\' or host_ip or chain_id'), help='test ansible')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
-                        help='Output => check build environment of server of the chain.')
+                        help='check build environment')
     parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
-                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server, can be host ip or chain id or \'all\'.')
+                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server')
     parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\', eg : 12345 、127.0.0.1、\'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
-                        help='Output => the cert of chain that set on the SET directory')
+                        help='generate root cert')
     parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                        './chain_ca_dir', 'Agency_Name'), help='Output => the cert of agency that set on the SET directory')
+                                                        './chain_ca_dir', 'Agency_Name'), help='generate agency cert')
     parser.add_argument('--nodeca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                      './dir_node_ca', 'node_name'), help='Output => the cert of node that set on the SET directory')
+                                                      './dir_node_ca', 'node_name'), help='generate node cert')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
-                                                     './dir_agency_ca'), help='Output => the cert of sdk for agency that set on the SET directory')
+                                                     './dir_agency_ca'), help='generate sdk cert')
     parser.add_argument('-g','--cert_check', nargs=1, metavar=(' ./cert_path/'
-                                                          ), help='Output => effect with --build/-b.')
+                                                          ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
-                        help='output => effect with --publish/-p.')
+                        help='effect with --publish/-p')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -206,10 +206,10 @@ def usage():
         opr_export.export_package(
             args.export[0], args.export[1], args.export[2])
         consoler.info(' export operation end.')
-    elif args.ls_port:
-        consoler.info(' ls_port operation begin.')
-        opr_list.ls_port(args.ls_port)
-        consoler.info(' ls_port operation end.')
+    elif args.ls_host:
+        consoler.info(' ls_host operation begin.')
+        opr_list.ls_port(args.ls_host)
+        consoler.info(' ls_host operation end.')
     else:
         consoler.error(
             'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
