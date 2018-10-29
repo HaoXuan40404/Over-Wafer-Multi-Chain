@@ -97,7 +97,7 @@ def expand_on_nonexist_chain(cc, fisco_path, genesisjson, bootstrapnodesjson):
         shutil.copy(bootstrapnodesjson, chain.data_dir() + '/')
 
         # create common dir
-        build.build_common_dir(chain, fisco)
+        build.build_common_dir(chain, fisco, False)
 
         # build install dir for every server
         for node in cc.get_nodes():
