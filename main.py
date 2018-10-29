@@ -47,6 +47,7 @@ def usage():
 
     parser = argparse.ArgumentParser(
         description='OWMC Description usage.')
+
     parser.add_argument('-v', '--version',
                         action='store_true', help='show OWMC\'s version')
     parser.add_argument('-i', '--init', action='store_true',
