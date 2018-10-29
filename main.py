@@ -200,7 +200,7 @@ def usage():
         telnet_list = args.telnet
         opr_tools.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
-    elif args.init_ansible:
+    elif args.init:
         opr_init_chain.init_chain()
         consoler.info(' ansible init success.')
     elif args.export:
