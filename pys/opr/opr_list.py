@@ -7,7 +7,11 @@ from pys.chain.meta import *
 from pys.chain.package import AllChain, ChainVers, HostNodeDirs, VerHosts
 from pys.chain.port import HostPort
 from pys.log import consoler, logger
+import sys
 
+reload(sys)
+
+sys.setdefaultencoding('utf-8')
 
 def pub_list(chains):
     """[List the nodes in package corresponding to the --publishi chain:version]

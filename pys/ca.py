@@ -10,7 +10,11 @@ from pys.log import consoler
 from pys.chain.parser import ConfigConfs
 import configparser
 from pys.exp import MCError
+import sys
 
+reload(sys)
+
+sys.setdefaultencoding('utf-8')
 class CA:
     '''
     save cert path、agency name

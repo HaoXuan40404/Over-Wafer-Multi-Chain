@@ -46,8 +46,8 @@ def chain_build(cfg, fisco_path, cert_path):
                     chain_version = cc.get_chain().get_version()
                     consoler.info(
                         ' build install package for chain %s version %s.', chain_id, chain_version)
-                    if not bool(cert_path)
-                        build_cfg(cc, fisco)
+                    if not bool(cert_path):
+                        build_cfg(cc, fisco, cert_path)
                     else:
                         if ( not  ca.check_cert_complete(cc, cert_path[0])) and ca.check_cert_sdk(cert_path[0] + '/sdk'):
                             build_cfg(cc, fisco, cert_path[0])
@@ -122,7 +122,7 @@ def build_cfg(cc, fisco, cert_path):
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.build_host_dir(chain, node, port, fisco, temp_node, cert_path)
+            build.build_host_dir(chain, node, port, fisco,cert_path, temp_node)
 
         # stop temp node and export for genesis.json file
         temp_node.stop_temp_node(dir)
