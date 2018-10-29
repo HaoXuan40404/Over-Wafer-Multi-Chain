@@ -31,7 +31,7 @@ def export_package(chain_id, chain_version, dest, direct):
                     continue
 
                 if direct:
-                    utils.getstatusoutput('cp -r ' + dir  +   ' ' + dest + '/' + host)
+                    utils.getstatusoutput('cp -r ' + dir  + '/*'  + ' ' + dest)
                 else:
                     utils.getstatusoutput('cp -r ' + dir + '/' + host + ' ' + dest + '/')
                     utils.getstatusoutput('cp -r ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
