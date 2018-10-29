@@ -93,10 +93,12 @@ def usage():
                                                       './dir_node_ca', 'node_name'), help='generate node cert')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='generate sdk cert')
-    parser.add_argument('-g','--cert_check', nargs=1, metavar=(' ./cert_path/'
-                                                          ), help='effect with --build/-b')
+    parser.add_argument('-g', '--cert_check', nargs=1, metavar=(' ./cert_path/'
+                                                                ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
                         help='effect with --publish/-p')
+    parser.add_argument('-D', '--direct', action='store_true',
+                        help='effect with --export/-E')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -204,7 +206,7 @@ def usage():
     elif args.export:
         consoler.info(' export operation begin.')
         opr_export.export_package(
-            args.export[0], args.export[1], args.export[2])
+            args.export[0], args.export[1], args.export[2], args.direct)
         consoler.info(' export operation end.')
     elif args.ls_host:
         consoler.info(' ls_host operation begin.')

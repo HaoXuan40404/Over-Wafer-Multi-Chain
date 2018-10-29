@@ -7,14 +7,17 @@ from pys.chain import data
 from pys.log import consoler, logger
 from pys.opr import opr_tools
 
-def export_package(chain_id, chain_version, dest):
+def export_package(chain_id, chain_version, dest, direct):
     """export chain_id:chain_version install package
     
     Arguments:
         chain_id {[string]} -- chain id
         chain_version {[string]} -- chain version
         dest {[string]} -- dest
+        direct {[string]}
     """
+
+    logger.debug(' chain id is %s, chain version is %s, dest dir is %s, is direct is %s', chain_id, chain_version, dest, direct)
 
     if utils.valid_chain_id(chain_id):
         chain = Chain(chain_id, chain_version)
@@ -27,8 +30,12 @@ def export_package(chain_id, chain_version, dest):
                     logger.debug('not invalid host_ip ' + host)
                     continue
 
-                utils.getstatusoutput('cp -r ' + dir + '/' + host + ' ' + dest + '/')
-                utils.getstatusoutput('cp -r ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
+                if direct:
+                    utils.getstatusoutput('cp -r ' + dir  +   ' ' + dest + '/' + host)
+                else:
+                    utils.getstatusoutput('cp -r ' + dir + '/' + host + ' ' + dest + '/')
+                    utils.getstatusoutput('cp -r ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
+
                 consoler.info(' Export chain_id(%s) chain_version(%s) success.', chain_id, chain_version)
         else:
             consoler.error(
