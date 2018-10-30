@@ -96,9 +96,9 @@ def usage():
     parser.add_argument('-g', '--cert_check', nargs=1, metavar=(' ./cert_path/'
                                                                 ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
-                        help='effect with --publish/-p')
+                        help='effect with --publish/-p, with this opt, all package of chain will be republished')
     parser.add_argument('--direct', action='store_true',
-                        help='effect with --export/-E')
+                        help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
     args = parser.parse_args()
     if args.version:
         version.version()
