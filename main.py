@@ -52,9 +52,9 @@ def usage():
     parser.add_argument('-i', '--init', action='store_true',
                         help=' initialize ansible configuration file, need sudo permissions')
     parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
-                                                           'fisco_path'), help=' build chain packages')
+                                                           'fisco_path'), help=' build chain packages with the specified configuration file')
     parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
-                        help='build expand packages')
+                        help='build chain packages on exist chain')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
                                                                ), help='publish packages')
     parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
@@ -62,7 +62,7 @@ def usage():
     parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
                                                              'chain_id:host_ip'), help='start node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
-                                                              'node'), help='register node')
+                                                              'node'), help='register node on node with expand opr build')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
                                                                 'node'), help='unregister node')
     parser.add_argument('-D', '--diagnose', nargs='+', metavar=('all or chain_id or',
@@ -74,15 +74,15 @@ def usage():
     parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or'
                                                                 ), help='list published packages info.')
     parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
-                                                            'dest_path'), help='export build package.')
+                                                            'dest_path'), help='export build package out.')
     parser.add_argument('-l', '--ls_host', nargs='+', metavar=('host_ip'),
-                        help='ls published packages\' port')
+                        help='ls published packages\' host')
     parser.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
     parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
-                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server')
+                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
     parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
@@ -215,7 +215,7 @@ def usage():
         consoler.info(' export operation end.')
     elif args.ls_host:
         consoler.info(' ls_host operation begin.')
-        opr_list.ls_port(args.ls_host)
+        opr_list.ls_host(args.ls_host)
         consoler.info(' ls_host operation end.')
     else:
         consoler.error(

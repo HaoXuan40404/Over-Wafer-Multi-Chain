@@ -84,7 +84,7 @@ def pkg_list(chains):
     logger.info('load end')
 
 
-def ls_port(hosts):
+def ls_host(hosts):
     """[show in host_ip which port used (published fisco-bcos) ]
     
     Arguments:
