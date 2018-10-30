@@ -296,22 +296,22 @@ def cmd_module(ip, cmd):
     return False
 
 
-def monitor_module(ip, dest):
-    """Using ansible.sh monitor_module, call script -> monotor.sh, Check status of nodes
+def diagnose_module(ip, dest):
+    """Using ansible.sh diagnose_module, call script -> monotor.sh, Check status of nodes
     Arguments:
         ip {string} -- corresponding server host ip
         dest {string} -- corresponding server dir path
     """
 
     (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh monitor ' + ip + ' ' + dest)
-    logger.debug('monitor action , status %s, output %s' % (status, result))
+                                                '/scripts/ansible.sh diagnose ' + ip + ' ' + dest)
+    logger.debug('diagnose action , status %s, output %s' % (status, result))
     if status:
-        consoler.error(' ansible monitor failed, host is %s, output is %s', ip, result)
+        consoler.error(' ansible diagnose failed, host is %s, output is %s', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible monitor failed, host is %s, output is %s', ip, result)
+        consoler.error(' ansible diagnose failed, host is %s, output is %s', ip, result)
     else:
-        consoler.info(' ansible monitor success, host is %s, result is %s.', ip, result)
+        consoler.info(' ansible diagnose success, host is %s, result is %s.', ip, result)
         return True
     return False
 

@@ -11,7 +11,7 @@ from pys import path
 from pys import version
 from pys.log import logger
 from pys.log import consoler
-from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop, opr_check, opr_env_check, opr_monitor, opr_list, opr_export, opr_register
+from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop, opr_check, opr_env_check, opr_diagnose, opr_list, opr_export, opr_register
 from pys.chain import build
 from pys.chain import expand
 from pys.chain import publish
@@ -53,9 +53,9 @@ def usage():
     parser.add_argument('-i', '--init', action='store_true',
                         help=' initialize ansible configuration file, need sudo permissions')
     parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
-                                                           'fisco_path'), help=' build chain packages')
-    parser.add_argument('-e', '--expand', nargs='*', metavar=('./config.conf fisco_path genesis.json_path bootstapnodes.json_path'),
-                        help='build expand packages')
+                                                           'fisco_path'), help=' build chain packages with the specified configuration file')
+    parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
+                        help='build chain packages on exist chain')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
                                                                ), help='publish packages')
     parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
@@ -63,11 +63,11 @@ def usage():
     parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
                                                             'chain_id:host_ip'), help='stop node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
-                                                              'node'), help='register node')
+                                                              'node'), help='register node on node with expand opr build')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
                                                                 'node'), help='unregister node')
-    parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
-                                                               'chain_id:host_ip'), help='monitor node')
+    parser.add_argument('-D', '--diagnose', nargs='+', metavar=('all or chain_id or',
+                                                               'chain_id:host_ip'), help='diagnose node')
     parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
                                                              'chain_id:host_ip'), help='check servers status')
     parser.add_argument('-K', '--pkg_list', nargs='+', metavar=('all or chain_id'
@@ -75,15 +75,15 @@ def usage():
     parser.add_argument('-U', '--pub_list', nargs='+', metavar=('all or chain_id or'
                                                                 ), help='list published packages info.')
     parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
-                                                            'dest_path'), help='export build package.')
+                                                            'dest_path'), help='export build package out.')
     parser.add_argument('-l', '--ls_host', nargs='+', metavar=('host_ip'),
-                        help='ls published packages\' port')
+                        help='ls published packages\' host')
     parser.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
     parser.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
-                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='docmd on dst server')
+                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
     parser.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     parser.add_argument('--chainca', nargs=1, metavar=('./dir_chain_ca(SET)',),
@@ -94,10 +94,12 @@ def usage():
                                                       './dir_node_ca', 'node_name'), help='generate node cert')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='generate sdk cert')
-    parser.add_argument('-g','--cert_check', nargs=1, metavar=(' ./cert_path/'
-                                                          ), help='effect with --build/-b')
+    parser.add_argument('-g', '--cert_check', nargs=1, metavar=(' ./cert_path/'
+                                                                ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
-                        help='effect with --publish/-p')
+                        help='effect with --publish/-p, with this opt, all package of chain will be republished')
+    parser.add_argument('--direct', action='store_true',
+                        help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -114,6 +116,11 @@ def usage():
         chain = args.check
         opr_check.check_chain(chain)
         consoler.info(' check operation end.')
+    elif args.diagnose:
+        consoler.info(' diagnose operation begin.')
+        chain = args.diagnose
+        opr_diagnose.diagnose_chain(chain)
+        consoler.info(' diagnose operation end.')
     elif args.publish:
         consoler.info(' publish operation begin.')
         chain = args.publish
@@ -139,11 +146,6 @@ def usage():
         chain = args.stop
         opr_stop.stop_chain(chain)
         consoler.info(' stop operation end.')
-    elif args.monitor:
-        consoler.info(' monitor operation begin.')
-        chain = args.monitor
-        opr_monitor.monitor_chain(chain)
-        consoler.info(' monitor operation end.')
     elif args.pub_list:
         consoler.info(' pub_list operation begin.')
         chain = args.pub_list
@@ -205,11 +207,11 @@ def usage():
     elif args.export:
         consoler.info(' export operation begin.')
         opr_export.export_package(
-            args.export[0], args.export[1], args.export[2])
+            args.export[0], args.export[1], args.export[2], args.direct)
         consoler.info(' export operation end.')
     elif args.ls_host:
         consoler.info(' ls_host operation begin.')
-        opr_list.ls_port(args.ls_host)
+        opr_list.ls_host(args.ls_host)
         consoler.info(' ls_host operation end.')
     else:
         consoler.error(

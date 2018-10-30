@@ -1,16 +1,16 @@
 #coding:utf-8
 
 import json
+import subprocess
 """Generate boots .json, which is a configuration file for nodes to perform p2p link
 
 """
-
 
 class P2pHost:
     def __init__(self, host, p2pport):
         self.host = host
         self.p2pport = str(p2pport)
-    
+
     def __repr__(self):
         return 'host %s, p2pport %d' % (self.host, self.p2pport)
 
@@ -25,14 +25,25 @@ class P2pHosts:
         return 'nodes %s' % self.nodes
 
     def to_json(self):
-        return json.dumps(self, default = lambda obj : obj.__dict__, sort_keys=True, indent=4)
+        # return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=True, indent=4)
+        return json.dumps(self, default=lambda obj: obj.__dict__, sort_keys=True)
 
-def bootstrapsnode_test():
-    phs = P2pHosts()
-    phs.add_p2p_host(P2pHost('127.0.0.1', 12345))
-    phs.add_p2p_host(P2pHost('127.0.0.1', 12345))
-    print(phs.to_json())
-    print(phs)
+    def clear(self):
+        self.nodes = []
 
-if __name__ == '__main__':
-    bootstrapsnode_test()
+    def from_json(self, json):
+        '''
+        resolve bootstrapsnodes.json, convert to P2pHosts
+        '''
+        try:
+            with open(json) as f:
+                js = json.load(f)
+                if 'nodes' in js:
+                    for p in js['nodes']:
+                        ph = P2pHost(p['host'], p['p2pport'])
+                        print(' load host, host is %s ', ph)
+                        self.add_p2p_host(ph)
+                return True
+        except Exception as e:
+            print(' load bootstrapsnode.json failed, json is %s, e is %s ', json, e)
+            return False

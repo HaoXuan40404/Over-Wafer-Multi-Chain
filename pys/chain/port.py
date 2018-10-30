@@ -20,6 +20,9 @@ class Port:
         self.rpc_port = rpc_port
         self.p2p_port = p2p_port
         self.channel_port = channel_port
+    
+    def check_port(self):
+        return (self.rpc_port == self.p2p_port) or (self.rpc_port == self.channel_port) and (self.p2p_port == self.channel_port)
 
     def set_rpc_port(self, rpc_port):
         self.rpc_port = rpc_port
