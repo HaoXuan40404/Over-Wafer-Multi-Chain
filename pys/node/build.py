@@ -24,7 +24,7 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
     Raises:
         Exception -- exception description
 
-    one node directory structure is as：
+    one node directory structure is as:
     node${index}/
         ├── config.json
         ├── genesis.json

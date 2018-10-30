@@ -22,8 +22,8 @@ def chain_build(cfg, fisco_path, cert_path):
     """parser input config file, build install pacakge by 
 
     Arguments:
-        cfg {string} --config, maybe a config.json or a dictionary of conf,eg：./conf/config.conf or ./conf
-        fisco_path {string} -- path of fisco-bcos, eg：/usr/local/bin/fisco-bcos
+        cfg {string} --config, maybe a config.json or a dictionary of conf,eg: ./conf/config.conf or ./conf
+        fisco_path {string} -- path of fisco-bcos, eg: /usr/local/bin/fisco-bcos
     """
 
     logger.info('build cfg is %s, fisco is %s ', cfg, fisco_path)
