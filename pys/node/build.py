@@ -53,6 +53,8 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
                 node_dir + '/stop.sh')
     shutil.copy(path.get_path() + '/scripts/node/node_check.sh',
                 node_dir + '/check.sh')
+    shutil.copy(path.get_path() + '/scripts/node/node_diagnose.sh',
+                node_dir + '/diagnose.sh')
 
     cfg_json = config.build_config_json(chain.get_id(
     ), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), fisco.is_gm())
@@ -142,7 +144,7 @@ def build_common_dir(chain, fisco,cert_path):
     common/
         ├── check.sh
         ├── fisco-bcos
-        ├── monitor.sh
+        ├── diagnose.sh
         ├── node_manager.sh
         ├── register.sh
         ├── rmlogs.sh
@@ -194,7 +196,7 @@ def build_common_dir(chain, fisco,cert_path):
     shutil.copy(path.get_path() + '/scripts/node/check.sh', com_dir)
     shutil.copy(path.get_path() + '/scripts/node/register.sh', com_dir)
     shutil.copy(path.get_path() + '/scripts/node/unregister.sh', com_dir)
-    shutil.copy(path.get_path() + '/scripts/node/monitor.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/diagnose.sh', com_dir)
     shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', com_dir)
     shutil.copy(path.get_path() + '/scripts/node/node_manager.sh', com_dir)
 

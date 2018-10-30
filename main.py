@@ -11,7 +11,7 @@ from pys import path
 from pys import version
 from pys.log import logger
 from pys.log import consoler
-from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop, opr_check, opr_env_check, opr_monitor, opr_list, opr_export, opr_register
+from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop, opr_check, opr_env_check, opr_diagnose, opr_list, opr_export, opr_register
 from pys.chain import build
 from pys.chain import expand
 from pys.chain import publish
@@ -65,8 +65,8 @@ def usage():
                                                               'node'), help='register node')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
                                                                 'node'), help='unregister node')
-    parser.add_argument('-m', '--monitor', nargs='+', metavar=('all or chain_id or',
-                                                               'chain_id:host_ip'), help='monitor node')
+    parser.add_argument('-D', '--diagnose', nargs='+', metavar=('all or chain_id or',
+                                                               'chain_id:host_ip'), help='diagnose node')
     parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
                                                              'chain_id:host_ip'), help='check servers status')
     parser.add_argument('-K', '--pkg_list', nargs='+', metavar=('all or chain_id'
@@ -115,6 +115,11 @@ def usage():
         chain = args.check
         opr_check.check_chain(chain)
         consoler.info(' check operation end.')
+    elif args.diagnose:
+        consoler.info(' diagnose operation begin.')
+        chain = args.diagnose
+        opr_diagnose.diagnose_chain(chain)
+        consoler.info(' diagnose operation end.')
     elif args.publish:
         consoler.info(' publish operation begin.')
         chain = args.publish
