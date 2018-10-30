@@ -9,7 +9,7 @@ cd $dirpath
 index=$1;
 
 if [ -z $index ];then
-    echo "start all node ... "
+    echo "start all node of this server ... "
     for startfile in `ls $dirpath/node*/start.sh`
     do
         bash $startfile

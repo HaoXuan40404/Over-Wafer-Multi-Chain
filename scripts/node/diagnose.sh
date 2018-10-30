@@ -6,7 +6,7 @@ cd $dirpath
 index=$1;
 
 if [ -z $index ];then
-    echo "diagnose all node ... "
+    echo " diagnose all node of this server  ... "
     for diagnose in `ls $dirpath/node*/diagnose.sh`
     do
         bash $diagnose
