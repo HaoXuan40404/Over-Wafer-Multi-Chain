@@ -54,14 +54,14 @@ def usage():
                         help=' initialize ansible configuration file, need sudo permissions')
     parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                            'fisco_path'), help=' build chain packages')
-    parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
+    parser.add_argument('-e', '--expand', nargs='*', metavar=('./config.conf fisco_path genesis.json_path bootstapnodes.json_path'),
                         help='build expand packages')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
                                                                ), help='publish packages')
-    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
-                                                            'chain_id:host_ip'), help='stop node')
     parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
                                                              'chain_id:host_ip'), help='start node')
+    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
+                                                            'chain_id:host_ip'), help='stop node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
                                                               'node'), help='register node')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
