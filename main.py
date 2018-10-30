@@ -97,7 +97,7 @@ def usage():
                                                                 ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
                         help='effect with --publish/-p')
-    parser.add_argument('-D', '--direct', action='store_true',
+    parser.add_argument('--direct', action='store_true',
                         help='effect with --export/-E')
     args = parser.parse_args()
     if args.version:
