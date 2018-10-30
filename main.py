@@ -103,7 +103,7 @@ def usage():
         version.version()
     elif args.build:
         consoler.info(' build operation begin.')
-        build.chain_build(args.build[0], args.build[1], args.cert_check)
+        build.chain_build(args.build[0], args.build[1])
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
