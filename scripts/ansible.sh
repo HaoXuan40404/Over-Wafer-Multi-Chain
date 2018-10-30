@@ -48,12 +48,12 @@ function check_module()
     local check_path=$2
     ansible ${package_config} -m shell -a "bash  ${check_path}/check.sh"
 }
-###monitor_module###
-function monitor_module()
+###diagnose_module###
+function diagnose_module()
 {
     local package_config=$1
-    local monitor_path=$2
-    ansible ${package_config} -m shell -a "bash  ${monitor_path}/monitor.sh"
+    local diagnose_path=$2
+    ansible ${package_config} -m shell -a "bash  ${monitor_path}/diagnose.sh"
 }
 
 ###register_module###
@@ -131,7 +131,7 @@ case $1 in
     unregister) unregister_module $2 $3 $4;;
     mkdir) mkdir_module $2 $3;;
     check) check_module $2 $3;;
-    monitor) monitor_module $2 $3;;
+    diagnose) diagnose_module $2 $3;;
     env_check) env_check_module $2 $3;;
     telnet) telnet_module $2 $3;;
     cmd) cmd_module $2 $3;;

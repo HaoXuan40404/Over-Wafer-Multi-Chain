@@ -129,7 +129,10 @@ class ConfigConf:
         channel_port = cf.getint('ports', 'channel_port')
         if not utils.valid_port(channel_port):
             raise Exception('invalid channel_port, ', channel_port)
-        self.set_port(Port(rpc_port, p2p_port, channel_port))
+        port = Port(rpc_port, p2p_port, channel_port)
+        if port.check_port():
+            raise Exception('port config dup, ', port)
+        self.set_port(port)
 
         index = 0
         while True:

@@ -1,5 +1,5 @@
+#!/bin/bash
 index=$1
-source /etc/profile
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
 
