@@ -94,8 +94,6 @@ def usage():
                                                       './dir_node_ca', 'node_name'), help='generate node cert')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='generate sdk cert')
-    parser.add_argument('-g', '--cert_check', nargs=1, metavar=(' ./cert_path/'
-                                                                ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
                         help='effect with --publish/-p, with this opt, all package of chain will be republished')
     parser.add_argument('--direct', action='store_true',
