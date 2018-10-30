@@ -37,7 +37,7 @@ def pub_list(chains):
                 meta_list.append(m)
 
     for m in meta_list:
-        consoler.info(' => chain id ：%s    published version : %s', m.get_chain_id(), m.get_chain_version())
+        consoler.info(' => chain id :%s    published version : %s', m.get_chain_id(), m.get_chain_version())
         nodes = m.get_nodes()
         for host, nodes in nodes.items():
             consoler.info('\t host => %s', host)
@@ -65,17 +65,17 @@ def pkg_list(chains):
         
     for chain in chains:
         logger.debug(' chain id is %s', chain)
-        consoler.info(' ==> chain id ： %s', chain)
+        consoler.info(' ==> chain id : %s', chain)
         cv = ChainVers(chain)
         if len(cv.get_ver_list()) == 0:
             consoler.info(' No build version exist for chain %s, do nothing.', chain)
 
         for version in cv.get_ver_list():
-            consoler.info('\t\t => chain version ： %s', version)
+            consoler.info('\t\t => chain version : %s', version)
             logger.debug(' chain id is %s, chain version is %s', chain, version)
             vh = VerHosts(chain, version)
             for pkg in vh.get_pkg_list():
-                consoler.info('\t\t\t => package ：%s', pkg)
+                consoler.info('\t\t\t => package :%s', pkg)
                 hn = HostNodeDirs(chain, version, pkg)
                 hp = HostPort(chain, version, pkg)
                 for node_dir in hn.get_node_dirs():
@@ -105,7 +105,7 @@ def ls_host(hosts):
             continue
         
         for meta in metas:
-            consoler.info(' \t => chain id ：%s    published version : %s', meta.get_chain_id(), meta.get_chain_version())
+            consoler.info(' \t => chain id :%s    published version : %s', meta.get_chain_id(), meta.get_chain_version())
             nodes = meta.get_host_nodes(host)
             for node in nodes:
-                consoler.info(' \t\t %s, rpc_port: %s, p2p_port: %s, channel_port: %s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
+                consoler.info(' \t\t %s, rpc_port:%s, p2p_port:%s, channel_port:%s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))

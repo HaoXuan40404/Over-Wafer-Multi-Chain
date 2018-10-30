@@ -24,7 +24,7 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
     Raises:
         Exception -- exception description
 
-    one node directory structure is as：
+    one node directory structure is as:
     node${index}/
         ├── config.json
         ├── genesis.json
@@ -235,7 +235,7 @@ def expand_host_dir(chain, node, port, fisco):
     try:
         # create node dir
         for i in range(node.get_node_num()):
-            build_node_dir(chain, node, fisco, port.to_port(i), index + i + 1, cert_path)
+            build_node_dir(chain, node, fisco, port.to_port(i), index + i + 1, False)
     except Exception as e:
         logger.error(' expand operation failed, chain is %s, node is %s, append_host is %s, e is %s ',
                      chain, node, append_host_dir, e)

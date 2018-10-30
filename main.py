@@ -47,6 +47,7 @@ def usage():
 
     parser = argparse.ArgumentParser(
         description='OWMC Description usage.')
+
     parser.add_argument('-v', '--version',
                         action='store_true', help='show OWMC\'s version')
     parser.add_argument('-i', '--init', action='store_true',
@@ -57,10 +58,10 @@ def usage():
                         help='build chain packages on exist chain')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
                                                                ), help='publish packages')
-    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
-                                                            'chain_id:host_ip'), help='stop node')
     parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
                                                              'chain_id:host_ip'), help='start node')
+    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
+                                                            'chain_id:host_ip'), help='stop node')
     parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
                                                               'node'), help='register node on node with expand opr build')
     parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
