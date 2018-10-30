@@ -145,11 +145,6 @@ def usage():
         chain = args.stop
         opr_stop.stop_chain(chain)
         consoler.info(' stop operation end.')
-    elif args.monitor:
-        consoler.info(' monitor operation begin.')
-        chain = args.monitor
-        opr_monitor.monitor_chain(chain)
-        consoler.info(' monitor operation end.')
     elif args.pub_list:
         consoler.info(' pub_list operation begin.')
         chain = args.pub_list
