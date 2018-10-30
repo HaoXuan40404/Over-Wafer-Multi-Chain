@@ -22,3 +22,4 @@ else
 		echo "node$index is not exist."
 	fi
 fi
+echo ""

@@ -7,7 +7,7 @@ function check_file()
     file=$1
     if [ ! -f ${file} ];then
         echo " ${file} is not exist."
-        exit 1
+        exit 0
     fi
 }
 
@@ -20,7 +20,7 @@ function alarm()
 {
         alert_ip=`/sbin/ifconfig eth0 | grep inet | awk '{print $2}'`
         time=`date "+%Y-%m-%d %H:%M:%S"`
-        echo "$alert_ip $1"; exit 1;
+        echo "$alert_ip $1"; exit 0;
 }
 
 function restart() 
