@@ -108,4 +108,4 @@ def ls_host(hosts):
             consoler.info(' \t => chain id ：%s    published version : %s', meta.get_chain_id(), meta.get_chain_version())
             nodes = meta.get_host_nodes(host)
             for node in nodes:
-                consoler.info(' \t\t %s, rpc_port：%s, p2p_port：%s, channel_port：%s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
+                consoler.info(' \t\t %s, rpc_port: %s, p2p_port: %s, channel_port: %s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))
