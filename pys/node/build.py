@@ -71,8 +71,8 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
         shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
-        ca.gm_generator_node_ca(
-            node_dir + '/data', 'node' + str(index), ca.get_GM_ca_path())
+        ca.gm_generator_node_ca(ca.get_GM_agent_path(),
+            node_dir + '/data', 'node' + str(index))
     else:
         # ca.generator_node_ca(node_dir + '/data',
         #                      node.get_p2p_ip(), ca.get_agent_ca_path())
@@ -167,10 +167,10 @@ def build_common_dir(chain, fisco,cert_path):
         shutil.copytree(path.get_path() +
                         '/tpl/GM_temp_node/web3sdk', com_dir + '/web3sdk')
         # copy ca.crt to web3sdk conf dir
-        shutil.copy(ca.get_ca_path() + '/GM/node0/data/sdk/ca.crt',
+        shutil.copy(ca.get_GM_ca_path() + '/node0/data/sdk/ca.crt',
                     com_dir + '/web3sdk/conf')
         # copy client.keystore to web3sdk conf dir
-        shutil.copy(ca.get_ca_path() + '/GM/node0/data/sdk/client.keystore',
+        shutil.copy(ca.get_GM_ca_path() + '/node0/data/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
     else:
         # web3sdk

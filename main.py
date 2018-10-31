@@ -35,7 +35,7 @@ def init():
     ca.set_agent(mconf.get_agent())
 
     # init ca dir
-    ca.set_ca_path(pwd + '/data/ca')
+    ca.set_ca_path(pwd + '/data/ca/' + ca.get_agent())
 
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
@@ -52,6 +52,8 @@ def usage():
                         action='store_true', help='show OWMC\'s version')
     parser.add_argument('-i', '--init', action='store_true',
                         help=' initialize ansible configuration file, need sudo permissions')
+    parser.add_argument('-a', '--cainit', nargs=1, metavar=('./ca_path'),
+                        help=' initialize cert configuration')
     parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                            'fisco_path'), help=' build chain packages with the specified configuration file')
     parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
@@ -204,6 +206,10 @@ def usage():
     elif args.init:
         opr_init_chain.init_chain()
         consoler.info(' ansible init success.')
+    elif args.cainit:
+        consoler.info(' cert init begin.')
+        ca.init_ca(args.cainit[0])
+        consoler.info(' cert init end.')
     elif args.export:
         consoler.info(' export operation begin.')
         opr_export.export_package(

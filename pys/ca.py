@@ -54,7 +54,7 @@ def get_agent_ca_path():
         [path] -- [agency cert path]
     """
 
-    return CA.CA_path + '/' + CA.agent
+    return CA.CA_path + '/' + '/NA' + CA.agent
 
 def get_ca_path():
     """[get root cert path]
@@ -63,9 +63,9 @@ def get_ca_path():
         [path] -- [root cert path]
     """
 
-    return CA.CA_path
+    return CA.CA_path + '/NA/'
 
-def get_GM_agent_ca_path():
+def get_GM_agent_path():
     """[get gm agency cert path]
     
     Returns:
@@ -90,7 +90,16 @@ def root_ca_exist():
         [bool] -- [true or false]
     """
     
-    return os.path.exists(CA.CA_path + '/ca.crt') and os.path.exists(CA.CA_path + '/ca.key')
+    return os.path.exists(get_ca_path() + '/ca.crt') and os.path.exists(get_ca_path() + '/ca.key')
+
+def root_gmca_exist():
+    """[check root cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+    
+    return os.path.exists(get_GM_ca_path() + '/gmca.crt') and os.path.exists(get_GM_ca_path() + '/gmca.key')
 
 def agent_ca_exist():
     """[check agency cert exists]
@@ -99,7 +108,17 @@ def agent_ca_exist():
         [bool] -- [true or false]
     """
 
-    return os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.crt') and os.path.exists(CA.CA_path + '/'+ CA.agent + '/agency.key')
+    return os.path.exists(get_ca_path() + '/'+ CA.agent + '/agency.crt') and os.path.exists(get_ca_path() + '/'+ CA.agent + '/agency.key')
+
+def agent_gmca_exist():
+    """[check agency cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    return os.path.exists(get_GM_ca_path() + '/'+ CA.agent + '/gmagency.crt') and os.path.exists(get_GM_ca_path() + '/'+ CA.agent + '/gmagency.key')
+
 
 def generate_root_ca(dir):
     """[generate root cert]
@@ -107,7 +126,6 @@ def generate_root_ca(dir):
     Arguments:
         dir {[path]} -- [root cert path]
     """
-
 
     os.environ['scripts'] = path.get_path() + '/scripts/ca/'
     os.environ['out'] = dir
@@ -224,7 +242,7 @@ def gm_generator_agent_ca(dir, ca, agent):
         logger.error('  Generate GM %s cert failed! Result is %s',agent, result)
         raise Exception(' Generate GM %s cert failed! Result is %s',agent, result)
 
-def gm_generator_node_ca(dir, node, agent):
+def gm_generator_node_ca(agent,dir, node):
     """[generate node cert ]
     
     Arguments:
@@ -525,6 +543,59 @@ def check_cert_sdk(path):
         logger.error(me)
         consoler.error(me)
     return result    
+
+
+def check_ca_exist(path):
+    """[check root cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+    
+    return (path + '/ca.crt') and (path + '/ca.key')
+
+def check_gmca_exist(path):
+    """[check root cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+    
+    return (path + '/gmca.crt') and (path + '/gmca.key')
+
+def check_agent_ca_exist(path):
+    """[check agency cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    return (path + '/'+ CA.agent + '/agency.crt') and (path + '/'+ CA.agent + '/agency.key')
+
+def check_agent_gmca_exist(path):
+    """[check agency cert exists]
+    
+    Returns:
+        [bool] -- [true or false]
+    """
+
+    return (path + '/'+ CA.agent + '/gmagency.crt') and (path + '/'+ CA.agent + '/gmagency.key')
+
+
+
+def init_ca(cert_path):
+    if check_ca_exist(cert_path) and check_agent_ca_exist(cert_path):
+        shutil.copytree(cert_path, get_ca_path() +  '/' + CA.agent)
+        logger.info("Init cert, copy cert to cert_path")
+    elif check_gmca_exist(cert_path) and check_agent_gmca_exist(cert_path):
+        shutil.copytree(cert_path, get_GM_ca_path() +  '/' + CA.agent)
+        logger.info("Init gm cert, copy gm cert to cert_path")
+    else:
+        logger.error("Init cert failed! files not completed")
+        raise Exception("Init cert failed! files not completed")
+
+    return 0
+
 
 
 
