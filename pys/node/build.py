@@ -71,7 +71,7 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
         shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
-        if ca.check_agent_gmca_exist(ca.get_GM_agent_path()):
+        if ca.check_agent_gmca_exist(ca.get_GM_ca_path()):
             ca.gm_generator_node_ca(ca.get_GM_agent_path(),
                 node_dir + '/data', 'node' + str(index))
         else:
@@ -82,7 +82,7 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
         #                      node.get_p2p_ip(), ca.get_agent_ca_path())
         if ca.check_agent_ca_exist(ca.get_agent_ca_path()):
             if not bool(cert_path):
-                ca.new_generator_node_ca(ca.get_agent_ca_path(),
+                ca.new_generator_node_ca(ca.get_ca_path(),
                                     node_dir + '/data', 'node' + str(index))
             else:
                 try:
