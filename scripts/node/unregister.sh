@@ -41,7 +41,7 @@ check_file $nodeidfile
 nodeid=$(cat `pwd`/node$index/data/node.nodeid)
 register_or_not $nodeid
 if [ $? -ne 0 ];then
-    echo " OK! $node has not been registered."; exit 0;
+    echo " OK! node$index has not been registered."; exit 0;
 fi
 
 bash web3sdk/bin/web3sdk NodeAction cancelNode file:`pwd`/node$index/data/node.json
