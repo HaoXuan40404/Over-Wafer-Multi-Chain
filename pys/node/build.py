@@ -71,29 +71,37 @@ def build_node_dir(chain, node, fisco, port, index, cert_path):
         shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
-        ca.gm_generator_node_ca(ca.get_GM_agent_path(),
-            node_dir + '/data', 'node' + str(index))
+        if ca.check_agent_gmca_exist(ca.get_GM_agent_path()):
+            ca.gm_generator_node_ca(ca.get_GM_agent_path(),
+                node_dir + '/data', 'node' + str(index))
+        else:
+            logger.error(' gm agency cert not completed')
+            raise Exception(' gm agency cert not completed')
     else:
         # ca.generator_node_ca(node_dir + '/data',
         #                      node.get_p2p_ip(), ca.get_agent_ca_path())
-        if not bool(cert_path):
-            ca.new_generator_node_ca(ca.get_agent_ca_path(),
-                                node_dir + '/data', 'node' + str(index))
+        if ca.check_agent_ca_exist(ca.get_agent_ca_path()):
+            if not bool(cert_path):
+                ca.new_generator_node_ca(ca.get_agent_ca_path(),
+                                    node_dir + '/data', 'node' + str(index))
+            else:
+                try:
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/agency.crt', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.csr', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.json', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.key', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.nodeid', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.private', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.pubkey', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.serial', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/ca.crt', node_dir + '/data')
+                    shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.crt', node_dir + '/data')
+                except Exception as e:
+                    logger.error(' Copy cert failed! %s.', e)
+                    raise Exception(' Copy cert failed! %s.', e)
         else:
-            try:
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/agency.crt', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.csr', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.json', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.key', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.nodeid', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.private', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.pubkey', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.serial', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/ca.crt', node_dir + '/data')
-                shutil.copy(cert_path[0] + '/' + str(chain.get_id) + '/' + str(chain.get_version) + '/node' + str(index) + '/node.crt', node_dir + '/data')
-            except Exception as e:
-                logger.error(' Copy cert failed! %s.', e)
-                return 1
+            logger.error(' agency cert not completed')
+            raise Exception(' agency cert not completed')
 
 
     logger.info(' build_node_dir end. ')
