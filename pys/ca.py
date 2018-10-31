@@ -54,7 +54,7 @@ def get_agent_ca_path():
         [path] -- [agency cert path]
     """
 
-    return CA.CA_path + '/' + '/NA' + CA.agent
+    return CA.CA_path + '/NA/' + CA.agent + '/'
 
 def get_ca_path():
     """[get root cert path]
@@ -72,7 +72,7 @@ def get_GM_agent_path():
         [path] -- [agency cert path]
     """
 
-    return CA.CA_path + '/GM/' + CA.agent
+    return CA.CA_path + '/GM/' + CA.agent + '/'
 
 def get_GM_ca_path():
     """[get gm root cert path]
@@ -335,7 +335,6 @@ def new_generator_agent_ca(dir, ca, agent):
             shutil.copy(temp_path + '/' + agent + '/ca.crt', dir + '/' + agent)
             shutil.copy(temp_path + '/' + agent + '/cert.cnf', dir + '/' + agent)
             logger.info(' Generate %s cert successful! dir is %s.', agent, dir + '/' + agent)
-            raise Exception(' Generate %s cert successful! dir is %s.', agent, dir + '/' + agent)
         except Exception as e:
             if os.path.exists(temp_path):
                 shutil.rmtree(temp_path)
@@ -551,8 +550,8 @@ def check_ca_exist(path):
     Returns:
         [bool] -- [true or false]
     """
-    
-    return (path + '/ca.crt') and (path + '/ca.key')
+    result = os.path.exists(path + '/ca.crt') and os.path.exists(path + '/ca.key')
+    return result
 
 def check_gmca_exist(path):
     """[check root cert exists]
@@ -560,8 +559,8 @@ def check_gmca_exist(path):
     Returns:
         [bool] -- [true or false]
     """
-    
-    return (path + '/gmca.crt') and (path + '/gmca.key')
+    result = os.path.exists(path + '/gmca.crt') and os.path.exists(path + '/gmca.key')
+    return result
 
 def check_agent_ca_exist(path):
     """[check agency cert exists]
@@ -569,8 +568,9 @@ def check_agent_ca_exist(path):
     Returns:
         [bool] -- [true or false]
     """
-
-    return (path + '/'+ CA.agent + '/agency.crt') and (path + '/'+ CA.agent + '/agency.key')
+    result = os.path.exists(path + CA.agent + '/agency.crt') and os.path.exists(path + CA.agent + '/agency.key') and \
+    os.path.exists(path + '/ca.crt') and os.path.exists(path + '/sdk')
+    return result
 
 def check_agent_gmca_exist(path):
     """[check agency cert exists]
@@ -578,17 +578,17 @@ def check_agent_gmca_exist(path):
     Returns:
         [bool] -- [true or false]
     """
-
-    return (path + '/'+ CA.agent + '/gmagency.crt') and (path + '/'+ CA.agent + '/gmagency.key')
-
+    result = os.path.exists(path + CA.agent + '/gmagency.crt') and os.path.exists(path + CA.agent + '/gmagency.key') and \
+    os.path.exists(path + '/gmca.crt') and os.path.exists(path + '/sdk')
+    return result
 
 
 def init_ca(cert_path):
     if check_ca_exist(cert_path) and check_agent_ca_exist(cert_path):
-        shutil.copytree(cert_path, get_ca_path() +  '/' + CA.agent)
+        shutil.copytree(cert_path, get_ca_path())
         logger.info("Init cert, copy cert to cert_path")
     elif check_gmca_exist(cert_path) and check_agent_gmca_exist(cert_path):
-        shutil.copytree(cert_path, get_GM_ca_path() +  '/' + CA.agent)
+        shutil.copytree(cert_path, get_GM_ca_path())
         logger.info("Init gm cert, copy gm cert to cert_path")
     else:
         logger.error("Init cert failed! files not completed")

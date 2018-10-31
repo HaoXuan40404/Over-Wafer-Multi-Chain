@@ -200,7 +200,8 @@ gen_sdk_cert() {
     gen_cert_secp256k1 $sdk sdk
     cp ca-agency.crt $sdk/ca.crt
     
-    read_password
+    #read_password
+    mypass=123456
     openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdk/sdk.crt -inkey $sdk/sdk.key -out $sdk/keystore.p12
     keytool -importkeystore -srckeystore $sdk/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
         -destkeystore $sdk/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 

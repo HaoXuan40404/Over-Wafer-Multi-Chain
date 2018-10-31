@@ -167,10 +167,10 @@ def build_common_dir(chain, fisco,cert_path):
         shutil.copytree(path.get_path() +
                         '/tpl/GM_temp_node/web3sdk', com_dir + '/web3sdk')
         # copy ca.crt to web3sdk conf dir
-        shutil.copy(ca.get_GM_ca_path() + '/node0/data/sdk/ca.crt',
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt',
                     com_dir + '/web3sdk/conf')
         # copy client.keystore to web3sdk conf dir
-        shutil.copy(ca.get_GM_ca_path() + '/node0/data/sdk/client.keystore',
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
     else:
         # web3sdk
