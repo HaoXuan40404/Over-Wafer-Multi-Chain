@@ -45,7 +45,7 @@ config_port=$(cat $configfile |grep -o '"rpcport": ".*"' | grep -o "[0-9]\+")
 result=$(curl -s  "http://$config_ip:$config_port" -X POST --data '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}')
 [ -z "$result" ] &&  {
     error " Cannot connect to $config_ip:$config_port."
-    }
+}
 
 echo "$result" | egrep "false" >/dev/null 2>&1
 [ $? -ne 0 ] && {
