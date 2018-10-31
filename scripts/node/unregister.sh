@@ -21,7 +21,7 @@ function register_or_not()
 {
     local nodeid=$1
     ret=$(bash web3sdk/bin/web3sdk NodeAction all 2> /dev/null)
-    if [ $? -eq 0 ];then
+    if [ $? -ne 0 ];then
         error " NodeAction all operation failed."
     fi
 
@@ -50,13 +50,14 @@ if [ $? -ne 0 ];then
 fi
 
 index=0
-while $index -lt 10
+while [ $index -lt 10 ]
 do
     register_or_not $nodeid
     if [ $? -ne 0 ];then
-        echo " OK! unregister $node success."; exit 0;
+        echo " OK! unregister node$index success."; exit 0;
     fi
     sleep 3
+    let index++
 done
 
-error " unregister $node timeout..."
+error " unregister node$index timeout..."

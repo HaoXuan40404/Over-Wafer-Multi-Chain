@@ -22,7 +22,7 @@ function register_or_not()
 {
     local nodeid=$1
     ret=$(bash web3sdk/bin/web3sdk NodeAction all 2> /dev/null)
-    if [ $? -eq 0 ];then
+    if [ $? -ne 0 ];then
         error " NodeAction all operation failed."
     fi
 
@@ -55,7 +55,7 @@ echo "$result" | egrep "false" >/dev/null 2>&1
 nodeid=$(cat `pwd`/node$index/data/node.nodeid)
 register_or_not $nodeid
 if [ $? -eq 0 ];then
-    echo " OK! $node has been registered."; exit 0;
+    echo " OK! node$index has been registered."; exit 0;
 fi
 
 # https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_syncing
@@ -65,13 +65,14 @@ if [ $? -ne 0 ];then
 fi
 
 index=0
-while $index -lt 10
+while [ $index -lt 10 ] 
 do
     register_or_not $nodeid
     if [ $? -eq 0 ];then
-        echo " OK! register $node success."; exit 0;
+        echo " OK! register node$index success."; exit 0;
     fi
     sleep 3
+    let index++
 done
 
-error " register $node timeout..."
+error " register node$index timeout..."
