@@ -64,7 +64,7 @@ def diagnose_server(chain_id):
     
     consoler.info(' ==> diagnose chain %s', chain_id)
 
-    logger.info('monitor_server action, chain_id is ' + chain_id)
+    logger.info('diagnose_server action, chain_id is ' + chain_id)
     for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.diagnose_module(k, ansible.get_dir() + '/' + chain_id)

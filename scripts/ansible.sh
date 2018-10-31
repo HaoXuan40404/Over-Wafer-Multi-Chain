@@ -71,7 +71,7 @@ function unregister_module()
     local package_config=$1
     local unregister_path=$2
     local index=$3
-    ansible ${package_config} -m shell -a "bash  ${register_path}/unregister.sh ${index}"
+    ansible ${package_config} -m shell -a "bash  ${unregister_path}/unregister.sh ${index}"
 }
 
 ###telnet_module###

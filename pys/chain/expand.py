@@ -57,18 +57,21 @@ def expand_on_exist_chain(cc):
             raise MCError(' expand failed, chain id is %s, chain version is %s, exception is %s' % (
             chain_id, chain_version, e))
 
-def expand_on_nonexist_chain(cc, fisco_path, genesisjson, bootstrapnodesjson):
+def expand_on_nonexist_chain(cc, dir):
     
+    fisco_path = dir + '/' + 'fisco-bcos'
+    genesisjson = dir + '/' + 'genesis.json'
+    bootstrapnodesjson = dir + '/' + 'bootstrapnodes.json'
     # check if fisco-bcos、genesis.json、bootstrapsnode.json exist.
     if not os.path.exists(fisco_path):
         raise MCError(
-            ' fisco bcos not exist, fisco bcos path is %s' % fisco_path)
+            ' fisco bcos not exist, dir path is %s' % dir)
     if not os.path.exists(genesisjson):
         raise MCError(
-            ' genesis.json not exist, genesis.json path is %s' % genesisjson)
+            ' genesis.json not exist, dir path is %s' % dir)
     if not os.path.exists(bootstrapnodesjson):
         raise MCError(
-            ' bootstrapnodes.json not exist, bootstrapnodes.json path is %s' % bootstrapnodesjson)
+            ' bootstrapnodes.json not exist, dir path is %s' % dir)
 
     chain = cc.get_chain()
     port = cc.get_port()
@@ -97,7 +100,7 @@ def expand_on_nonexist_chain(cc, fisco_path, genesisjson, bootstrapnodesjson):
         shutil.copy(bootstrapnodesjson, chain.data_dir() + '/')
 
         # create common dir
-        build.build_common_dir(chain, fisco, False)
+        build.build_common_dir(chain, fisco)
 
         # build install dir for every server
         for node in cc.get_nodes():
@@ -111,28 +114,15 @@ def expand_on_nonexist_chain(cc, fisco_path, genesisjson, bootstrapnodesjson):
         raise MCError(' expand failed, chain id is %s, chain version is %s, exception is %s' % (
             chain_id, chain_version, e))
 
-def chain_expand(cfg, args):
+def chain_expand(cfg, dir):
     """expand operation 
     
     Arguments:
         cfg {string} -- config file path
-        fisco_path {string} -- fisco-bcos file path
-        genesisjson {string} -- genesis.json file path
-        bootstrapnodesjson {string} -- bootstrapsnodes.json file path
+        dir {string} -- dir with fisco-bcos, genesis.json, bootstrapsnode.json
     """
 
-    logger.debug(' cfg is %s, args is %s', cfg, args)
-
-    fisco_path = ''
-    genesisjson = ''
-    bootstrapnodesjson = ''
-
-    if len(args) > 1:
-        fisco_path = args[0]
-    if len(args) > 2:
-        genesisjson = args[1]
-    if len(args) > 3:
-        bootstrapnodesjson = args[2]
+    logger.debug(' cfg is %s, dir is %s', cfg, dir)
 
     try:
         try:
@@ -145,8 +135,9 @@ def chain_expand(cfg, args):
         if os.path.exists(cc.get_chain().data_dir()):
             expand_on_exist_chain(cc)
         else:
-            expand_on_nonexist_chain(cc, fisco_path, genesisjson, bootstrapnodesjson)
-            consoler.info(' expand install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
+            expand_on_nonexist_chain(cc, dir)
+        
+        consoler.info(' expand install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
 
     except MCError as me:
         consoler.error(me)
