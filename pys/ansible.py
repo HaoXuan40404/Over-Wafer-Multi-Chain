@@ -280,8 +280,6 @@ def cmd_module(ip, cmd):
         [bool] -- true or false
     """
     cmd = '"' + cmd + '"'
-    os.system('bash ' + path.get_path() +
-                                                '/scripts/ansible.sh cmd ' + ip + ' ' + cmd)
     
     (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + cmd)

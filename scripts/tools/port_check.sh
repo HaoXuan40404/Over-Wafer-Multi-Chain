@@ -26,7 +26,7 @@ function check_port_use()
 
     nc -z 127.0.0.1 $1 >/dev/null 2>&1
     if [ $? -eq 0 ];then
-        echo "port $1 has been using."
+        # echo "port $1 has been using."
         return 0
     else
         return 1

@@ -53,7 +53,7 @@ function diagnose_module()
 {
     local package_config=$1
     local diagnose_path=$2
-    ansible ${package_config} -m shell -a "bash  ${monitor_path}/diagnose.sh"
+    ansible ${package_config} -m shell -a "bash  ${diagnose_path}/diagnose.sh"
 }
 
 ###register_module###
@@ -71,7 +71,7 @@ function unregister_module()
     local package_config=$1
     local unregister_path=$2
     local index=$3
-    ansible ${package_config} -m shell -a "bash  ${register_path}/unregister.sh ${index}"
+    ansible ${package_config} -m shell -a "bash  ${unregister_path}/unregister.sh ${index}"
 }
 
 ###telnet_module###

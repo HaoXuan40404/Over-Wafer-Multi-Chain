@@ -7,7 +7,7 @@ function check_file()
     file=$1
     if [ ! -f ${file} ];then
         echo " ${file} is not exist."
-        exit 1
+        exit 0
     fi
 }
 
@@ -20,7 +20,7 @@ function alarm()
 {
         alert_ip=`/sbin/ifconfig eth0 | grep inet | awk '{print $2}'`
         time=`date "+%Y-%m-%d %H:%M:%S"`
-        echo "$alert_ip $1"; exit 1;
+        echo "$alert_ip $1"; exit 0;
 }
 
 function restart() 
@@ -39,9 +39,9 @@ config_port=$(cat $configfile |grep -o '"rpcport": ".*"' | grep -o "[0-9]\+")
 # first check if fisco-bcos is running.
 weth_pid=`ps aux|grep "${configfile}"|grep "fisco-bcos"|grep -v grep|awk '{print $2}'`
 if [ ! -z $weth_pid ];then
-    message "${node} is running."
+    echo " ${node} is running."
 else
-    alarm "ERROR : ${node} is not running."
+    echo " ${node} is not running."; exit 0;
 fi
 
 # get blocknumber
@@ -53,7 +53,7 @@ do
     # echo $heightresult
     height=$(echo $heightresult|awk -F'"' '{if($2=="id" && $4=="jsonrpc" && $8=="result") {print $10}}')
     [[ -z "$height" && $i -eq 2 ]] &&  {
-        alarm "ERROR! Cannot connect to $config_ip:$config_port $heightresult"
+        echo " ERROR! Cannot connect to $config_ip:$config_port $heightresult"
     }
     configdir=$(dirname $configfile)
     height_file="$configdir/node.height"
@@ -66,7 +66,7 @@ do
     # echo $viewresult
     view=$(echo $viewresult|awk -F'"' '{if($2=="id" && $4=="jsonrpc" && $8=="result") {print $10}}')
     [[ -z "$view" && $i -eq 2 ]] &&  {
-            alarm "ERROR! Cannot connect to $config_ip:$config_port $viewresult"
+            echo " ERROR! Cannot connect to $config_ip:$config_port $viewresult"
     }
 
     [[ -n "$height" && -n "$view" ]] && { 
@@ -84,9 +84,9 @@ prev_viewvalue=$(printf "%d\n" "$prev_view")
 
 # check if PBFT work properly.
 [  $heightvalue -eq  $prev_heightvalue ] && [ $viewvalue -eq  $prev_viewvalue ] && {
-    alarm "ERROR! $config_ip:$config_port is not working properly: height $height and view $view no change"
+    echo " ERROR! $config_ip:$config_port is not working properly: height $height and view $view no change"
 }
 
 echo $height > $height_file
 echo $view > $view_file
-message "OK! $config_ip:$config_port is working properly: height $height view $view" 
+echo " OK! $config_ip:$config_port is working properly: height $height view $view" 

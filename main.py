@@ -56,7 +56,7 @@ def usage():
                         help=' initialize cert configuration')
     parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                            'fisco_path'), help=' build chain packages with the specified configuration file')
-    parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf fisco_path genesis.json path bootstapnodes.json path'),
+    parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf, dir with genesis.json bootstrapsnode.json fisco-bcos'),
                         help='build chain packages on exist chain')
     parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
                                                                ), help='publish packages')
@@ -96,8 +96,6 @@ def usage():
                                                       './dir_node_ca', 'node_name'), help='generate node cert')
     parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
                                                      './dir_agency_ca'), help='generate sdk cert')
-    parser.add_argument('-g', '--cert_check', nargs=1, metavar=(' ./cert_path/'
-                                                                ), help='effect with --build/-b')
     parser.add_argument('-f', '--force', action='store_true',
                         help='effect with --publish/-p, with this opt, all package of chain will be republished')
     parser.add_argument('--direct', action='store_true',
@@ -107,7 +105,7 @@ def usage():
         version.version()
     elif args.build:
         consoler.info(' build operation begin.')
-        build.chain_build(args.build[0], args.build[1], args.cert_check)
+        build.chain_build(args.build[0], args.build[1])
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')

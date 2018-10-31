@@ -9,7 +9,7 @@ cd $dirpath
 index=$1;
 
 if [ -z $index ];then
-    echo "stop all node ... "
+    echo "stop all node of this server ... "
     for stopfile in `ls $dirpath/node*/stop.sh`
     do
         bash $stopfile
@@ -22,3 +22,4 @@ else
 		echo "node$index is not exist."
 	fi
 fi
+echo ""
