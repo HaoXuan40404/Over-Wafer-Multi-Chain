@@ -569,7 +569,7 @@ def check_agent_ca_exist(path):
         [bool] -- [true or false]
     """
     result = os.path.exists(path + CA.agent + '/agency.crt') and os.path.exists(path + CA.agent + '/agency.key') and \
-    os.path.exists(path + '/ca.crt') and os.path.exists(path + '/sdk')
+    os.path.exists(path + '/ca.crt') and os.path.exists(path + CA.agent + '/sdk')
     return result
 
 def check_agent_gmca_exist(path):
@@ -579,7 +579,7 @@ def check_agent_gmca_exist(path):
         [bool] -- [true or false]
     """
     result = os.path.exists(path + CA.agent + '/gmagency.crt') and os.path.exists(path + CA.agent + '/gmagency.key') and \
-    os.path.exists(path + '/gmca.crt') and os.path.exists(path + '/sdk')
+    os.path.exists(path + '/gmca.crt') and os.path.exists(path + CA.agent + '/sdk')
     return result
 
 
