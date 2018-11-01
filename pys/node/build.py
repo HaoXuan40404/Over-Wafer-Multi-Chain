@@ -74,6 +74,11 @@ def build_node_dir(chain, node, fisco, port, index):
         if ca.check_agent_gmca_exist(ca.get_GM_ca_path()):
             ca.gm_generator_node_ca(ca.get_GM_agent_path(),
                 node_dir + '/data', 'node' + str(index))
+            shutil.copytree(ca.get_GM_agent_path() + '/sdk', node_dir + '/data/sdk')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt', node_dir + '/data/')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.key', node_dir + '/data/')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/server.crt', node_dir + '/data/')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/server.key', node_dir + '/data/')
         else:
             logger.error(' gm agency cert not completed')
             raise Exception(' gm agency cert not completed')

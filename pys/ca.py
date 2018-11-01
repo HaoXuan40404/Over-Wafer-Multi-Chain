@@ -345,7 +345,10 @@ def gm_generator_node_ca(agent, dir, node):
     shutil.copytree(sh_path, temp_path)
     try:
         get_agent = agent.split('/')
-        agent_name = get_agent[len(get_agent)-1]
+        if bool(get_agent[len(get_agent)-1]):
+            agent_name = get_agent[len(get_agent)-1]
+        else:
+            agent_name = get_agent[len(get_agent)-2]
     except Exception as e:
         if os.path.exists(temp_path):
             shutil.rmtree(temp_path)
@@ -355,6 +358,7 @@ def gm_generator_node_ca(agent, dir, node):
         try:
             shutil.copytree(agent, temp_path + '/gm/' + agent_name)
             os.chdir(path.get_path() + '/cert_temp/gm')
+            shutil.copy('./cert.cnf',agent_name)
             (status, result)= utils.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent_name + ' ' + node)
             os.chdir(path.get_path())
         except Exception as e:
@@ -369,7 +373,8 @@ def gm_generator_node_ca(agent, dir, node):
         raise Exception(' Generate %s cert failed! Cant find %s.' %(agent_name, agent))
     if not status:
         try:
-            os.mkdir(dir + '/' + node)
+            if os.path.exists(dir + '/' + node):
+                os.mkdir(dir + '/' + node)
             shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmagency.crt', dir + '/')
             shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmca.crt', dir + '/')
             shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmennode.crt', dir + '/')
@@ -388,6 +393,8 @@ def gm_generator_node_ca(agent, dir, node):
             logger.error('  Generate %s cert failed! %s.'%(node, e))
             raise Exception(' Generate %s cert failed! %s.'%(node, e))
     else:
+        if os.path.exists(temp_path):
+            shutil.rmtree(temp_path)
         logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
         logger.error('  Generate %s cert failed! Result is %s'%(node, result))
         raise Exception(' Generate %s cert failed! Result is %s'%(node, result))
