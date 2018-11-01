@@ -57,11 +57,10 @@ def chain_build(cfg, fisco_path):
                         ' \t build install package for chain %s version %s success.', chain_id, chain_version)
                 except MCError as me:
                     logger.error(me)
-                    consoler.error(' \t %s', me)
+                    consoler.error(' \033[1;31m \t %s \033[0m', me)
                     
             if nsc > 0:
                 ns.write()
-
         else:
             consoler.info(' build operation will do nothing.')
 
@@ -70,6 +69,7 @@ def chain_build(cfg, fisco_path):
         consoler.error(me)
 
     logger.info(' chain build end.')
+
 
 
 def build_cfg(cc, fisco):
