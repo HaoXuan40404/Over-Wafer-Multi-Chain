@@ -71,14 +71,23 @@ def build_node_dir(chain, node, fisco, port, index):
         shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
-        ca.gm_generator_node_ca(
-            node_dir + '/data', 'node' + str(index), ca.get_GM_ca_path())
+        if ca.check_agent_gmca_exist(ca.get_GM_ca_path()):
+            ca.gm_generator_node_ca(ca.get_GM_agent_path(),
+                node_dir + '/data', 'node' + str(index))
+            shutil.copytree(ca.get_GM_agent_path() + '/sdk', node_dir + '/data/sdk')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt', node_dir + '/data/')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.key', node_dir + '/data/')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/server.crt', node_dir + '/data/')
+            shutil.copy(ca.get_GM_agent_path() + '/sdk/server.key', node_dir + '/data/')
+        else:
+            logger.error(' gm agency cert not completed')
+            raise Exception(' gm agency cert not completed')
     else:
         # ca.generator_node_ca(node_dir + '/data',
         #                      node.get_p2p_ip(), ca.get_agent_ca_path())
-        
-        ca.new_generator_node_ca(
+        ca.generator_node_ca(
             ca.get_agent_ca_path(), node_dir + '/data', 'node' + str(index))
+
 
     logger.info(' build_node_dir end. ')
 
@@ -151,10 +160,10 @@ def build_common_dir(chain, fisco):
         shutil.copytree(path.get_path() +
                         '/tpl/GM_temp_node/web3sdk', com_dir + '/web3sdk')
         # copy ca.crt to web3sdk conf dir
-        shutil.copy(ca.get_ca_path() + '/GM/node0/data/sdk/ca.crt',
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt',
                     com_dir + '/web3sdk/conf')
         # copy client.keystore to web3sdk conf dir
-        shutil.copy(ca.get_ca_path() + '/GM/node0/data/sdk/client.keystore',
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
     else:
         # web3sdk

@@ -35,7 +35,7 @@ def init():
     ca.set_agent(mconf.get_agent())
 
     # init ca dir
-    ca.set_ca_path(pwd + '/data/ca')
+    ca.set_ca_path(pwd + '/data/ca/' + ca.get_agent())
 
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
@@ -93,6 +93,7 @@ def Usage():
         '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
+
     tools_group.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                             'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\'',
@@ -151,50 +152,63 @@ def Usage():
         chain = args.stop
         opr_stop.stop_chain(chain)
         consoler.info(' stop operation end.')
-    elif args.pub_list:
-        consoler.info(' pub_list operation begin.')
-        chain = args.pub_list
+    elif args.publist:
+        consoler.info(' publist operation begin.')
+        chain = args.publist
         opr_list.pub_list(chain)
-        consoler.info(' pub_list operation end.')
-    elif args.pkg_list:
-        consoler.info(' pkg_list operation begin.')
-        chain = args.pkg_list
+        consoler.info(' publist operation end.')
+    elif args.pkglist:
+        consoler.info(' pkglist operation begin.')
+        chain = args.pkglist
         opr_list.pkg_list(chain)
-        consoler.info(' pkg_list operation end.')
-    elif args.do_cmd:
-        consoler.info(' do_cmd operation begin.')
-        params = args.do_cmd
+        consoler.info(' pkglist operation end.')
+    elif args.docmd:
+        consoler.info(' docmd operation begin.')
+        params = args.docmd
         opr_tools.do_cmd(params[0], params[1])
-        consoler.info(' do_cmd operation end.')
-    elif args.push_file:
-        consoler.info(' push_file operation begin.')
-        params = args.push_file
+        consoler.info(' docmd operation end.')
+    elif args.pushfile:
+        consoler.info(' pushfile operation begin.')
+        params = args.pushfile
         opr_tools.push_file(params[0], params[1], params[2])
-        consoler.info(' push_file operation end.')
+        consoler.info(' pushfile operation end.')
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
-        ca.new_generate_root_ca(chain_dir)
+        chain_name = args.chainca[1]
+        if args.gm:
+            ca.gm_generate_root_ca(chain_dir, chain_name)
+        else:
+            ca.generate_root_ca(chain_dir, chain_name)
         consoler.info(' chain cert end.')
     elif args.agencyca:
         consoler.info(' agency cert begin.')
         agency_dir = args.agencyca[0]
         chain_dir = args.agencyca[1]
         agency_name = args.agencyca[2]
-        ca.new_generator_agent_ca(agency_dir, chain_dir, agency_name)
+        if args.gm:
+            ca.gm_generator_agent_ca(agency_dir, chain_dir, agency_name)
+        else:
+            ca.generator_agent_ca(agency_dir, chain_dir, agency_name)
         consoler.info(' agency cert end.')
     elif args.nodeca:
         consoler.info(' agency cert begin.')
         agency_dir = args.nodeca[0]
         node_dir = args.nodeca[1]
         node_name = args.nodeca[2]
-        ca.new_generator_node_ca(agency_dir, node_dir, node_name)
+        if args.gm:
+            ca.gm_generator_node_ca(agency_dir, node_dir, node_name)
+        else:
+            ca.generator_node_ca(agency_dir, node_dir, node_name)
         consoler.info(' agency cert end.')
     elif args.sdkca:
         consoler.info(' sdk cert begin.')
         sdk_dir = args.sdkca[0]
         agency_dir = args.sdkca[1]
-        ca.new_generator_sdk_ca(agency_dir, sdk_dir)
+        if args.gm:
+            ca.gm_generator_sdk_ca(agency_dir, sdk_dir)
+        else:
+            ca.generator_sdk_ca(agency_dir, sdk_dir)
         consoler.info(' sdk cert end.')
     elif args.env_check:
         consoler.info(' env_check operation begin.')
@@ -209,6 +223,10 @@ def Usage():
     elif args.init:
         opr_init_chain.init_chain()
         consoler.info(' ansible init success.')
+    elif args.cainit:
+        consoler.info(' cert init begin.')
+        ca.init_ca(args.cainit[0])
+        consoler.info(' cert init end.')
     elif args.export:
         consoler.info(' export operation begin.')
         opr_export.export_package(
@@ -220,14 +238,14 @@ def Usage():
         consoler.info(' ls_host operation end.')
     else:
         consoler.error(
-            'invalid operation,  \"python main.py -h\" can be used to show detailed usage.')
+            '\033[1;31m invalid operation,  \"python main.py -h\" can be used to show detailed usage. \033[0m')
     return 0
 
 def main():
     try:
         init()
     except Exception as e:
-        consoler.error(' OWMC init fault , %s', e)
+        consoler.error(' \033[1;31m OWMC init fault , %s \033[0m', e)
     else:
         Usage()
 

@@ -32,11 +32,23 @@ check_java() {
 
 usage() {
 printf "%s\n" \
-"usage command gen_chain_cert chainname|
-              gen_agency_cert agencyname|
-              gen_node_cert agencyname nodename|
-              gen_sdk_cert agencyname sdkname|
+"usage command gen_chain_cert chaindir|
+              gen_agency_cert chaindir agencydir|
+              gen_node_cert agencydir nodedir|
+              gen_sdk_cert agencydir sdkdir|
               help"
+}
+
+getname() {
+    local name="$1"
+    if [ -z "$name" ]; then
+        return 0
+    fi
+    [[ "$name" =~ ^.*/$ ]] && {
+        name="${name%/*}"
+    }
+    name="${name##*/}"
+    echo "$name"
 }
 
 check_name() {
@@ -63,23 +75,23 @@ dir_must_exists() {
 }
 
 dir_must_not_exists() {
-    if [  -d "$1" ]; then
+    if [ -e "$1" ]; then
         echo "$1 DIR exists, please clean old DIR!"
         exit $EXIT_CODE
     fi
 }
 
 gen_chain_cert() {
-    name="$2"
+    path="$2"
+    name=`getname "$path"`
+    dir_must_not_exists "$path"
     check_name chain "$name"
-
-    if [  -f "ca.key" -o -f "ca.req" -o -f "ca.crt" ]; then
-        echo "ca.key or ca.req or ca.crt file exists, please clean all old files!"
-        exit $EXIT_CODE
-    fi
-
-    openssl genrsa -out ca.key 2048
-    openssl req -new -x509 -days 3650 -subj "/CN=$name/O=fiscobcos/OU=chain" -key ca.key -out ca.crt
+    
+    chaindir=$path
+    mkdir -p $chaindir
+    openssl genrsa -out $chaindir/ca.key 2048
+    openssl req -new -x509 -days 3650 -subj "/CN=$name/O=fiscobcos/OU=chain" -key $chaindir/ca.key -out $chaindir/ca.crt
+    cp cert.cnf $chaindir
 
     if [ $? -eq 0 ]; then
         echo "build chain ca succussful!"
@@ -89,34 +101,43 @@ gen_chain_cert() {
 }
 
 gen_agency_cert() {
-    name="$2"
-    check_name agency "$name"
-    dir_must_not_exists "$name"
+    chain="$2"
+    agencypath="$3"
+    name=`getname "$agencypath"`
 
-    mkdir $name
-    agencydir=$name
+    dir_must_exists "$chain"
+    file_must_exists "$chain/ca.key"
+    check_name agency "$name"
+    agencydir=$agencypath
+    dir_must_not_exists "$agencydir"
+    mkdir -p $agencydir
 
     openssl genrsa -out $agencydir/agency.key 2048
-    openssl req -new -sha256 -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/agency.key -config cert.cnf -out $agencydir/agency.csr
-    openssl x509 -req -days 3650 -sha256 -CA ca.crt -CAkey ca.key -CAcreateserial\
-        -in $agencydir/agency.csr -out $agencydir/agency.crt  -extensions v4_req -extfile cert.cnf
+    openssl req -new -sha256 -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/agency.key -config $chain/cert.cnf -out $agencydir/agency.csr
+    openssl x509 -req -days 3650 -sha256 -CA $chain/ca.crt -CAkey $chain/ca.key -CAcreateserial\
+        -in $agencydir/agency.csr -out $agencydir/agency.crt  -extensions v4_req -extfile $chain/cert.cnf
     
-    cp ca.crt cert.cnf $agencydir/
-    cp ca.crt $agencydir/ca-agency.crt
+    cp $chain/ca.crt $chain/cert.cnf $agencydir/
+    cp $chain/ca.crt $agencydir/ca-agency.crt
     more $agencydir/agency.crt | cat >>$agencydir/ca-agency.crt
+    rm -f $agencydir/agency.csr
+
     echo "build $name agency cert successful!"
 }
 
 gen_cert_secp256k1() {
-    store_dir="$1"
-    name="$2"
-    openssl ecparam -out $store_dir/${name}.param -name secp256k1
-    openssl genpkey -paramfile $store_dir/${name}.param -out $store_dir/${name}.key
-    openssl pkey -in $store_dir/${name}.key -pubout -out $store_dir/${name}.pubkey
-    openssl req -new -sha256 -subj "/CN=$store_dir/O=fiscobcos/OU=${name}" -key $store_dir/${name}.key -config cert.cnf -out $store_dir/${name}.csr
-    openssl x509 -req -days 3650 -sha256 -in $store_dir/${name}.csr -CAkey agency.key -CA agency.crt\
-        -force_pubkey $store_dir/${name}.pubkey -out $store_dir/${name}.crt -CAcreateserial -extensions v3_req -extfile cert.cnf
-    openssl ec -in $store_dir/${name}.key -outform DER | tail -c +8 | head -c 32 | xxd -p -c 32 | cat >$store_dir/${name}.private
+    capath="$1"
+    certpath="$2"
+    name="$3"
+    type="$4"
+    openssl ecparam -out $certpath/${type}.param -name secp256k1
+    openssl genpkey -paramfile $certpath/${type}.param -out $certpath/${type}.key
+    openssl pkey -in $certpath/${type}.key -pubout -out $certpath/${type}.pubkey
+    openssl req -new -sha256 -subj "/CN=${name}/O=fiscobcos/OU=${type}" -key $certpath/${type}.key -config $capath/cert.cnf -out $certpath/${type}.csr
+    openssl x509 -req -days 3650 -sha256 -in $certpath/${type}.csr -CAkey $capath/agency.key -CA $capath/agency.crt\
+        -force_pubkey $certpath/${type}.pubkey -out $certpath/${type}.crt -CAcreateserial -extensions v3_req -extfile $capath/cert.cnf
+    openssl ec -in $certpath/${type}.key -outform DER | tail -c +8 | head -c 32 | xxd -p -c 32 | cat >$certpath/${type}.private
+    rm -f $certpath/${type}.csr
 }
 
 gen_node_cert() {
@@ -126,27 +147,24 @@ gen_node_cert() {
     fi
 
     agency="$2"
-    node="$3"
-    check_name agency "$agency"
-    check_name node "$node"
-
+    nodepath="$3"
+    #node=`getname "$nodepath"`
+    node="$4"
     dir_must_exists "$agency"
     file_must_exists "$agency/agency.key"
-    dir_must_not_exists "$agency/$node"
+    dir_must_exists "$nodepath"
+    check_name node "$node"
 
-    cd $agency
-    mkdir -p $node
-   
-    gen_cert_secp256k1 $node node
+    mkdir -p $nodepath
+    gen_cert_secp256k1 "$agency" "$nodepath" "$node" node
     #nodeid is pubkey
-    openssl ec -in $node/node.key -text -noout | sed -n '7,11p' | tr -d ": \n" | awk '{print substr($0,3);}' | cat >$node/node.nodeid
-    openssl x509 -serial -noout -in $node/node.crt | awk -F= '{print $2}' | cat >$node/node.serial
-    cp ca.crt agency.crt $node
+    openssl ec -in $nodepath/node.key -text -noout | sed -n '7,11p' | tr -d ": \n" | awk '{print substr($0,3);}' | cat >$nodepath/node.nodeid
+    openssl x509 -serial -noout -in $nodepath/node.crt | awk -F= '{print $2}' | cat >$nodepath/node.serial
+    cp $agency/ca.crt $agency/agency.crt $nodepath
 
-    cd $node
+    cd $nodepath
     nodeid=`cat node.nodeid | head`
     serial=`cat node.serial | head`
-    
     cat >node.json <<EOF
 {
  "id":"$nodeid",
@@ -160,7 +178,7 @@ EOF
  "serial":"$serial",
  "pubkey":"$nodeid",
  "name":"$node"
-}
+
 EOF
 
     echo "build $node node cert successful!"
@@ -186,24 +204,22 @@ gen_sdk_cert() {
     check_java
 
     agency="$2"
-    sdk="$3"
-    check_name agency "$agency"
-    check_name sdk "$sdk"
-
+    sdkpath="$3"
+    sdk=`getname "$sdkpath"`
     dir_must_exists "$agency"
     file_must_exists "$agency/agency.key"
-    dir_must_not_exists "$agency/$sdk"
+    dir_must_not_exists "$sdkpath"
+    check_name sdk "$sdk"
 
-    cd  $agency
-    mkdir -p $sdk
+    mkdir -p $sdkpath
+    gen_cert_secp256k1 "$agency" "$sdkpath" "$sdk" sdk
+    cp $agency/ca-agency.crt $sdkpath/ca.crt
     
-    gen_cert_secp256k1 $sdk sdk
-    cp ca-agency.crt $sdk/ca.crt
-    
-    read_password
-    openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdk/sdk.crt -inkey $sdk/sdk.key -out $sdk/keystore.p12
-    keytool -importkeystore -srckeystore $sdk/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
-        -destkeystore $sdk/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 
+    #read_password
+    mypass=123456
+    openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdkpath/sdk.crt -inkey $sdkpath/sdk.key -out $sdkpath/keystore.p12
+    keytool -importkeystore -srckeystore $sdkpath/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
+        -destkeystore $sdkpath/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 
 
     echo "build $sdk sdk cert successful!"
 }

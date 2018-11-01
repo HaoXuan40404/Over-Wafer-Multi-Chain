@@ -30,7 +30,7 @@ def publish_chain(chains, force = False):
         chain = chains[i].split(':')
         if len(chain) != 2:
             logger.error('not chain_id:chain_version format, str is %s', chains[i])
-            consoler.error(' skip, invalid publish format, chain_id:chain_version should require, chain is %s', chain)
+            consoler.error(' \033[1;31m skip, invalid publish format, chain_id:chain_version should require, chain is %s \033[0m', chain)
             continue
 
         chain_id = chain[0]
@@ -95,7 +95,7 @@ def publish_server(chain_id, chain_version, force=False):
                     mm.append(meta.MetaNode(host, p.get_rpc_port(), p.get_p2p_port(), p.get_channel_port(), node_dir))
             consoler.info(' \t push package : %s success.', host)
         else:
-            consoler.error(' \t push package : %s  failed.', host)
+            consoler.error(' \033[1;31m \t push package : %s  failed. \033[0m', host)
     # record meta info, write meta.json file
     mm.write_to_file()
     consoler.info(' publish package for chain %s version %s end.', chain_id, chain_version)

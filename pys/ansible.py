@@ -91,7 +91,7 @@ def unarchive_module(ip, src, dest):
     """
 
 
-    (status, result) = commautilsnds.getstatusoutput('bash ' + path.get_path() +
+    (status, result) = utils.getstatusoutput('bash ' + path.get_path() +
                                                 '/scripts/ansible.sh unarchive ' + ip + ' ' + src + ' ' + dest)
     logger.debug('unarchive action , status %s, output %s' % (status, result))
    
@@ -261,9 +261,9 @@ def telnet_module(ip, msg='HelloWorld!'):
                                                 '/scripts/ansible.sh telnet ' + ip + ' ' + msg)
     logger.debug('telnet action , status %s, output %s' % (status, result))
     if status:
-        consoler.error(' ansible telnet failed, host is %s, output is %s', ip, result)
+        consoler.error(' \033[1;31m  ansible telnet failed, host is %s, output is %s \033[0m', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible telnet failed, host is %s, output is %s', ip, result)
+        consoler.error(' \033[1;31m  ansible telnet failed, host is %s, output is %s \033[0m', ip, result)
     else:
         consoler.info(' ansible telnet success, host is %s, output is %s', ip, result)
         return True
@@ -289,9 +289,9 @@ def cmd_module(ip, cmd):
                                                 '/scripts/ansible.sh cmd ' + ip + ' ' + cmd)
     logger.debug(' cmd action , status %s, output %s' % (status, result))
     if status:
-        consoler.error(' ansible cmd failed, host is %s, output is %s', ip, result)
+        consoler.error(' \033[1;31m  ansible cmd failed, host is %s, output is %s \033[0m', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible cmd failed, host is %s, output is %s', ip, result)
+        consoler.error(' \033[1;31m  ansible cmd failed, host is %s, output is %s \033[0m', ip, result)
     else:
         consoler.info(' ansible cmd success, host is %s, cmd is %s.', ip, cmd)
         return True
@@ -309,9 +309,9 @@ def diagnose_module(ip, dest):
                                                 '/scripts/ansible.sh diagnose ' + ip + ' ' + dest)
     logger.debug('diagnose action , status %s, output %s' % (status, result))
     if status:
-        consoler.error(' ansible diagnose failed, host is %s, output is %s', ip, result)
+        consoler.error(' \033[1;31m  ansible diagnose failed, host is %s, output is %s \033[0m', ip, result)
     elif not (result.find('SUCCESS') + 1):
-        consoler.error(' ansible diagnose failed, host is %s, output is %s', ip, result)
+        consoler.error(' \033[1;31m  ansible diagnose failed, host is %s, output is %s \033[0m', ip, result)
     else:
         consoler.info(' ansible diagnose success, host is %s, result is %s.', ip, result)
         return True
