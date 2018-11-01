@@ -52,7 +52,7 @@ def Usage():
     parser.add_argument('--init', action='store_true',
                         help=' initialize ansible configuration file, need sudo permissions. ')
     
-    pkg_group = parser.add_argument_group(' Build, Expand, Export, List Chain Package Options.')
+    pkg_group = parser.add_argument_group(' Build, Expand, Export, List Chain Package Options ')
     pkg_group.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                         'fisco_path'), help=' build chain packages with the specified configuration file')
     pkg_group.add_argument('--expand', nargs=2, metavar=('./config.conf, dir'),
@@ -65,7 +65,7 @@ def Usage():
                            help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
 
     mgr_group = parser.add_argument_group(
-        ' Manage Published Chain With Ansible Options .')
+        ' Manage Published Chain With Ansible Options ')
     mgr_group.add_argument('--publish', nargs='+', metavar=('chain_id:version'
                                                             ), help='publish packages')
     mgr_group.add_argument('--start', nargs='+', metavar=('all or chain_id or',
@@ -88,7 +88,7 @@ def Usage():
                            help='effect with --publish/-p, with this opt, all package of chain will be republished')
 
     tools_group = parser.add_argument_group(
-        ' Other Tools Options .')
+        ' Other Tools Options ')
     tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
