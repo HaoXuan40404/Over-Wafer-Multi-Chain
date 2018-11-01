@@ -12,6 +12,7 @@ from pys.chain import data
 from pys.node import build
 from pys.node import temp_node
 from pys.exp import MCError
+from pys.chain.names import Names
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
 from pys.chain.parser import ConfigConf
@@ -133,7 +134,11 @@ def chain_expand(cfg, dir):
                 ' parser config failed, invalid format, config is %s, exception is %s' % (cfg, e))
 
         if os.path.exists(cc.get_chain().data_dir()):
+            ns = Names()
             expand_on_exist_chain(cc)
+            chain = cc.get_chain()
+            if ns.append(chain.get_id(), chain.get_name()):
+                ns.write()
         else:
             expand_on_nonexist_chain(cc, dir)
         

@@ -12,6 +12,7 @@ from pys.chain.parser import ConfigConfs
 from pys.chain import data
 from pys.node import build
 from pys.node import temp_node
+from pys.chain.names import Names
 from pys.exp import MCError
 
 from pys.node.fisco_version import Fisco
@@ -38,21 +39,28 @@ def chain_build(cfg, fisco_path):
 
         # parser and check config if valid
         ccs = ConfigConfs(cfg).get_ccs()
+        ns = Names()
+        nsc = 0
         # build all chain
         if len(ccs) != 0:
             for cc in ccs.values():
                 try:
                     chain_id = cc.get_chain().get_id()
                     chain_version = cc.get_chain().get_version()
+                    chain_name = cc.get_chain().get_name()
                     consoler.info(
                         ' build install package for chain %s version %s.', chain_id, chain_version)
                     build_cfg(cc, fisco)
+                    if ns.append(chain_id, chain_name):
+                        nsc = nsc + 1
                     consoler.info(
                         ' \t build install package for chain %s version %s success.', chain_id, chain_version)
                 except MCError as me:
                     logger.error(me)
                     consoler.error(' \033[1;31m \t %s \033[0m', me)
-
+                    
+            if nsc > 0:
+                ns.write()
         else:
             consoler.info(' build operation will do nothing.')
 
@@ -91,6 +99,7 @@ def build_cfg(cc, fisco):
         dir = chain.data_dir()
 
         acp = AllChainPort()
+        
         # port check
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):

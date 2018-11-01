@@ -20,6 +20,12 @@ class Data:
     def remove(self, chain_id, chain_version):
         return shutil.rmtree(dir(chain_id, chain_version))
 
+def package_names_dir():
+    return path.get_path() + '/data/chain/names/'
+
+def create_names_dir():
+    os.makedirs(package_names_dir())
+
 def package_dir(chain_id, chain_version):
     return path.get_path() + ('/data/chain/pkg/' + chain_id + '/' + chain_version)
 

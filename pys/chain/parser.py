@@ -118,7 +118,15 @@ class ConfigConf:
         chain_version = cf.get('chain', 'version')
         if not utils.valid_string(chain_id):
             raise Exception('chain_version empty.')
-        self.set_chain(Chain(chain_id, chain_version))
+
+        try:
+            chain_name = cf.get('chain', 'chainname')
+            if not utils.valid_string(chain_name):
+                chain_name = str(id)
+        except Exception as e:
+            pass
+        
+        self.set_chain(Chain(chain_id, chain_version, chain_name))
 
         rpc_port = cf.getint('ports', 'rpc_port')
         if not utils.valid_port(rpc_port):
