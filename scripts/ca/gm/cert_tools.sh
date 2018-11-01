@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPENSSL_CMD=/mnt/c/Users/asherli/Desktop/ca/bin/openssl
+OPENSSL_CMD={GM_PATH}
 EXIT_CODE=-1
 
 check_openssl_gm() {

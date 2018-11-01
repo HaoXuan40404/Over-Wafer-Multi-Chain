@@ -148,10 +148,11 @@ gen_node_cert() {
 
     agency="$2"
     nodepath="$3"
-    node=`getname "$nodepath"`
+    #node=`getname "$nodepath"`
+    node="$4"
     dir_must_exists "$agency"
     file_must_exists "$agency/agency.key"
-    dir_must_not_exists "$nodepath"
+    dir_must_exists "$nodepath"
     check_name node "$node"
 
     mkdir -p $nodepath
