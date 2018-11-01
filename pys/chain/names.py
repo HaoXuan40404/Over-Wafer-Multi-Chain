@@ -36,7 +36,7 @@ class Names:
         return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
 
     def write(self):
-        if not data.package_names_dir():
+        if not os.path.exists(data.package_names_dir()):
             data.create_names_dir()
 
         names_file = data.package_names_dir() + '/names.json'
