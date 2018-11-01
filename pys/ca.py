@@ -120,22 +120,30 @@ def agent_gmca_exist():
     return os.path.exists(get_GM_ca_path() + '/'+ CA.agent + '/gmagency.crt') and os.path.exists(get_GM_ca_path() + '/'+ CA.agent + '/gmagency.key')
 
 
-def generate_root_ca(dir):
+
+def generate_root_ca(dir, chain = '12345'):
     """[generate root cert]
     
     Arguments:
         dir {[path]} -- [root cert path]
     """
-
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.environ['out'] = dir
-    (status, result) = utils.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out')
+    try:
+        int(chain)
+    except Exception as e:
+        logger.error('\033[1;31m  Generate root cert failed! Chain id must be (int), your chain id is %s.\033[0m',chain )
+        raise Exception(' Generate root cert failed! Result is %s', e)
+    sh_path =  path.get_path() + '/scripts/ca/'
+     
+    _dir = os.path.abspath(dir) 
+    os.chdir(sh_path)
+    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + _dir + '/' + chain)
+    os.chdir(path.get_path())
     if not status:
-        logger.info(' Generate root cert successful! dir is %s.', dir)
+        logger.info(' Generate root cert successful! dir is %s.', _dir)
     else:
-        consoler.error('  Generate root cert failed! Please check your network, and try to check your opennssl version.')
-        consoler.error('  Generate root cert failed! Result is %s', result)
-        logger.error(' Generate root cert failed! Result is %s', result)
+        logger.error('  Generate root cert failed! Please check your network, and try to check your opennssl version.')
+        logger.error('  Generate root cert failed! Result is %s', result)
+        raise Exception(' Generate root cert failed! Result is %s', result)
 
 
 def generator_agent_ca(dir, ca, agent):
@@ -147,78 +155,133 @@ def generator_agent_ca(dir, ca, agent):
         agent {[string]} -- [agency name]
     """
 
-
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.environ['out'] = dir
-    os.environ['ca'] = ca
-    os.environ['agent'] = agent
-    (status, result)= utils.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent')
-    if not status:
-        logger.info(' Generate %s cert successful! dir is %s.', agent, dir)
+    ca = os.path.abspath(ca) 
+    dir = os.path.abspath(dir) 
+    sh_path =  path.get_path() + '/scripts/ca/'
+    if os.path.exists(ca) and os.path.isfile(ca + '/ca.crt') and os.path.isfile(ca +  '/ca.key') and os.path.isfile(ca + '/cert.cnf'):
+        logger.info('ca_path completed.')
     else:
-        consoler.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
-        consoler.error('  Generate %s cert failed! Result is %s',agent, result)
-        logger.error(' Generate %s cert failed! Result is %s',agent, result)
+        consoler.error(' \033[1;31m   Generate %s cert failed! Cant find cert in %s. \033[0m',agent, ca)
+        raise Exception(' Generate %s cert failed! Cant find cert in %s. \033[0m',agent, ca)
+    ca = path.get_path() + '/' + ca 
+    os.chdir(sh_path)
+    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_agency_cert ' + ca + ' ' + dir + '/' + agent)
+    os.chdir(path.get_path())
+    if not status:
+        logger.info(' Generate %s cert successful! dir is %s.', agent, dir + '/' + agent)
+    else:
+        logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
+        logger.error('  Generate %s cert failed! Result is %s',agent, result)
+        raise Exception(' Generate %s cert failed! Result is %s',agent, result)
 
 
 
-def generator_node_ca(dir, node, agent):
+def generator_node_ca(agent, dir, node):
     """[generate node cert ]
     
     Arguments:
-        dir {[path]} -- [node cert path]
-        node {[string]} -- [node name]
         agent {[path]} -- [agency cert path]
+        node {[string]} -- [node name]
+        dir {[path]} -- [node cert path]
     """
-
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.environ['agent'] = agent
-    os.environ['node'] = node
-    os.environ['out']= dir
-    (status, result)= utils.getstatusoutput('bash $scripts/generate_node_cert.sh -a $agent -d $agent -n $node -o $out')
-    if not status:
-        logger.info(' Generate %s cert successful! dir is %s.', node, dir)
+    sh_path =  path.get_path() + '/scripts/ca/'
+    _dir = os.path.abspath(dir) 
+    agent = os.path.abspath(agent) 
+    try:
+        get_agent = agent.split('/')
+        agent_name = get_agent[len(get_agent)-1]
+    except Exception as e:
+        consoler.error(' \033[1;31m   Generate %s cert failed! %s. \033[0m',agent_name, e)
+        raise Exception(' Generate %s cert failed! %s.',agent_name, e)
+    if os.path.exists(agent) and os.path.isfile(agent +  '/agency.crt') and os.path.isfile(agent + '/agency.key'):
+        try:
+            os.chdir(sh_path)
+            (status, result)= utils.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent + ' ' + _dir + '/' + node)
+            os.chdir(path.get_path())
+        except Exception as e:
+            logger.error('  Generate %s cert failed! %s.',agent_name, e)
+            raise Exception(' Generate %s cert failed! %s.',agent_name, e)
     else:
-        consoler.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
-        consoler.error('  Generate %s cert failed! Result is %s',node, result)
-        logger.error(' Generate %s cert failed! Result is %s',node, result)
+        logger.error('  Generate %s cert failed! Cant find %s.',agent_name, agent)
+        raise Exception(' Generate %s cert failed! Cant find %s.',agent_name, agent)
+    if not status:
+        logger.info(' Generate %s cert successful! dir is %s.', node, _dir + '/' + node)
+    else:
+        logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
+        logger.error('  Generate %s cert failed! Result is %s',node, result)
+        raise Exception(' Generate %s cert failed! Result is %s',node, result)
 
-def generator_sdk_ca(dir):
-    """[generate sdkcert ]
+def generator_sdk_ca(agency_dir,sdk_dir):
+    """[generate sdkcert]
     
     Arguments:
         dir {[path]} -- [agency cert path]
         If operation success, dir will generate sdk dir under the target path, the content is sdk_cert.
     """
-
-    os.environ['out'] = dir
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    (status, result)= utils.getstatusoutput('bash $scripts/generate_sdk_cert.sh -d $out')
-    if not  status:
-        logger.info(' Generate sdk cert successful! dir is %s/sdk.', dir)
+    dir = os.path.abspath(agency_dir)
+    sdk_dir = os.path.abspath(sdk_dir)
+    sh_path =  path.get_path() + '/scripts/ca/'
+    if os.path.exists(dir) and os.path.isfile(dir +  '/agency.crt') and os.path.isfile(dir + '/agency.key'):
+        try:
+            get_agent = dir.split('/')
+            agent_name = get_agent[len(get_agent)-1]
+            logger.debug("name is "+agent_name)
+            os.chdir(sh_path)
+            (status, result)= utils.getstatusoutput('./cert_tools.sh  gen_sdk_cert ' + dir + ' ' + sdk_dir + '/sdk')
+            os.chdir(path.get_path())
+        except Exception as e:
+            logger.error('  Copy %s cert failed! %s.',agent_name, e)
+            raise Exception(' Copy %s cert failed! %s.',agent_name, e)
+            
     else:
-        logger.error('  Generate sdk cert failed! Please check your network, and try to check your opennssl version.')
-        logger.error(' Generate sdk cert failed! Result is %s', result)
-        raise Exception('  Generate sdk cert failed! Result is %s', result)
-        
-    return 0
+        logger.error('  Copy %s cert failed! %s.',agent_name, e)
+        raise Exception(' Copy %s cert failed! %s.',agent_name, e)
 
-def gm_generate_root_ca(dir):
-    """[generate guomi root cert]
+    if not status:
+        consoler.info(' Generate %s cert successful! dir is %s.', agent_name, sdk_dir + '/sdk')
+        logger.info(' Generate %s cert successful! dir is %s.', agent_name, sdk_dir + '/sdk')
+    else:
+        logger.error('  Generate sdk cert failed! Result is %s', result)
+        raise Exception(' Generate sdk cert failed! Result is %s', result)
+
+
+def gm_generate_root_ca(dir, chain = '12345'):
+    """[generate root cert]
     
     Arguments:
-        dir {[dir]} -- [put ca in dir]
+        dir {[path]} -- [root cert path]
     """
-    
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.environ['out'] = dir
-    (status, result)= utils.getstatusoutput('bash $scripts/generate_chain_cert.sh -o $out -g')
+
+
+    sh_path =  path.get_path() + '/scripts/ca/'
+    temp_path = path.get_path() + '/cert_temp'
+    shutil.copytree(sh_path, temp_path)
+    os.chdir(path.get_path() + '/cert_temp/gm')
+    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + chain)
+    os.chdir(path.get_path())
+    if not os.path.exists(dir + '/' + chain):
+        os.makedirs(dir + '/' + chain)
     if not status:
-        logger.info(' Generate GM root cert successful! dir is %s.', dir)
+        try:
+            shutil.copy(temp_path + '/gm/gmca.crt', dir + '/' + chain)
+            shutil.copy(temp_path + '/gm/gmca.key', dir + '/' + chain)
+            shutil.copy(temp_path + '/gm/gmsm2.param', dir + '/' + chain)
+            shutil.copy(temp_path + '/gm/cert.cnf', dir + '/' + chain)
+            logger.info(' Generate root cert successful! dir is %s.', dir + '/' + chain)
+        except Exception as e:
+            if os.path.exists(temp_path):
+                shutil.rmtree(temp_path)
+            logger.error('  Generate root cert failed! %s.',e)
+            raise Exception(' Generate root cert failed! %s.',e)
     else:
-        logger.error('  Generate GM root cert failed! Please check your network, and try to check your opennssl version.')
-        logger.error('  Generate GM root cert failed! Result is %s', result)
-        raise Exception(' Generate GM root cert failed! Result is %s', result)
+        if os.path.exists(temp_path):
+            shutil.rmtree(temp_path)
+        logger.error('  Generate root cert failed! Please check your network, and try to check your opennssl version.')
+        logger.error('  Generate root cert failed! Result is %s', result)
+        raise Exception(' Generate root cert failed! Result is %s', result)
+    if os.path.exists(temp_path):
+        shutil.rmtree(temp_path)
+
 
 def gm_generator_agent_ca(dir, ca, agent):
     """[generate agency cert]
@@ -230,110 +293,27 @@ def gm_generator_agent_ca(dir, ca, agent):
     """
 
 
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.environ['out'] = dir
-    os.environ['ca'] = ca
-    os.environ['agent'] = agent
-    (status, result)= utils.getstatusoutput('bash $scripts/generate_agency_cert.sh -c $ca -o $out -n $agent -g')
-    if not status:
-        logger.info(' Generate GM %s cert successful! dir is %s.', agent, dir)
-    else:
-        logger.error('  Generate GM %s cert failed! Please check your network, and try to check your opennssl version.')
-        logger.error('  Generate GM %s cert failed! Result is %s',agent, result)
-        raise Exception(' Generate GM %s cert failed! Result is %s',agent, result)
-
-def gm_generator_node_ca(agent,dir, node):
-    """[generate node cert ]
-    
-    Arguments:
-        dir {[path]} -- [node cert path]
-        node {[string]} -- [node name]
-        agent {[path]} -- [agency cert path]
-    """
-
-    os.environ['scripts'] = path.get_path() + '/scripts/ca/'
-    os.environ['agent'] = agent
-    os.environ['node'] = node
-    os.environ['out']= dir
-    (status, result)= utils.getstatusoutput('bash $scripts/generate_node_cert.sh -a WB -d $agent -n $node -o $out -s sdk -g')
-    if not status:
-        logger.info(' Generate GM %s cert successful! dir is %s.', node, dir)
-    else:
-        logger.error('  Generate GM %s cert failed! Please check your network, and try to check your opennssl version.')
-        logger.error('  Generate GM %s cert failed! Result is %s',node, result)
-        raise Exception(' Generate GM %s cert failed! Result is %s',node, result)
-
-
-
-
-
-def new_generate_root_ca(dir, chain = '12345'):
-    """[generate root cert]
-    
-    Arguments:
-        dir {[path]} -- [root cert path]
-    """
-
-
     sh_path =  path.get_path() + '/scripts/ca/'
     temp_path = path.get_path() + '/cert_temp'
-    os.mkdir(path.get_path() + '/cert_temp')
-    shutil.copy(sh_path + '/cert_tools.sh', temp_path)
-    shutil.copy(sh_path + '/cert.cnf', temp_path)
-    os.chdir(path.get_path() + '/cert_temp')
-    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + chain)
-    os.chdir(path.get_path())
-    if not status:
-        try:
-            shutil.copy(temp_path + '/ca.crt', dir)
-            shutil.copy(temp_path + '/ca.key', dir)
-            shutil.copy(temp_path + '/cert.cnf', dir)
-            logger.info(' Generate root cert successful! dir is %s.', dir)
-        except Exception as e:
-            logger.error('  Generate root cert failed! %s.',e)
-            raise Exception(' Generate root cert failed! %s.',e)
+    shutil.copytree(sh_path, temp_path)
+    if os.path.exists(ca) and os.path.isfile(ca + '/gmca.crt') and os.path.isfile(ca +  '/gmca.key') and os.path.isfile(ca + '/cert.cnf'):
+        shutil.copy(ca + '/gmca.crt', temp_path + '/gm/')
+        shutil.copy(ca + '/gmca.key', temp_path + '/gm/')
+        shutil.copy(ca + '/gmsm2.param', temp_path + '/gm/')
     else:
-        logger.error('  Generate root cert failed! Please check your network, and try to check your opennssl version.')
-        logger.error('  Generate root cert failed! Result is %s', result)
-        raise Exception(' Generate root cert failed! Result is %s', result)
-    if os.path.exists(temp_path):
-        shutil.rmtree(temp_path)
-
-
-def new_generator_agent_ca(dir, ca, agent):
-    """[generate agency cert]
-    
-    Arguments:
-        dir {[path]} -- [agency cert path]
-        ca {[path]} -- [root cert path]
-        agent {[string]} -- [agency name]
-    """
-
-
-    sh_path =  path.get_path() + '/scripts/ca/'
-    os.mkdir(path.get_path() + '/cert_temp')
-    temp_path = path.get_path() + '/cert_temp'
-    if os.path.exists(ca) and os.path.isfile(ca + '/ca.crt') and os.path.isfile(ca +  '/ca.key') and os.path.isfile(ca + '/cert.cnf'):
-        shutil.copy(ca + '/ca.crt', temp_path)
-        shutil.copy(ca + '/ca.key', temp_path)
-        shutil.copy(ca + '/cert.cnf', temp_path)
-    else:
-        consoler.error('  Generate %s cert failed! Cant find cert in %s.',agent, ca)
-        logger.error(' Generate %s cert failed! Cant find cert in %s.',agent, ca)
-    os.chdir(path.get_path() + '/cert_temp')
-    shutil.copy(sh_path + '/cert_tools.sh', temp_path)
-    shutil.copy(sh_path + '/cert.cnf', temp_path)
+        consoler.error(' \033[1;31m   Generate %s cert failed! Cant find cert in %s. \033[0m',agent, ca)
+        logger.error(' Generate %s cert failed! Cant find cert in %s. \033[0m',agent, ca)
+    os.chdir(path.get_path() + '/cert_temp/gm')
     (status, result) = utils.getstatusoutput('./cert_tools.sh gen_agency_cert ' + agent)
     os.chdir(path.get_path())
     if not status:
         try: 
             os.mkdir(dir + '/' + agent)
-            shutil.copy(temp_path + '/' + agent + '/agency.crt', dir + '/' + agent)
-            shutil.copy(temp_path + '/' + agent + '/agency.csr', dir + '/' + agent)
-            shutil.copy(temp_path + '/' + agent + '/agency.key', dir + '/' + agent)
-            shutil.copy(temp_path + '/' + agent + '/ca-agency.crt', dir + '/' + agent)
-            shutil.copy(temp_path + '/' + agent + '/ca.crt', dir + '/' + agent)
-            shutil.copy(temp_path + '/' + agent + '/cert.cnf', dir + '/' + agent)
+            shutil.copy(temp_path + '/gm/' + agent + '/gmagency.crt', dir + '/' + agent)
+            shutil.copy(temp_path + '/gm/' + agent + '/gmagency.key', dir + '/' + agent)
+            shutil.copy(temp_path + '/gm/' + agent + '/gmsm2.param', dir + '/' + agent)
+            shutil.copy(temp_path + '/gm/' + agent + '/gmca.crt', dir + '/' + agent)
+            shutil.copy(temp_path + '/gm/' + agent + '/cert.cnf', dir + '/' + agent)
             logger.info(' Generate %s cert successful! dir is %s.', agent, dir + '/' + agent)
         except Exception as e:
             if os.path.exists(temp_path):
@@ -351,7 +331,7 @@ def new_generator_agent_ca(dir, ca, agent):
 
 
 
-def new_generator_node_ca(agent, dir, node):
+def gm_generator_node_ca(agent, dir, node):
     """[generate node cert ]
     
     Arguments:
@@ -360,22 +340,20 @@ def new_generator_node_ca(agent, dir, node):
         agent {[path]} -- [agency cert path]
     """
     sh_path =  path.get_path() + '/scripts/ca/'
-    os.mkdir(path.get_path() + '/cert_temp')
     temp_path = path.get_path() + '/cert_temp'
+    shutil.copytree(sh_path, temp_path)
     try:
         get_agent = agent.split('/')
         agent_name = get_agent[len(get_agent)-1]
     except Exception as e:
         if os.path.exists(temp_path):
             shutil.rmtree(temp_path)
-        consoler.error('  Generate %s cert failed! %s.',agent_name, e)
+        consoler.error(' \033[1;31m   Generate %s cert failed! %s. \033[0m',agent_name, e)
         raise Exception(' Generate %s cert failed! %s.',agent_name, e)
-    if os.path.exists(agent) and os.path.isfile(agent +  '/agency.crt') and os.path.isfile(agent + '/agency.key'):
+    if os.path.exists(agent) and os.path.isfile(agent +  '/gmagency.crt') and os.path.isfile(agent + '/gmagency.key'):
         try:
-            shutil.copytree(agent, temp_path + '/' + agent_name)
-            os.chdir(path.get_path() + '/cert_temp')
-            shutil.copy(sh_path + '/cert_tools.sh', temp_path)
-            shutil.copy(sh_path + '/cert.cnf', temp_path)
+            shutil.copytree(agent, temp_path + '/gm/' + agent_name)
+            os.chdir(path.get_path() + '/cert_temp/gm')
             (status, result)= utils.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent_name + ' ' + node)
             os.chdir(path.get_path())
         except Exception as e:
@@ -390,18 +368,18 @@ def new_generator_node_ca(agent, dir, node):
         raise Exception(' Generate %s cert failed! Cant find %s.',agent_name, agent)
     if not status:
         try:
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/agency.crt', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/ca.crt', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.ca', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.crt', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.csr', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.json', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.key', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.nodeid', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.param', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.private', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.pubkey', dir + '/')
-            shutil.copy(temp_path + '/' + agent_name + '/' + node + '/node.serial', dir + '/')
+            os.mkdir(dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmagency.crt', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmca.crt', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmennode.crt', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmennode.key', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.ca', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.crt', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.json', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.key', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.nodeid', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.private', dir + '/' + node)
+            shutil.copy(temp_path + '/gm/' + agent_name + '/' + node + '/gmnode.serial', dir + '/' + node)
             logger.info(' Generate %s cert successful! dir is %s.', node, dir + '/' + node)
         except Exception as e:
             if os.path.exists(temp_path):
@@ -415,7 +393,7 @@ def new_generator_node_ca(agent, dir, node):
     if os.path.exists(temp_path):
         shutil.rmtree(temp_path)
 
-def new_generator_sdk_ca(agency_dir,sdk_dir):
+def gm_generator_sdk_ca(agency_dir,sdk_dir):
     """[generate sdkcert]
     
     Arguments:
@@ -424,17 +402,15 @@ def new_generator_sdk_ca(agency_dir,sdk_dir):
     """
     dir = agency_dir
     sh_path =  path.get_path() + '/scripts/ca/'
-    os.mkdir(path.get_path() + '/cert_temp')
     temp_path = path.get_path() + '/cert_temp'
-    if os.path.exists(dir) and os.path.isfile(dir +  '/agency.crt') and os.path.isfile(dir + '/agency.key'):
+    shutil.copytree(sh_path, temp_path)
+    if os.path.exists(dir) and os.path.isfile(dir +  '/gmagency.crt') and os.path.isfile(dir + '/gmagency.key'):
         try:
             get_agent = dir.split('/')
             agent_name = get_agent[len(get_agent)-1]
-            shutil.copytree(dir, temp_path +  '/' +agent_name)
+            shutil.copytree(dir, temp_path +  '/gm/' +agent_name)
             logger.debug("name is "+agent_name)
-            shutil.copy(sh_path + '/cert_tools.sh', temp_path)
-            shutil.copy(sh_path + '/cert.cnf', temp_path)
-            os.chdir(path.get_path() + '/cert_temp')
+            os.chdir(path.get_path() + '/cert_temp/gm')
             (status, result)= utils.getstatusoutput('./cert_tools.sh  gen_sdk_cert ' + agent_name + ' sdk')
             os.chdir(path.get_path())
         except Exception as e:
@@ -451,7 +427,7 @@ def new_generator_sdk_ca(agency_dir,sdk_dir):
 
     if not status:
         try:
-            shutil.copytree(temp_path + '/' + agent_name + '/sdk', sdk_dir + '/sdk')
+            shutil.copytree(temp_path + '/gm/' + agent_name + '/sdk', sdk_dir + '/sdk')
             consoler.info(' Generate %s cert successful! dir is %s.', agent_name, sdk_dir + '/sdk')
             logger.info(' Generate %s cert successful! dir is %s.', agent_name, sdk_dir + '/sdk')
         except Exception as e:
@@ -460,6 +436,8 @@ def new_generator_sdk_ca(agency_dir,sdk_dir):
             logger.error(' Generate sdk cert failed! dir is %s/sdk.', sdk_dir)
             raise Exception(' Generate sdk cert failed! dir is %s/sdk.', sdk_dir)
     else:
+        if os.path.exists(temp_path):
+            shutil.rmtree(temp_path)
         logger.error('  Generate sdk cert failed! Result is %s', result)
         raise Exception(' Generate sdk cert failed! Result is %s', result)
     if os.path.exists(temp_path):
@@ -595,6 +573,7 @@ def init_ca(cert_path):
         raise Exception("Init cert failed! files not completed")
 
     return 0
+
 
 
 

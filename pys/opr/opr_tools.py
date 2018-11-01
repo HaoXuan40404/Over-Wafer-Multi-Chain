@@ -32,9 +32,9 @@ def telnet_ansible(server):
             if ansible.telnet_module(server[i]):
                 consoler.info(' telnet test success, host is %s.', server[i])
             else:
-                consoler.error(' telnet test failed, host is %s.', server[i])
+                consoler.error(' \033[1;31m telnet test failed, host is %s. \033[0m', server[i])
         else:
-            consoler.error(' Not invalid host, skip, host is %s.', server[i])
+            consoler.error(' \033[1;31m Not invalid host, skip, host is %s. \033[0m', server[i])
 
 def do_cmd(dst, cmd):
     """do cmd on remote server, dst can be one server, one chain or all server
@@ -49,7 +49,7 @@ def do_cmd(dst, cmd):
     elif utils.valid_chain_id(dst):
         mm = Meta(dst)
         if not mm.exist():
-            consoler.error(' chain is not published, can not cmd action, chain_id is %s', dst)
+            consoler.error(' \033[1;31m chain is not published, can not cmd action, chain_id is %s \033[0m', dst)
         else:
             consoler.info(' => do cmd, chain id is %s', dst)
             for k in mm.get_nodes().keys():
@@ -58,7 +58,7 @@ def do_cmd(dst, cmd):
     elif utils.valid_ip(dst):
         ansible.cmd_module(dst, cmd)
     else:
-        consoler.error(' invalid docmd dst, dst is %s, dst should be invalid chain_id or invali host ip or \'all\'.', dst)
+        consoler.error(' \033[1;31m invalid docmd dst, dst is %s, dst should be invalid chain_id or invali host ip or \'all\'. \033[0m', dst)
 
 def push_file(host, src, dst):
     """push file to remote server
@@ -70,7 +70,7 @@ def push_file(host, src, dst):
     """
 
     if not os.path.exists(src):
-        consoler.error(' src is not exist, src is %s.', src)
+        consoler.error(' \033[1;31m src is not exist, src is %s. \033[0m', src)
         return
 
     logger.info(' host is %s, src is %s, dst is %s', host, src, dst)
@@ -82,7 +82,7 @@ def push_file(host, src, dst):
         consoler.info(' => push %s to %s of chain %s.', src, dst, host)
         mm = Meta(host)
         if not mm.exist():
-            consoler.error(' chain is not published, can not push file action, chain_id is %s', host)
+            consoler.error(' \033[1;31m chain is not published, can not push file action, chain_id is %s \033[0m', host)
         else:
             consoler.info(' => do cmd, chain id is %s', host)
             for k in mm.get_nodes().keys():
@@ -94,7 +94,7 @@ def push_file(host, src, dst):
         if mkdir_and_push(host, src, dst):
             consoler.info(' push %s to %s of %s server success.', src, dst, host)
     else:
-        consoler.error(' invalid push file host, host is %s, dst should be invalid chain_id or invali host ip or \'all\'.', host)
+        consoler.error(' \033[1;31m invalid push file host, host is %s, dst should be invalid chain_id or invali host ip or \'all\'. \033[0m', host)
 
 
 def mkdir_and_push(host, src, dst):
