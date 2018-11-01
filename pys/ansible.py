@@ -152,6 +152,8 @@ def register_module(ip, dest, index):
         consoler.warn(' ansible register  failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
+    elif not (result.find('sucess') + 1):
+        consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
     else:
         consoler.info(' ansible register success, host is %s, index is %s, output is %s.', ip, str(index), result)
         return True
@@ -177,6 +179,8 @@ def unregister_module(ip, dest, index):
         consoler.warn(' ansible unregister  failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
     elif not (result.find('SUCCESS') + 1):
         consoler.warn(' ansible unregister failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
+    elif not (result.find('sucess') + 1):
+        consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
     else:
         consoler.info(' ansible unregister success, host is %s, index is %s, output is %s.', ip, str(index), result)
         return True

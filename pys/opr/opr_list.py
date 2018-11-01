@@ -4,6 +4,7 @@ import sys
 
 from pys import ansible, utils
 from pys.chain import data
+from pys.chain.names import Names
 from pys.chain.meta import *
 from pys.chain.package import AllChain, ChainVers, HostNodeDirs, VerHosts
 from pys.chain.port import HostPort
@@ -19,7 +20,7 @@ def pub_list(chains):
 
     logger.info('list begin, chains is %s', chains)
     consoler.info(' chains is %s' % chains)
-
+    ns = Names()
     meta_list = []
     if chains[0] == 'all':
         dir = data.meta_dir_base()
@@ -37,7 +38,7 @@ def pub_list(chains):
                 meta_list.append(m)
 
     for m in meta_list:
-        consoler.info(' => chain id :%s    published version : %s', m.get_chain_id(), m.get_chain_version())
+        consoler.info(' => chain id :%s  chain name : %s  published version : %s', m.get_chain_id(), ns.get_name(m.get_chain_id()), m.get_chain_version())
         nodes = m.get_nodes()
         for host, nodes in nodes.items():
             consoler.info('\t host => %s', host)
@@ -57,6 +58,8 @@ def pkg_list(chains):
 
     consoler.info(' chains is %s' % chains)
 
+    ns = Names()
+
     if chains[0] == 'all':
         ac = AllChain()
         chains = ac.get_chains()
@@ -64,8 +67,8 @@ def pkg_list(chains):
             consoler.info(' No build chain exist, do nothing.')
         
     for chain in chains:
-        logger.debug(' chain id is %s', chain)
-        consoler.info(' ==> chain id : %s', chain)
+        logger.debug(' chain id is %s, chain name is %s', chain, ns.get_name(chain))
+        consoler.info(' ==> chain id : %s ,chain name is %s', chain, ns.get_name(chain))
         cv = ChainVers(chain)
         if len(cv.get_ver_list()) == 0:
             consoler.info(' No build version exist for chain %s, do nothing.', chain)
@@ -92,6 +95,7 @@ def ls_host(hosts):
     """
 
     am = AllMeta()
+    ns = Names()
 
     for host in hosts:
         consoler.info(' => host is %s', host)
@@ -105,7 +109,7 @@ def ls_host(hosts):
             continue
         
         for meta in metas:
-            consoler.info(' \t => chain id :%s    published version : %s', meta.get_chain_id(), meta.get_chain_version())
+            consoler.info(' \t => chain id :%s  chain name : %s  published version : %s', meta.get_chain_id(), ns.get_name(meta.get_chain_id()), meta.get_chain_version())
             nodes = meta.get_host_nodes(host)
             for node in nodes:
                 consoler.info(' \t\t %s, rpc_port:%s, p2p_port:%s, channel_port:%s', node.get_node(), str(node.get_rpc()), str(node.get_p2p()), str(node.get_channel()))

@@ -40,68 +40,72 @@ def init():
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
 
-
-def usage():
+def Usage():
     """cmd usage
     """
 
     parser = argparse.ArgumentParser(
-        description='OWMC Description usage.')
+        description=' Build fisco-bcos install pkg for multi chain and manage the chain installation package builded with ansible. ')
 
-    parser.add_argument('-v', '--version',
-                        action='store_true', help='show OWMC\'s version')
-    parser.add_argument('-i', '--init', action='store_true',
-                        help=' initialize ansible configuration file, need sudo permissions')
-    parser.add_argument('-a', '--cainit', nargs=1, metavar=('./ca_path'),
-                        help=' initialize cert configuration')
-    parser.add_argument('-b', '--build', nargs=2, metavar=('./config.conf or ./conf/',
-                                                           'fisco_path'), help=' build chain packages with the specified configuration file')
-    parser.add_argument('-e', '--expand', nargs='+', metavar=('./config.conf, dir with genesis.json bootstrapsnode.json fisco-bcos'),
-                        help='build chain packages on exist chain')
-    parser.add_argument('-p', '--publish', nargs='+', metavar=('chain_id:version'
-                                                               ), help='publish packages')
-    parser.add_argument('-s', '--start', nargs='+', metavar=('all or chain_id or',
-                                                             'chain_id:host_ip'), help='start node')
-    parser.add_argument('-S', '--stop', nargs='+', metavar=('all or chain_id or',
-                                                            'chain_id:host_ip'), help='stop node')
-    parser.add_argument('-r', '--register', nargs=3, metavar=('chain_id ', 'host_ip',
-                                                              'node'), help='register node on node with expand opr build')
-    parser.add_argument('-u', '--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
-                                                                'node'), help='unregister node')
-    parser.add_argument('-D', '--diagnose', nargs='+', metavar=('all or chain_id or',
-                                                               'chain_id:host_ip'), help='diagnose node')
-    parser.add_argument('-c', '--check', nargs='+', metavar=('all or chain_id or',
-                                                             'chain_id:host_ip'), help='check servers status')
-    parser.add_argument('-K', '--pkglist', nargs='+', metavar=('all or chain_id'
-                                                                ), help='list build packages info.')
-    parser.add_argument('-U', '--publist', nargs='+', metavar=('all or chain_id or'
-                                                                ), help='list published packages info.')
-    parser.add_argument('-E', '--export', nargs=3, metavar=('chain_id', 'chain_version',
-                                                            'dest_path'), help='export build package out.')
-    parser.add_argument('-l', '--ls_host', nargs='+', metavar=('host_ip'),
-                        help='ls published packages\' host')
-    parser.add_argument('-t', '--telnet', nargs='+', metavar=(
+    parser.add_argument('--version',
+                        action='store_true', help='show OWMC\'s version. ')
+    parser.add_argument('--init', action='store_true',
+                        help=' initialize ansible configuration file, need sudo permissions. ')
+    
+    pkg_group = parser.add_argument_group(' Build, Expand, Export, List Chain Package Options.')
+    pkg_group.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
+                                                        'fisco_path'), help=' build chain packages with the specified configuration file')
+    pkg_group.add_argument('--expand', nargs=2, metavar=('./config.conf, dir'),
+                           help='build chain packages on exist chain')
+    pkg_group.add_argument('--export', nargs=3, metavar=('chain_id', 'chain_version',
+                                                         'dest_path'), help='export build package out.')
+    pkg_group.add_argument('--pkglist', nargs='+', metavar=('all or chain_id'
+                                                            ), help='list build packages info.')
+    pkg_group.add_argument('--direct', action='store_true',
+                           help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
+
+    mgr_group = parser.add_argument_group(
+        ' Manage Published Chain With Ansible Options .')
+    mgr_group.add_argument('--publish', nargs='+', metavar=('chain_id:version'
+                                                            ), help='publish packages')
+    mgr_group.add_argument('--start', nargs='+', metavar=('all or chain_id or',
+                                                          'chain_id:host_ip'), help='start node')
+    mgr_group.add_argument('--stop', nargs='+', metavar=('all or chain_id or',
+                                                         'chain_id:host_ip'), help='stop node')
+    mgr_group.add_argument('--register', nargs=3, metavar=('chain_id ', 'host_ip',
+                                                           'node'), help='register node on node with expand opr build')
+    mgr_group.add_argument('--unregister', nargs=3, metavar=('chain_id ',  'host_ip',
+                                                             'node'), help='unregister node')
+    mgr_group.add_argument('--diagnose', nargs='+', metavar=('all or chain_id or',
+                                                             'chain_id:host_ip'), help='diagnose node')
+    mgr_group.add_argument('--check', nargs='+', metavar=('all or chain_id or',
+                                                          'chain_id:host_ip'), help='check servers status')
+    mgr_group.add_argument('--publist', nargs='+', metavar=('all or chain_id or'
+                                                            ), help='list published packages info.')
+    mgr_group.add_argument('--lshost', nargs='+', metavar=('host_ip'),
+                           help='ls published packages\' host')
+    mgr_group.add_argument('-f', '--force', action='store_true',
+                           help='effect with --publish/-p, with this opt, all package of chain will be republished')
+
+    tools_group = parser.add_argument_group(
+        ' Other Tools Options .')
+    tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
-    parser.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
+    tools_group.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
-    parser.add_argument('-d', '--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
+
+    tools_group.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                             'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
-    parser.add_argument('-P', '--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
+    tools_group.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
-    parser.add_argument('--chainca', nargs=2, metavar=('./dir_chain_ca(SET)'), 
+    tools_group.add_argument('--chainca', nargs=1, metavar=('chain ca dir to be generate.',),
                         help='generate root cert')
-    parser.add_argument('--agencyca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                        './chain_ca_dir', 'Agency_Name'), help='generate agency cert')
-    parser.add_argument('--nodeca', nargs=3, metavar=('./dir_agency_ca(SET)',
-                                                      './dir_node_ca', 'node_name'), help='generate node cert')
-    parser.add_argument('--sdkca', nargs=2, metavar=('./dir_sdk_ca(SET)',
-                                                     './dir_agency_ca'), help='generate sdk cert')
-    parser.add_argument('-f', '--force', action='store_true',
-                        help='effect with --publish/-p, with this opt, all package of chain will be republished')
-    parser.add_argument('-g', '--gm', action='store_true',
-                        help='effect with generate cert, generate gm cert')
-    parser.add_argument('--direct', action='store_true',
-                        help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
+    tools_group.add_argument('--agencyca', nargs=3, metavar=('agency ca dir to be generate.',
+                                                        'chain ca dir', ' agency name'), help='generate agency cert')
+    tools_group.add_argument('--nodeca', nargs=3, metavar=('agency ca dir',
+                                                      'node ca dir to be generate.', 'node_name'), help='generate node cert')
+    tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk ca dir',
+                                                     'agency ca dir'), help='generate sdk cert')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -237,14 +241,13 @@ def usage():
             '\033[1;31m invalid operation,  \"python main.py -h\" can be used to show detailed usage. \033[0m')
     return 0
 
-
 def main():
     try:
         init()
     except Exception as e:
         consoler.error(' \033[1;31m OWMC init fault , %s \033[0m', e)
     else:
-        usage()
+        Usage()
 
 
 if __name__ == '__main__':
