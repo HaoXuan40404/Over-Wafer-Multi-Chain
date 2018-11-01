@@ -562,6 +562,18 @@ def check_agent_gmca_exist(path):
 
 
 def init_ca(cert_path):
+    """[init users' agenct ca]
+    
+    Arguments:
+        cert_path {[dir]} -- [usrs' cert path]
+    
+    Raises:
+        Exception -- [normal error]
+    
+    Returns:
+        [bool] -- [true or flase]
+    """
+
     if check_ca_exist(cert_path) and check_agent_ca_exist(cert_path):
         shutil.copytree(cert_path, get_ca_path())
         logger.info("Init cert, copy cert to cert_path")
@@ -573,6 +585,22 @@ def init_ca(cert_path):
         raise Exception("Init cert failed! files not completed")
 
     return 0
+
+def installgm():
+    os.chdir(path.get_path() + '/cert_temp/gm')
+    gmpath = os.path.abspath('./') 
+    (status, result) = utils.getstatusoutput('./install_tassl.sh ' + gmpath)
+    old = 'OPENSSL_CMD=/mnt/c/Users/asherli/Desktop/ca/bin/openssl'
+    new = gmpath + '/bin/openssl'
+    utils.replace('./cert_tools.sh',old,new)
+    os.chdir(path.get_path())
+    if not status:
+        logger.info(' Init gm cert successful!')
+    else:
+        consoler.error(' \033[1;31m  Init gm cert failed \033[0m')
+        logger.error('  Init gm cert failed')
+        raise Exception(' Init gm cert failed! Result is %s', result) 
+
 
 
 
