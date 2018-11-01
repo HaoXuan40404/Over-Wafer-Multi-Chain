@@ -118,7 +118,8 @@ class ConfigConf:
         chain_version = cf.get('chain', 'version')
         if not utils.valid_string(chain_id):
             raise Exception('chain_version empty.')
-
+        
+        chain_name = str(chain_id)
         try:
             chain_name = cf.get('chain', 'chainname')
             if not utils.valid_string(chain_name):
