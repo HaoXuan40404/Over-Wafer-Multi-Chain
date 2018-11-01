@@ -68,7 +68,7 @@ def pkg_list(chains):
         
     for chain in chains:
         logger.debug(' chain id is %s, chain name is %s', chain, ns.get_name(chain))
-        consoler.info(' ==> chain id : %s', chain)
+        consoler.info(' ==> chain id : %s ,chain name is %s', chain, ns.get_name(chain))
         cv = ChainVers(chain)
         if len(cv.get_ver_list()) == 0:
             consoler.info(' No build version exist for chain %s, do nothing.', chain)
