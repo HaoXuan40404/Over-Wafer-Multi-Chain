@@ -218,8 +218,6 @@ def usage():
         consoler.info(' telnet operation end.')
     elif args.init:
         opr_init_chain.init_chain()
-        if args.gm:
-            ca.installgm()
         consoler.info(' ansible init success.')
     elif args.cainit:
         consoler.info(' cert init begin.')
