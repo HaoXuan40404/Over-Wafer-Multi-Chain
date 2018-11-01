@@ -51,6 +51,8 @@ def Usage():
                         action='store_true', help='show OWMC\'s version. ')
     parser.add_argument('--init', action='store_true',
                         help=' initialize ansible configuration file, need sudo permissions. ')
+    parser.add_argument('--cainit', action='store_true',
+                        help=' initialize cert. ')
     
     pkg_group = parser.add_argument_group(' Build, Expand, Export, List Chain Package Options.')
     pkg_group.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
@@ -94,9 +96,9 @@ def Usage():
     tools_group.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
 
-    tools_group.add_argument('-d', '--do_cmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
+    tools_group.add_argument('-d', '--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                             'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
-    tools_group.add_argument('-P', '--push_file', nargs=3, metavar=('host ip or chain id or \'all\'',
+    tools_group.add_argument('-P', '--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     tools_group.add_argument('--chainca', nargs=1, metavar=('chain ca dir to be generate.',),
                         help='generate root cert')
