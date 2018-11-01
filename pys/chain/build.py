@@ -63,7 +63,8 @@ def chain_build(cfg, fisco_path):
     logger.info(' chain build end.')
 
 
-def build_cfg(cc, fisco,):
+
+def build_cfg(cc, fisco):
     """build all install package for one chain base on cc 
 
     Arguments:

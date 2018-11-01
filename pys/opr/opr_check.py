@@ -55,6 +55,7 @@ def check_server(chain_id):
         return 
 
     logger.info('check action, chain_id is ' + chain_id)
+    consoler.info(' => check all node of chain %s', chain_id)
     for k in mm.get_nodes().keys():
         logger.debug('host ip is ' + k)
         ansible.check_module(k, ansible.get_dir() + '/' + chain_id)

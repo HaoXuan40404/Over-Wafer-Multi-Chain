@@ -80,12 +80,8 @@ def build_node_dir(chain, node, fisco, port, index):
     else:
         # ca.generator_node_ca(node_dir + '/data',
         #                      node.get_p2p_ip(), ca.get_agent_ca_path())
-        if ca.check_agent_ca_exist(ca.get_agent_ca_path()):
-            ca.generator_node_ca(ca.get_ca_path(),
-                                node_dir + '/data', 'node' + str(index))
-        else:
-            logger.error(' agency cert not completed')
-            raise Exception(' agency cert not completed')
+        ca.generator_node_ca(
+            ca.get_agent_ca_path(), node_dir + '/data', 'node' + str(index))
 
 
     logger.info(' build_node_dir end. ')

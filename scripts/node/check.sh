@@ -6,7 +6,7 @@ cd $dirpath
 index=$1;
 
 if [ -z $index ];then
-	echo "check all node status ... "
+	echo "check all node status of this server ... "
 	for checkfile in `ls $dirpath/node*/check.sh`
     do
         bash $checkfile
@@ -19,3 +19,4 @@ else
 		echo "node$index is not exist."
 	fi
 fi
+echo ""
