@@ -99,6 +99,9 @@ function deps_check()
         done
     ;;
     esac
+
+    openssl_check
+    java_check
 }
 
 #openssl 1.0.2 be requied.
