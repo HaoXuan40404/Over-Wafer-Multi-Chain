@@ -20,9 +20,9 @@ class JAVA:
     
     def __repr__(self):
         if self.is_openjdk():
-            return ' java version : %s:%s - %s' % (self.major, self.minor, 'openjdk')
+            return ' java version : %s.%s-%s' % (self.major, self.minor, 'openjdk')
         else:
-            return ' java version : %s:%s - %s' % (self.major, self.minor, 'oracle')
+            return ' java version : %s.%s-%s' % (self.major, self.minor, 'oracle')
 
     def is_openjdk(self):
         return self.openjdk
@@ -52,7 +52,7 @@ class JAVA:
             self.openjdk = False
 
         if not self.is_suitable():
-            raise MCError(' invalid java version, oracle jdk need >=1.8 or openjdk need >= 1.9, now is %s ' % self)
+            raise MCError(' invalid java version, oracle jdk need >=1.8 or openjdk need >= 1.9, now %s ' % self)
         
         logger.info(' java version is %s ', self)
         
