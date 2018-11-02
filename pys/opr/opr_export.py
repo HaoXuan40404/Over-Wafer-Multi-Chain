@@ -39,6 +39,6 @@ def export_package(chain_id, chain_version, dest, direct):
                 consoler.info(' Export chain_id(%s) chain_version(%s) success.', chain_id, chain_version)
         else:
             consoler.error(
-                ' No package build for chain_id(%s):chain_version(%s). ', chain_id, chain_version)
+                '\033[1;31m No package build for chain_id(%s):chain_version(%s). \033[0m', chain_id, chain_version)
     else:
         consoler.error(' \033[1;31m Not invalid chain_id, chain_id is %s \033[0m', chain_id)
