@@ -108,7 +108,7 @@ function deps_check()
 function openssl_check()
 {
     if $(check_install openssl);then
-       echo " " 
+       echo " " >/dev/null 2>&1
     else
         echo " ERROR - openssl is not installed." ; exit 1;
     fi
@@ -131,7 +131,7 @@ function openssl_check()
 function java_check()
 {
     if $(check_install java);then
-       echo "" 
+       echo "" >/dev/null 2>&1
     else
         echo " java is not installed." ; exit 1;
     fi
