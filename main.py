@@ -93,21 +93,21 @@ def Usage():
         ' Other Tools Options ')
     tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
-    tools_group.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
+    tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
 
     tools_group.add_argument('-d', '--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                             'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('-P', '--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
-    tools_group.add_argument('--chainca', nargs=1, metavar=('chain ca dir to be generate.',),
+    tools_group.add_argument('--chainca', nargs=1, metavar=('chain_dir',),
                         help='generate root cert')
-    tools_group.add_argument('--agencyca', nargs=3, metavar=('agency ca dir to be generate.',
-                                                        'chain ca dir', ' agency name'), help='generate agency cert')
-    tools_group.add_argument('--nodeca', nargs=3, metavar=('agency ca dir',
-                                                      'node ca dir to be generate.', 'node_name'), help='generate node cert')
-    tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk ca dir',
-                                                     'agency ca dir'), help='generate sdk cert')
+    tools_group.add_argument('--agencyca', nargs=3, metavar=('agency_dir',
+                                                        'chain_dir', ' agency_name'), help='generate agency cert')
+    tools_group.add_argument('--nodeca', nargs=3, metavar=('agency_dir',
+                                                      'node _dir', 'node_name'), help='generate node cert')
+    tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
+                                                     'agency_dir'), help='generate sdk cert')
     args = parser.parse_args()
     if args.version:
         version.version()
@@ -212,11 +212,11 @@ def Usage():
         else:
             ca.generator_sdk_ca(agency_dir, sdk_dir)
         consoler.info(' sdk cert end.')
-    elif args.env_check:
-        consoler.info(' env_check operation begin.')
-        hosts = args.env_check
+    elif args.envcheck:
+        consoler.info(' envcheck operation begin.')
+        hosts = args.envcheck
         opr_env_check.env_check(hosts)
-        consoler.info(' env_check operation end.')
+        consoler.info(' envcheck operation end.')
     elif args.telnet:
         consoler.info(' telnet operation begin.')
         telnet_list = args.telnet
