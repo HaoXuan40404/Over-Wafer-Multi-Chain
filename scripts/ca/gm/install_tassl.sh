@@ -2,7 +2,8 @@
 
 EXIT_CODE=-1
 cur_dir=`pwd`
-target_dir=`pwd`
+GM_FOLDER=$(cd "$(dirname "$0")";pwd)
+target_dir=${GM_FOLDER}
 
 usage() {
 printf "%s\n" "\
@@ -94,5 +95,5 @@ tassl_name="TASSL"
 tassl_url="https://github.com/jntass"
 tassl_install_cmd="bash config --prefix=${target_dir} no-shared && make -j2 && make install"
 download_and_install "${tassl_url}" "${tassl_name}" "${tassl_install_cmd}"
-GM_FOLDER=$(cd "$(dirname "$0")";pwd)
+
 sed -i "s:{GM_PATH}:${GM_FOLDER}/bin/openssl:g" ${GM_FOLDER}/cert_tools.sh

@@ -142,7 +142,7 @@ def generate_root_ca(dir, chain = '12345'):
     if not status:
         logger.info(' Generate root cert successful! dir is %s.', _dir)
     else:
-        logger.error('  Generate root cert failed! Please check your network, and try to check your opennssl version.')
+        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
         logger.error('  Generate root cert failed! Result is %s'%result)
         raise Exception(' Generate root cert failed! Result is %s'%result)
 
@@ -171,7 +171,7 @@ def generator_agent_ca(dir, ca, agent):
     if not status:
         logger.info(' Generate %s cert successful! dir is %s.'%(agent, dir + '/' + agent))
     else:
-        logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
+        consoler.error(' \033[1;31m Generate %s cert failed! Please check your network, and try to check your opennssl version.\033[0m')
         logger.error('  Generate %s cert failed! Result is %s'%(agent, result))
         raise Exception(' Generate %s cert failed! Result is %s'%(agent, result))
 
@@ -208,7 +208,7 @@ def generator_node_ca(agent, dir, node):
     if not status:
         logger.info(' Generate %s cert successful! dir is %s.', node, _dir + '/' + node)
     else:
-        logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
+        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
         logger.error('  Generate %s cert failed! Result is %s' %(node, result))
         raise Exception(' Generate %s cert failed! Result is %s' %(node, result))
 
@@ -277,7 +277,7 @@ def gm_generate_root_ca(dir, chain = '12345'):
     else:
         if os.path.exists(temp_path):
             shutil.rmtree(temp_path)
-        logger.error('  Generate root cert failed! Please check your network, and try to check your opennssl version.')
+        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
         logger.error('  Generate root cert failed! Result is %s' %result)
         raise Exception(' Generate root cert failed! Result is %s' %result)
     if os.path.exists(temp_path):
@@ -324,7 +324,7 @@ def gm_generator_agent_ca(dir, ca, agent):
     else:
         if os.path.exists(temp_path):
             shutil.rmtree(temp_path)
-        logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
+        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
         logger.error('  Generate %s cert failed! Result is %s'%(agent, result))
         raise Exception(' Generate %s cert failed! Result is %s'%(agent, result))
     if os.path.exists(temp_path):
@@ -395,7 +395,7 @@ def gm_generator_node_ca(agent, dir, node):
     else:
         if os.path.exists(temp_path):
             shutil.rmtree(temp_path)
-        logger.error('  Generate %s cert failed! Please check your network, and try to check your opennssl version.')
+        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
         logger.error('  Generate %s cert failed! Result is %s'%(node, result))
         raise Exception(' Generate %s cert failed! Result is %s'%(node, result))
     if os.path.exists(temp_path):
