@@ -37,12 +37,12 @@ class JAVA:
         version_str = output.split("\"")
         if not len(version_str) > 1:
             logger.error(' cannot get java version, status is %d, output is %s', status, output)
-            raise MCError(' cannot get java version. ')
+            raise MCError(' cannot get java version, oracle jdk need >=1.8 or openjdk need >= 1.9, please try \'java -version\'. ')
 
         version_arr = version_str[1].split('.')
         if not len(version_arr) > 2:
             logger.error(' cannot get java version, status is %d, output is %s', status, output)
-            raise MCError(' cannot get java version. ')
+            raise MCError(' cannot get java version, oracle jdk need >=1.8 or openjdk need >= 1.9, please try \'java -version\' ')
 
         self.major = version_arr[0]
         self.minor = version_arr[1]
