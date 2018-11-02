@@ -93,7 +93,7 @@ def Usage():
         ' Other Tools Options .')
     tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
-    tools_group.add_argument('--env_check', nargs='+', metavar=('all or host_ip'),
+    tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
 
     tools_group.add_argument('-d', '--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
@@ -212,11 +212,11 @@ def Usage():
         else:
             ca.generator_sdk_ca(agency_dir, sdk_dir)
         consoler.info(' sdk cert end.')
-    elif args.env_check:
-        consoler.info(' env_check operation begin.')
-        hosts = args.env_check
+    elif args.envcheck:
+        consoler.info(' envcheck operation begin.')
+        hosts = args.envcheck
         opr_env_check.env_check(hosts)
-        consoler.info(' env_check operation end.')
+        consoler.info(' envcheck operation end.')
     elif args.telnet:
         consoler.info(' telnet operation begin.')
         telnet_list = args.telnet
