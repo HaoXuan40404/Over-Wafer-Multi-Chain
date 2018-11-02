@@ -93,9 +93,10 @@ def Usage():
         ' Other Tools Options .')
     tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
+    tools_group.add_argument('-g', '--gm', action='store_true',
+                           help='effect with --***ca, this opt will generate gm cert')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                         help='check build environment')
-
     tools_group.add_argument('--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                             'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
@@ -108,8 +109,7 @@ def Usage():
                                                       'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
                                                      'agency_dir'), help='generate sdk cert')
-    tools_group.add_argument('-g', '--gm', action='store_true',
-                           help='effect with --***ca, this opt will generate gm cert')
+
 
     args = parser.parse_args()
     if args.version:
