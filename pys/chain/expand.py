@@ -126,6 +126,10 @@ def chain_expand(cfg, dir):
     logger.debug(' cfg is %s, dir is %s', cfg, dir)
 
     try:
+
+        # check java env
+        java = JAVA()
+        
         try:
             # parser and check config if valid
             cc = ConfigConf(cfg)

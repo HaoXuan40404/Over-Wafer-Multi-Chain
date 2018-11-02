@@ -8,6 +8,7 @@ from pys import path,ca
 from pys import utils
 from pys.log import logger
 from pys.log import consoler
+from pys.tool.java import JAVA
 from pys.chain.parser import ConfigConfs
 from pys.chain import data
 from pys.node import build
@@ -36,6 +37,9 @@ def chain_build(cfg, fisco_path):
                 ' fisco-bcos is not 1.3.x version, not support now, %s', fisco)
             raise MCError(
                 ' fisco-bcos is not 1.3.x version, not support now, %s' % fisco)
+        
+        # check java env
+        java = JAVA()
 
         # parser and check config if valid
         ccs = ConfigConfs(cfg).get_ccs()
