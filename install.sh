@@ -45,9 +45,10 @@ function sudo_permission_check()
 
 function format()
 {
-	find . -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
-    find . -name "*.sh"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
-    find . -name "web3sdk"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
+    dir=$1
+	find $dir -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
+    find $dir -name "*.sh"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
+    find $dir -name "web3sdk"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
 }
 
 #owmc install dir, default '/usr/local/'
@@ -94,6 +95,7 @@ function install()
     sudo cp -r $dirpath/doc  ${install_dir}/owmc/
     sudo cp -r $dirpath/data  ${install_dir}/owmc/
     sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
+    format ${install_dir}/owmc/
     sed -e "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
