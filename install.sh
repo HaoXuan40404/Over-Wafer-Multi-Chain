@@ -1,5 +1,5 @@
 #!/bin/bash
-# OWMC init and install shell.
+# owmc init and install shell.
 
 set -e
 
@@ -16,8 +16,7 @@ function alarm()
 function check_python()
 {
     python=$1
-    py_version=$($python -V 2>/dev/null | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '}
-3.6.6)
+    py_version=$($python -V 2>/dev/null | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
     if [ ! -z '${py_version}' ];then
         # echo " python path is ${python}, version is ${py_version}"
         return 0
@@ -61,55 +60,59 @@ function deps_check()
 
 }
 
-#OWMC install dir, default '/usr/local/'
+#owmc install dir, default '/usr/local/'
 install_dir="/usr/local/"
 python_env='/usr/bin/python'
 force="false"
 gm="false"
-OWMC="/usr/bin/OWMC"
+owmc="/usr/bin/owmc"
 function install()
 {
     # sudo permission check
     sudo_permission_check
     
     # params check
-    if ! $(check_python);then
-        alarm " Not invalid python path."; exit 1;
+    if ! $(check_python ${python_env});then
+        alarm " not invalid python path, path is ${python_env}."; exit 1;
     fi
 
-    if [ -f $OWMC ];then
+    if [ -f $owmc ];then
         if force == "true";then
-            sudo rm -rf $OWMC
+            sudo rm -rf $owmc
         else
-            alarm " $OWMC already install, set '-f' to force install." ; exit 1;
+            alarm " $owmc already install, set '-f' to force install." ; exit 1;
         fi
     fi
 
-    if [ -d ${install_dir}/OWMC ];then
+    if [ -d ${install_dir}/owmc/ ];then
         if force == "true";then
-            sudo rm -rf ${install_dir}/OWMC
+            sudo rm -rf ${install_dir}/owmc
         else
-            alarm " $OWMC already install, set '-f' to force install." ; exit 1;
+            alarm " $owmc already install, set '-f' to force install." ; exit 1;
         fi
     fi
 
-    echo " OWMC install dir is ${install_dir}"
-    echo " OWMC python env is ${python_env}"
+    echo " owmc install dir is ${install_dir}"
+    echo " owmc python env is ${python_env}"
 
-    sudo mkdir -p ${install_dir}/OWMC
-    sudo cp $dirpath/*  ${install_dir}/OWMC/
+    sudo mkdir -p ${install_dir}/owmc
+    sudo cp $dirpath/*  ${install_dir}/owmc/
+    sed -e "s/\/usr\/bin\/python/${python_env}/" ${install_dir}/owmc/main.py
+    ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
     deps_install
+
+    echo "owmc install success."
 }
 
 function help() 
 {
     echo "Usage:"
     echo "Optional:"
-    echo "    -d  <dir>           The dir of OWMC will be install. (default: /usr/loca/)"
+    echo "    -d  <dir>           The dir of owmc will be install. (default: /usr/loca/)"
     echo "    -p  <path>          The python path. (default: /usr/bin/python) "
     echo "    -g 			      Install guomi deps. (default: not install guomi deps.)"
-    echo "    -f                  Install OWMC even if it has been installed."
+    echo "    -f                  Install owmc even if it has been installed."
     echo "    -h                  This help"
     echo "Example:"
     echo "    bash install.sh "
