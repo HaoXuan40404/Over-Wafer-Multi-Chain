@@ -11,7 +11,7 @@ OS_ORACLE='oracle'
 
 function alarm()
 {
-    { echo "ERROR - $1"; exit 1; }
+    { echo 1>&2  "ERROR - $1"; exit 1; }
 }
 
 function os_check() 
