@@ -45,7 +45,7 @@ def Usage():
     """
 
     parser = argparse.ArgumentParser(
-        description=' Build fisco-bcos install pkg for multi chain and manage the chain installation package builded with ansible. ')
+        description=' Build fisco-bcos install pkg for multi chain and manage the chain  package with ansible. ')
 
     parser.add_argument('--version',
                         action='store_true', help='show OWMC\'s version. ')
@@ -53,8 +53,9 @@ def Usage():
                         help=' initialize ansible configuration file, need sudo permissions. ')
     parser.add_argument('--cainit', action='store_true',
                         help=' initialize cert. ')
-    
-    pkg_group = parser.add_argument_group(' Build, Expand, Export, List Chain Package Options ')
+
+    pkg_group = parser.add_argument_group(
+        ' Build, Expand, Export, List Chain Package Options ')
     pkg_group.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                         'fisco_path'), help=' build chain packages with the specified configuration file')
     pkg_group.add_argument('--expand', nargs=2, metavar=('./config.conf, dir'),
@@ -94,20 +95,20 @@ def Usage():
     tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
-                        help='check build environment')
+                             help='check build environment')
 
     tools_group.add_argument('-d', '--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
-                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
+                                                                'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('-P', '--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
-                                                               'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
+                                                                   'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     tools_group.add_argument('--chainca', nargs=1, metavar=('chain_dir',),
-                        help='generate root cert')
+                             help='generate root cert')
     tools_group.add_argument('--agencyca', nargs=3, metavar=('agency_dir',
-                                                        'chain_dir', ' agency_name'), help='generate agency cert')
+                                                             'chain_dir', ' agency_name'), help='generate agency cert')
     tools_group.add_argument('--nodeca', nargs=3, metavar=('agency_dir',
-                                                      'node _dir', 'node_name'), help='generate node cert')
+                                                           'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
-                                                     'agency_dir'), help='generate sdk cert')
+                                                          'agency_dir'), help='generate sdk cert')
     args = parser.parse_args()
     if args.version:
         version.version()
