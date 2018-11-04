@@ -84,7 +84,14 @@ function install()
     echo " owmc python env is ${python_env}."
 
     sudo mkdir -p ${install_dir}/owmc
-    sudo cp $dirpath/*  ${install_dir}/owmc/
+    sudo cp -r $dirpath/conf  ${install_dir}/owmc/
+    sudo cp -r $dirpath/log  ${install_dir}/owmc/
+    sudo cp -r $dirpath/pys  ${install_dir}/owmc/
+    sudo cp -r $dirpath/scripts  ${install_dir}/owmc/
+    sudo cp -r $dirpath/tpl  ${install_dir}/owmc/
+    sudo cp -r $dirpath/doc  ${install_dir}/owmc/
+    sudo cp -r $dirpath/data  ${install_dir}/owmc/
+    sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
     sed -e "s/\/usr\/bin\/python/${python_env}/" ${install_dir}/owmc/main.py
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
