@@ -66,7 +66,7 @@ def Usage():
     pkg_group.add_argument('--pkglist', nargs='+', metavar=('all or chain_id'
                                                             ), help='list build packages info.')
     pkg_group.add_argument('--direct', action='store_true',
-                           help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
+                           help='follow --export/-E, package of chain will export without reordering')
 
     mgr_group = parser.add_argument_group(
         ' Manage Published Chain With Ansible Options ')
@@ -89,7 +89,7 @@ def Usage():
     mgr_group.add_argument('--lshost', nargs='+', metavar=('host_ip'),
                            help='ls published packages\' host')
     mgr_group.add_argument('-f', '--force', action='store_true',
-                           help='effect with --publish/-p, with this opt, all package of chain will be republished')
+                           help='follow --publish/-p, all package of chain will be republished')
 
     tools_group = parser.add_argument_group(
         ' Other Tools Options ')
