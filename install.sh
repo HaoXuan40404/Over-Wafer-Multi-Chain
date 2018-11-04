@@ -24,15 +24,6 @@ function check_python()
     return 1
 }
 
-# check if soft installed.
-function check_install()
-{
-    type $1 >/dev/null 2>&1
-    [ $1 -ne 0 ] && {
-        alarm " $1 is not installed."
-    }
-}
-
 # check sudo permission
 function sudo_permission_check() 
 {
