@@ -93,7 +93,7 @@ def Usage():
 
     tools_group = parser.add_argument_group(
         ' Other Tools Options ')
-    tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
+    tools_group.add_argument('--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                              help='check build environment')
