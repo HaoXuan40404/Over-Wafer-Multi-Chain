@@ -1,6 +1,5 @@
 #!/bin/bash
 # owmc init and install shell.
-
 set -e
 
 dirpath="$(cd "$(dirname "$0")" && pwd)"
@@ -50,16 +49,6 @@ function format()
     find . -name "web3sdk"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
 }
 
-function deps_install()
-{
-
-}
-
-function deps_check()
-{
-
-}
-
 #owmc install dir, default '/usr/local/'
 install_dir="/usr/local/"
 python_env='/usr/bin/python'
@@ -77,7 +66,7 @@ function install()
     fi
 
     if [ -f $owmc ];then
-        if force == "true";then
+        if $force == "true";then
             sudo rm -rf $owmc
         else
             alarm " $owmc already install, set '-f' to force install." ; exit 1;
@@ -85,15 +74,15 @@ function install()
     fi
 
     if [ -d ${install_dir}/owmc/ ];then
-        if force == "true";then
+        if $force == "true";then
             sudo rm -rf ${install_dir}/owmc
         else
             alarm " $owmc already install, set '-f' to force install." ; exit 1;
         fi
     fi
 
-    echo " owmc install dir is ${install_dir}"
-    echo " owmc python env is ${python_env}"
+    echo " owmc install dir is ${install_dir}."
+    echo " owmc python env is ${python_env}."
 
     sudo mkdir -p ${install_dir}/owmc
     sudo cp $dirpath/*  ${install_dir}/owmc/
@@ -126,8 +115,8 @@ function main()
         case $option in
         d) install_dir=$OPTARG;;
         p) python_env=$OPTARG;;
-        f) force="true"
-        g) gm="true"
+        f) force="true";;
+        g) gm="true";;
         h) help;;
         esac
     done
