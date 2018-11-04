@@ -50,7 +50,7 @@ def Usage():
 
     parser.add_argument('--version',
                         action='store_true', help='show OWMC\'s version. ')
-    parser.add_argument('--init', action='store_true',
+    parser.add_argument('--ansibleinit', nargs=1, metavar=(' hosts config file '),
                         help=' initialize ansible configuration file, need sudo permissions. ')
     parser.add_argument('--cainit', action='store_true',
                         help=' initialize cert. ')
@@ -224,8 +224,8 @@ def Usage():
         telnet_list = args.telnet
         opr_tools.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
-    elif args.init:
-        opr_init_chain.init_chain()
+    elif args.ansibleinit:
+        opr_init_chain.init_chain(args.ansibleinit[0])
         consoler.info(' ansible init success.')
     elif args.cainit:
         consoler.info(' cert init begin.')

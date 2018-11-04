@@ -15,9 +15,7 @@ from pys.log import consoler
 from pys.chain import data
 from pys.chain import package
 
-def init_chain():
-    """[init]
-    """
-
-    os.system('sudo bash ./scripts/hostsname.sh')
+def init_chain(hosts_conf):
+ 
+    os.system('sudo bash ./scripts/hostsname.sh' + ' ' + hosts_conf)
     os.system('bash ./scripts/ssh_copy_add.sh')
