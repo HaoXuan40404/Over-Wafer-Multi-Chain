@@ -4,6 +4,8 @@ set -e
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
 
+source $dirpath/scripts/tools/deps.sh
+
 function alarm()
 {
     local content=${1}
@@ -92,12 +94,12 @@ function install()
     sudo cp -r $dirpath/doc  ${install_dir}/owmc/
     sudo cp -r $dirpath/data  ${install_dir}/owmc/
     sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
-    sed -e 's|/usr/bin/python|${python_env}|g' ${install_dir}/owmc/main.py
+    sed -e "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
     deps_install
 
-    echo "owmc install success."
+    echo " owmc install success ! "
 }
 
 function help() 

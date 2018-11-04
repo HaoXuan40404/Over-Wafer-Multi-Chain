@@ -1,6 +1,4 @@
 #!/bin/bash
-dirpath="$(cd "$(dirname "$0")" && pwd)"
-cd $dirpath
 
 # Check the version of the OS, now support version: CentOS 7.2+ 64bits, Ubuntu 16.04 64bits, Redhat 7.2+, Oracle Linux Server 7.4+
 
