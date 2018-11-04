@@ -236,10 +236,10 @@ def Usage():
         opr_export.export_package(
             args.export[0], args.export[1], args.export[2], args.direct)
         consoler.info(' export operation end.')
-    elif args.ls_host:
-        consoler.info(' ls_host operation begin.')
-        opr_list.ls_host(args.ls_host)
-        consoler.info(' ls_host operation end.')
+    elif args.lshost:
+        consoler.info(' lshost operation begin.')
+        opr_list.ls_host(args.lshost)
+        consoler.info(' lshost operation end.')
     else:
         consoler.error(
             '\033[1;31m invalid operation,  \"python main.py -h\" can be used to show detailed usage. \033[0m')
