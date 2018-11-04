@@ -94,10 +94,11 @@ function install()
     sudo cp -r $dirpath/doc  ${install_dir}/owmc/
     sudo cp -r $dirpath/data  ${install_dir}/owmc/
     sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
-    sed -e "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py
+    sed -e "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
     deps_install
+    deps_check
 
     echo " owmc install success ! "
 }
