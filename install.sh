@@ -1,5 +1,4 @@
 #!/bin/bash
-# owmc init and install shell.
 set -e
 
 dirpath="$(cd "$(dirname "$0")" && pwd)"
@@ -100,7 +99,7 @@ function help()
     echo "Optional:"
     echo "    -d  <dir>           The dir of owmc will be install. (default: /usr/loca/)"
     echo "    -p  <path>          The python path. (default: /usr/bin/python) "
-    echo "    -g 			      Install guomi deps. (default: not install guomi deps.)"
+    echo "    -g                  Install guomi deps. (default: not install guomi deps.)"
     echo "    -f                  Install owmc even if it has been installed."
     echo "    -h                  This help"
     echo "Example:"
@@ -109,20 +108,16 @@ function help()
     exit 0
 }
 
-function main()
-{
-    while getopts "d:p:gfh" option;do
-        case $option in
-        d) install_dir=$OPTARG;;
-        p) python_env=$OPTARG;;
-        f) force="true";;
-        g) gm="true";;
-        h) help;;
-        esac
-    done
 
-    # install
-    install
-}
+while getopts "d:p:gfh" option;do
+    case $option in
+    d) install_dir=$OPTARG;;
+    p) python_env=$OPTARG;;
+    f) force="true";;
+    g) gm="true";;
+    h) help;;
+    esac
+done
 
-main
+# install
+install
