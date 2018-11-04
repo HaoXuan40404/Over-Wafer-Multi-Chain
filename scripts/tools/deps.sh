@@ -146,7 +146,7 @@ function java_check()
     if  java -version 2>&1 | egrep -i openjdk >/dev/null 2>&1;then
     #openjdk
         if [ ${JAVA_VER} -le 18 ];then
-            alarm "OpenJDK need 1.9 or above, now is ${JAVA_VER}. "
+            alarm "OpenJDK need 1.9 or above, now is OpenJDK - ${JAVA_VER}. "
         fi
     else
         if [ ${JAVA_VER} -lt 18 ];then
