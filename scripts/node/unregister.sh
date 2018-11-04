@@ -46,7 +46,7 @@ fi
 
 bash web3sdk/bin/web3sdk NodeAction cancelNode file:`pwd`/node$index/data/node.json
 if [ $? -ne 0 ];then
-    error " NodeAction cancelNode opr failed."
+    error " NodeAction cancelNode operation failed."
 fi
 
 index=0

@@ -61,7 +61,7 @@ fi
 # https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_syncing
 bash web3sdk/bin/web3sdk NodeAction registerNode file:`pwd`/node$index/data/node.json
 if [ $? -ne 0 ];then
-    error " NodeAction registerNode opr failed."
+    error " NodeAction registerNode operation failed."
 fi
 
 index=0
