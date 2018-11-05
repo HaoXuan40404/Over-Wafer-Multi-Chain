@@ -7,4 +7,4 @@ from pys import path
 def init_chain(hosts_conf):
  
     os.system('sudo bash ' + path.get_path() + '/scripts/hostsname.sh' + ' ' + hosts_conf)
-    os.system('bash ./scripts/ssh_copy_add.sh')
+    os.system('bash ' + path.get_path() + '/scripts/ssh_copy_add.sh' + ' ' + hosts_conf)
