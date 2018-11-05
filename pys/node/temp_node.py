@@ -22,7 +22,9 @@ def GM_temp_node_build(dir, port, fisco):
     logger.info('GM build temp node, dir => ' + dir)
 
     os.makedirs(dir + '/temp')
-    shutil.copytree(path.get_path() + '/tpl/GM_temp_node/web3sdk', dir + '/temp/web3sdk')
+    shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/temp/web3sdk')
+    shutil.move(dir + '/temp/web3sdk/conf/applicationContext_GM.xml',
+                    dir + '/temp/web3sdk/conf/applicationContext.xml')
 
     shutil.copytree(path.get_path() + '/tpl/GM_temp_node', dir + '/temp/node')
     #copy GM fisco-bcos
@@ -38,8 +40,8 @@ def GM_temp_node_build(dir, port, fisco):
     old = 'NODE@HOSTIP'
     new = 'node0@127.0.0.1:%d' % port.get_channel_port()
     utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml', old, new)
-    utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml',
-                      'constructor-arg value="0"', 'constructor-arg value="1"')
+    # utils.replace(dir + '/temp/web3sdk/conf/applicationContext.xml',
+    #                  'constructor-arg value="0"', 'constructor-arg value="1"')
     logger.info('GM build temp node end')
 
 def temp_node_build(dir, port, fisco):
@@ -54,6 +56,8 @@ def temp_node_build(dir, port, fisco):
 
     os.makedirs(dir + '/temp')
     shutil.copytree(path.get_path() + '/tpl/web3sdk', dir + '/temp/web3sdk')
+    shutil.move(dir + '/temp/web3sdk/conf/applicationContext_NB.xml',
+                    dir + '/temp/web3sdk/conf/applicationContext.xml')
 
     shutil.copytree(path.get_path() + '/tpl/temp_node', dir + '/temp/node')
     #copy fisco-bcos file
