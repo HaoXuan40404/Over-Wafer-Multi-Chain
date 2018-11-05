@@ -95,8 +95,8 @@ function install()
 
     if [ $gm == "true" ];then
         echo " install gm deps tassl => "
-        chmod o+x  ${install_dir}/scripts/ca/gm/install_tassl.sh
-        bash  ${install_dir}/scripts/ca/gm/install_tassl.sh
+        chmod o+x  ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
+        bash  ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
     fi
 
     echo " owmc install success ! "
