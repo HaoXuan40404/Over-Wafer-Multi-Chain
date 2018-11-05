@@ -30,7 +30,7 @@ function sudo_permission_check()
     sudo echo -n " "
 
     if [ $? -ne 0 ]; then
-        alarm "no sudo permission, please add youself in the sudoers"
+        alarm "no sudo permission, please add youself in the sudoers"; exit 1;
     fi
 }
 
@@ -53,8 +53,9 @@ function install()
     # sudo permission check
     sudo_permission_check
     
+    check_python ${python_env}
     # params check
-    if ! $(check_python ${python_env});then
+    if [ $? -ne 0 ];then
         alarm " not invalid python path, path is ${python_env}."; exit 1;
     fi
 
