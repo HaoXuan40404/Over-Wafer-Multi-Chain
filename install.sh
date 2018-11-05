@@ -4,8 +4,6 @@ set -e
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
 
-source $dirpath/scripts/tools/deps.sh
-
 function alarm()
 {
     local content=${1}
@@ -81,8 +79,8 @@ function install()
     sed -i "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
-    deps_install
-    deps_check
+    # install deps and check if deps install success.
+    bash $dirpath/scripts/tools/deps_install.sh
 
     if [ $gm == "true" ];then
         echo " install gm deps tassl => "
