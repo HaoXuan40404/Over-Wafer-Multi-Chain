@@ -78,6 +78,7 @@ function install()
     sudo cp -r $dirpath/release_note.txt ${install_dir}/owmc/
     format ${install_dir}/owmc/
     sed -i "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
+    sed -i "s|./log/all.log|${install_dir}/owmc/log|g" ${install_dir}/owmc/conf/logging.conf 1> /dev/null
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
     # install deps and check if deps install success.
