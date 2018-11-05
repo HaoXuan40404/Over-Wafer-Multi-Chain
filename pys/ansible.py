@@ -42,8 +42,10 @@ def mkdir_module(ip, dest):
     logger.debug('mkdir action , status %s, output %s' % (status, result))
    
     if status:
+        consoler.warn(' ansible mkdir failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
         logger.warn('mkdir action failed, status %s, result %s ' % (status, result))
     elif not (result.find('SUCCESS') + 1):
+        consoler.warn(' ansible mkdir failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
         logger.warn('mkdir action failed, output %s' % (result))
     else:
         return True
