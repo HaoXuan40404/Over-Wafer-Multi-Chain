@@ -5,10 +5,15 @@ import argparse
 import os
 import sys
 
+from pys import path
+# init path info first
+owmc_dir = os.path.split(os.path.realpath(__file__))[0]
+sys.path.append(owmc_dir + '/pys')
+path.set_path(owmc_dir)
+
 from pys import mconf
 from pys import ca
 from pys import ansible
-from pys import path
 from pys import version
 from pys.log import logger
 from pys.log import consoler
@@ -23,20 +28,21 @@ def init():
     """
 
     # init pwd dir
-    pwd = os.getcwd()
-    sys.path.append(pwd + '/pys')
-    path.set_path(pwd)
+    # owmc_dir = os.getcwd()
+    owmc_dir = os.path.split(os.path.realpath(__file__))[0]
+    sys.path.append(owmc_dir + '/pys')
+    path.set_path(owmc_dir)
 
-    logger.info('main init ,pwd is %s', pwd)
+    logger.info('main init ,owmc_dir is %s', owmc_dir)
 
     # parser mchain.conf for project initialize
-    mconf.parser(pwd + '/conf/mchain.conf')
+    mconf.parser(owmc_dir + '/conf/mchain.conf')
 
     # init agent name
     ca.set_agent(mconf.get_agent())
 
     # init ca dir
-    ca.set_ca_path(pwd + '/data/ca/' + ca.get_agent())
+    ca.set_ca_path(owmc_dir + '/data/ca/' + ca.get_agent())
 
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
