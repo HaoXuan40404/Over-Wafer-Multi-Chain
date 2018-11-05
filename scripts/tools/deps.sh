@@ -156,3 +156,12 @@ function java_check()
 
     echo " java version is ${JAVA_VER}. "
 } 
+
+if [ "$1" == "deps_check" ];then
+    deps_check
+elif [ "$1" == "deps_install" ];then
+    deps_install
+else if [ "$1" == "all" ]
+    deps_install
+    deps_check
+fi
