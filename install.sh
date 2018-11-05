@@ -17,7 +17,7 @@ function check_python()
 {
     python=$1
     py_version=$($python -V 2>/dev/null | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
-    if [ ! -z '${py_version}' ];then
+    if [ ! -z "${py_version}" ];then
         # echo " python path is ${python}, version is ${py_version}"
         return 0
     fi
