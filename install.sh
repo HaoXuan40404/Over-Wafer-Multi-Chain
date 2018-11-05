@@ -110,7 +110,7 @@ function help()
     echo "    -p  <path>          The python path. (default: /usr/bin/python) "
     echo "    -g                  Install guomi deps. (default: not install guomi deps.)"
     echo "    -f                  Install owmc even if it has been installed."
-    echo "    -h                  This help"
+    echo "    -h                  This help."
     echo "Example:"
     echo "    bash install.sh "
     echo "    bash install.sh -d /usr/local -p /usr/bin/python -f -g "
