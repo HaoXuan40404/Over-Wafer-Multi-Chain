@@ -47,7 +47,7 @@ function install()
         alarm " not invalid python path, path is ${python_env}."; exit 1;
     fi
 
-    echo " python version is ${py_version}, python path is ${python}"
+    echo " python version is ${py_version}, python path is ${python_env}"
 
     if [ -f $owmc ];then
         if $force == "true";then
