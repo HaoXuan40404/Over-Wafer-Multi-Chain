@@ -87,11 +87,17 @@ function install()
     sudo cp -r $dirpath/data  ${install_dir}/owmc/
     sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
     format ${install_dir}/owmc/
-    sed -e "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
+    sed -i "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
     ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
 
     deps_install
     deps_check
+
+    if [ $gm == "true" ];then
+        echo " install gm deps tassl => "
+        chmod o+x  ${install_dir}/scripts/ca/gm/install_tassl.sh
+        bash  ${install_dir}/scripts/ca/gm/install_tassl.sh
+    fi
 
     echo " owmc install success ! "
 }
