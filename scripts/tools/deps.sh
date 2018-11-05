@@ -128,7 +128,7 @@ function openssl_check()
     echo " openssl version is ${OPENSSL_VER}. "
 }
 
-#Oracle JDK 1.8 be requied.
+# OracleJDK 1.8 + or OpenJDK 1.9 +
 function java_check()
 {
     if $(check_install java);then
@@ -161,6 +161,8 @@ if [ "$1" == "deps_check" ];then
     deps_check
 elif [ "$1" == "deps_install" ];then
     deps_install
+elif [ "$1" == "check_java" ];then
+    java_check
 elif [ "$1" == "all" ];then
     deps_install
     deps_check
