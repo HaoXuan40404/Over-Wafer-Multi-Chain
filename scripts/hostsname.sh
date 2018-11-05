@@ -1,6 +1,6 @@
 #!/bin/bash
-dirpath="$(cd "$(dirname "$0")" && pwd)"
-cd $dirpath
+# dirpath="$(cd "$(dirname "$0")" && pwd)"
+# cd $dirpath
 
 hosts_conf=$1
 if [ ! -f ${hosts_conf} ];then
