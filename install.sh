@@ -12,18 +12,6 @@ function alarm()
     echo -e "\033[31m ${content} \033[0m"
 }
 
-# check python enviroment.
-function check_python()
-{
-    python=$1
-    py_version=$($python -V 2>/dev/null | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
-    if [ ! -z "${py_version}" ];then
-        # echo " python path is ${python}, version is ${py_version}"
-        return 0
-    fi
-    return 1
-}
-
 # check sudo permission
 function sudo_permission_check() 
 {
@@ -52,12 +40,14 @@ function install()
 {
     # sudo permission check
     sudo_permission_check
-    
-    check_python ${python_env}
+
+    py_version=$($python_env -V 2>/dev/null | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
     # params check
-    if [ $? -ne 0 ];then
+    if [ -z "${py_version}" ];then
         alarm " not invalid python path, path is ${python_env}."; exit 1;
     fi
+
+    echo " python version is ${py_version}, python path is ${python}"
 
     if [ -f $owmc ];then
         if $force == "true";then
