@@ -161,7 +161,7 @@ if [ "$1" == "deps_check" ];then
     deps_check
 elif [ "$1" == "deps_install" ];then
     deps_install
-else if [ "$1" == "all" ]
+else if [ "$1" == "all" ];then
     deps_install
     deps_check
 fi
