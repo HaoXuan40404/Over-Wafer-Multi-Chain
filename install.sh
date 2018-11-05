@@ -39,7 +39,7 @@ function install()
     # sudo permission check
     sudo_permission_check
 
-    py_version=$($python_env -V 2>/dev/null | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
+    py_version=$($python_env -V | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
     # params check
     if [ -z "${py_version}" ];then
         alarm " not invalid python path, path is ${python_env}."; exit 1;
