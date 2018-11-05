@@ -150,7 +150,7 @@ function java_check()
         fi
     else
         if [ ${JAVA_VER} -lt 18 ];then
-            alarm "OracleJDK need 1.8 or above, now is ${JAVA_VER}. "
+            alarm "OracleJDK need 1.8 or above, now is OracleJDK - ${JAVA_VER}. "
         fi
     fi 
 
