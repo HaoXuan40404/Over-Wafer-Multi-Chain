@@ -44,7 +44,7 @@ def mkdir_module(ip, dest):
     if status:
         consoler.warn(' ansible mkdir failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
         logger.warn('mkdir action failed, status %s, result %s ' % (status, result))
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.warn(' ansible mkdir failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
         logger.warn('mkdir action failed, output %s' % (result))
     else:
@@ -71,7 +71,7 @@ def copy_module(ip, src, dest):
     if status:
         logger.warn('copy action failed, status %s' % (status))
         consoler.warn(' ansible copy failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.warn(' ansible copy failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
         logger.warn('copy action failed, output %s' % (result))
     else:
@@ -100,7 +100,7 @@ def unarchive_module(ip, src, dest):
     if status:
         logger.warn('unarchive action failed, status %s' % (status))
         consoler.warn(' ansible unarchive  failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         logger.warn('unarchive action failed, output %s' % (result))
         consoler.warn(' ansible unarchive failed, host is %s, src is %s, dst is %s, status is %s, output is %s.', ip, src, dest, status, result)
     else:
@@ -126,7 +126,7 @@ def start_module(ip, dest):
     if status:
         logger.warn('start action failed, status %s' % (status))
         consoler.warn(' ansible start  failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         logger.warn('start action failed, output %s' % (result))
         consoler.warn(' ansible start failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
@@ -152,7 +152,7 @@ def register_module(ip, dest, index):
     
     if status:
         consoler.warn(' ansible register  failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
     elif not (result.find('sucess') + 1):
         consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
@@ -179,7 +179,7 @@ def unregister_module(ip, dest, index):
     
     if status:
         consoler.warn(' ansible unregister  failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.warn(' ansible unregister failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
     elif not (result.find('sucess') + 1):
         consoler.warn(' ansible register failed, host is %s, index is %s, dst is %s, status is %s, output is %s.', ip, str(index), dest, status, result)
@@ -206,7 +206,7 @@ def stop_module(ip, dest):
     if status:
         logger.warn('stop action failed, status %s' % (status))
         consoler.warn(' ansible stop failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         logger.warn('stop action failed, output %s' % (result))
         consoler.warn(' ansible stop failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
@@ -234,7 +234,7 @@ def check_module(ip, dest):
     if status:
         logger.warn('check action failed, status %s' % (status))
         consoler.warn(' ansible check failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         logger.warn('check action failed, output %s' % (result))
         consoler.warn(' ansible check failed, host is %s, dst is %s, status is %s, output is %s.', ip, dest, status, result)
     else:
@@ -264,7 +264,7 @@ def telnet_module(ip, msg='HelloWorld!'):
     logger.debug('telnet action , status %s, output %s' % (status, result))
     if status:
         consoler.error(' \033[1;31m  ansible telnet failed, host is %s, output is %s \033[0m', ip, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.error(' \033[1;31m  ansible telnet failed, host is %s, output is %s \033[0m', ip, result)
     else:
         consoler.info(' ansible telnet success, host is %s, output is %s', ip, result)
@@ -292,7 +292,7 @@ def cmd_module(ip, cmd):
     logger.debug(' cmd action , status %s, output %s' % (status, result))
     if status:
         consoler.error(' \033[1;31m  ansible cmd failed, host is %s, output is %s \033[0m', ip, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.error(' \033[1;31m  ansible cmd failed, host is %s, output is %s \033[0m', ip, result)
     else:
         consoler.info(' ansible cmd success, host is %s, cmd is %s.', ip, cmd)
@@ -312,7 +312,7 @@ def diagnose_module(ip, dest):
     logger.debug('diagnose action , status %s, output %s' % (status, result))
     if status:
         consoler.error(' \033[1;31m  ansible diagnose failed, host is %s, output is %s \033[0m', ip, result)
-    elif not (result.find('SUCCESS') + 1):
+    elif result.find('SUCCESS') == -1 and result.find('CHANGED') == -1:
         consoler.error(' \033[1;31m  ansible diagnose failed, host is %s, output is %s \033[0m', ip, result)
     else:
         consoler.info(' ansible diagnose success, host is %s, result is %s.', ip, result)
