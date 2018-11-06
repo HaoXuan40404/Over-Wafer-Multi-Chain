@@ -129,17 +129,18 @@ def generate_root_ca(dir):
         dir {[path]} -- [root cert path]
     """
     try:
-        dest_dir = path.get_path() + '/scripts/tools/ca/.temp'
-        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/tools/ca/cert_tools.sh gen_chain_cert ' + '.temp')
+        dest_dir = path.get_path() + '/scripts/ca/.temp'
+        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cert_tools.sh gen_chain_cert ' + '.temp')
         if status != 0:
             logger.warn(' cert_tools.sh failed! status is %d, output is %s, dir is %s.', status, result, dir)
             raise MCError('cert_tools.sh failed! status is %d, output is %s, dir is %s.' % (status, result, dir))
+        logger.warn(' cert_tools.sh success! status is %d, output is %s, dir is %s.', status, result, dir)
         if not check_ca_exist(dest_dir):
             logger.warn(' ca.crt or ca.key not exist, dir is %s.', dir)
             raise MCError(' ca.crt or ca.key not exist, dir is %s.' % dir)
         
         if not os.path.exists(dir):
-            os.mkdirs(dir)
+            os.makedirs(dir)
         shutil.copy(dest_dir + '/ca.crt', dir)
         shutil.copy(dest_dir + '/ca.key', dir)
         logger.info(' Generate root cert success, dir is %s', dir)
@@ -262,7 +263,7 @@ def gm_generate_root_ca(dir, chain = '12345'):
 
 
     sh_path =  path.get_path() + '/scripts/ca/'
-    temp_path = path.get_path() + '/cert_temp'
+    temp_path = path.get_path() + '/cert__temp'
     shutil.copytree(sh_path, temp_path)
     os.chdir(path.get_path() + '/cert_temp/gm')
     (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + chain)

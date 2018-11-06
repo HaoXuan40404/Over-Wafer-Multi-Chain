@@ -116,6 +116,8 @@ def Usage():
                                                            'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
                                                           'agency_dir'), help='generate sdk cert')
+    tools_group.add_argument('--gm', action='store_true',
+                           help='is gm ca action.')
     args = parser.parse_args()
     if args.version:
         version.version()
