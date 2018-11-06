@@ -5,6 +5,7 @@ import shutil
 
 from pys import path
 from pys import utils
+from pys.tool.java import JAVA
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import parser
