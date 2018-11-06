@@ -109,7 +109,7 @@ def start_temp_node(dir, port):
     status, output = utils.getstatusoutput(cmd)
     logger.info('check status, status is %d, output is %s', status, output)
 
-    if utils.valid_string(output) and (output.find('is running') != -1) and utils.port_in_use(port.get_channel_port()):
+    if utils.valid_string(output) and (output.find('is running') != -1):
         # add consoler.log for the reason temp node start failed.
         pass
     else:
