@@ -116,9 +116,9 @@ def Usage():
                                                            'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
                                                           'agency_dir'), help='generate sdk cert')
-    tools_group.add_argument('--gm', action='store_true',
-                           help='is gm ca action.')
+    tools_group.add_argument('--gm', action='store_true', help='is gm ca action.')
     args = parser.parse_args()
+    os.path.exists
     if args.version:
         version.version()
     elif args.build:
@@ -189,9 +189,9 @@ def Usage():
         chain_dir = args.chainca[0]
         chain_name = args.chainca[1]
         if args.gm:
-            ca.gm_generate_root_ca(chain_dir, chain_name)
+            ca.gm_generate_root_ca(chain_dir)
         else:
-            ca.generate_root_ca(chain_dir, chain_name)
+            ca.generate_root_ca(chain_dir)
         consoler.info(' chain cert end.')
     elif args.agencyca:
         consoler.info(' agency cert begin.')
