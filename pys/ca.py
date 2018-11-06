@@ -122,29 +122,36 @@ def agent_gmca_exist():
 
 
 
-def generate_root_ca(dir, chain = '12345'):
+def generate_root_ca(dir):
     """[generate root cert]
     
     Arguments:
         dir {[path]} -- [root cert path]
     """
     try:
-        int(chain)
+        dest_dir = path.get_path() + '/scripts/tools/ca/.temp'
+        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/tools/ca/cert_tools.sh gen_chain_cert ' + '.temp')
+        if status != 0:
+            logger.warn(' cert_tools.sh failed! status is %d, output is %s, dir is %s.', status, result, dir)
+            raise MCError('cert_tools.sh failed! status is %d, output is %s, dir is %s.' % (status, result, dir))
+        if not check_ca_exist(dest_dir):
+            logger.warn(' ca.crt or ca.key not exist, dir is %s.', dir)
+            raise MCError(' ca.crt or ca.key not exist, dir is %s.' % dir)
+        
+        if not os.path.exists(dir):
+            os.mkdirs(dir)
+        shutil.copy(dest_dir + '/ca.crt', dir)
+        shutil.copy(dest_dir + '/ca.key', dir)
+        logger.info(' Generate root cert success, dir is %s', dir)
+        consoler.info(' Generate root cert success, dir is %s' % dir)
+    except MCError as me:
+        consoler.error(' \033[1;31m %s \033[0m', me)
     except Exception as e:
-        logger.error('\033[1;31m  Generate root cert failed! Chain id must be (int), your chain id is %s.\033[0m',chain )
-        raise Exception(' Generate root cert failed! Result is %s' %e)
-    sh_path =  path.get_path() + '/scripts/ca/'
-     
-    _dir = os.path.abspath(dir) 
-    os.chdir(sh_path)
-    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + _dir + '/' + chain)
-    os.chdir(path.get_path())
-    if not status:
-        logger.info(' Generate root cert successful! dir is %s.', _dir)
-    else:
-        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
+        consoler.error(' \033[1;31m Generate root cert failed! excepion is %s.\033[0m', e)
         logger.error('  Generate root cert failed! Result is %s'%result)
-        raise Exception(' Generate root cert failed! Result is %s'%result)
+    finally:
+        if os.path.exist(dest_dir):
+            shutil.rmtree(dest_dir) 
 
 
 def generator_agent_ca(dir, ca, agent):
@@ -548,6 +555,7 @@ def check_gmca_exist(path):
     result = os.path.exists(path + '/gmca.crt') and os.path.exists(path + '/gmca.key')
     return result
 
+
 def check_agent_ca_exist(path):
     """[check agency cert exists]
     
@@ -555,8 +563,10 @@ def check_agent_ca_exist(path):
         [bool] -- [true or false]
     """
     result = os.path.exists(path + CA.agent + '/agency.crt') and os.path.exists(path + CA.agent + '/agency.key') and \
-    os.path.exists(path + '/ca.crt') and os.path.exists(path + CA.agent + '/sdk')
+        os.path.exists(
+            path + '/ca.crt') and os.path.exists(path + CA.agent + '/sdk')
     return result
+
 
 def check_agent_gmca_exist(path):
     """[check agency cert exists]
@@ -565,7 +575,8 @@ def check_agent_gmca_exist(path):
         [bool] -- [true or false]
     """
     result = os.path.exists(path + CA.agent + '/gmagency.crt') and os.path.exists(path + CA.agent + '/gmagency.key') and \
-    os.path.exists(path + '/gmca.crt') and os.path.exists(path + CA.agent + '/sdk')
+        os.path.exists(
+            path + '/gmca.crt') and os.path.exists(path + CA.agent + '/sdk')
     return result
 
 
@@ -593,23 +604,6 @@ def init_ca(cert_path):
         raise Exception("Init cert failed! files not completed")
 
     return 0
-
-def installgm():
-    os.chdir(path.get_path() + '/scripts/ca/gm')
-    gmpath = os.path.abspath('./') 
-    args = [sys.executable] + sys.argv
-    os.execlp('sudo', 'sudo', *args)
-    (status, result) = utils.getstatusoutput('./install_tassl.sh ' + gmpath)
-    old = 'OPENSSL_CMD=/mnt/c/Users/asherli/Desktop/ca/bin/openssl'
-    new = gmpath + '/bin/openssl'
-    utils.replace('./cert_tools.sh',old,new)
-    os.chdir(path.get_path())
-    if not status:
-        logger.info(' Init gm cert successful!')
-    else:
-        consoler.error(' \033[1;31m  Init gm cert failed \033[0m')
-        logger.error('  Init gm cert failed')
-        raise Exception(' Init gm cert failed! Result is %s' %result)
 
 
 
