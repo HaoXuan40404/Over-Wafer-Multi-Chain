@@ -306,7 +306,7 @@ if [ "$1" == "deps_check" ];then
     deps_check
 elif [ "$1" == "deps_install" ];then
     deps_install
-elif [ "$1" == "check_java" ];then
+elif [ "$1" == "java_check" ];then
     java_check
 elif [ "$1" == "all" ];then
     deps_install
