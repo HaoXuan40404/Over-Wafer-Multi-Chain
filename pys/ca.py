@@ -134,7 +134,7 @@ def generate_root_ca(dir):
         if status != 0:
             logger.warn(' cert_tools.sh failed! status is %d, output is %s, dir is %s.', status, result, dir)
             raise MCError('cert_tools.sh failed! status is %d, output is %s, dir is %s.' % (status, result, dir))
-        logger.warn(' cert_tools.sh success! status is %d, output is %s, dir is %s.', status, result, dir)
+        logger.info(' cert_tools.sh success! status is %d, output is %s, dir is %s.', status, result, dir)
         if not check_ca_exist(dest_dir):
             logger.warn(' ca.crt or ca.key not exist, dir is %s.', dir)
             raise MCError(' ca.crt or ca.key not exist, dir is %s.' % dir)

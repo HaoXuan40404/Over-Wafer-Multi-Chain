@@ -187,7 +187,6 @@ def Usage():
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
-        chain_name = args.chainca[1]
         if args.gm:
             ca.gm_generate_root_ca(chain_dir)
         else:
