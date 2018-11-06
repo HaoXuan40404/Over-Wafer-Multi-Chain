@@ -147,4 +147,3 @@ function os_check()
 
     echo ${os_version}
 }
-
