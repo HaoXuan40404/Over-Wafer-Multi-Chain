@@ -154,26 +154,28 @@ def build_common_dir(chain, fisco):
 
     # copy fisco-bcos file
     shutil.copy(fisco.get_fisco_path(), com_dir)
+    # web3sdk
+    shutil.copytree(path.get_path() +
+                    '/tpl/web3sdk', com_dir + '/web3sdk')
 
     if fisco.is_gm():
-        # web3sdk
-        shutil.copytree(path.get_path() +
-                        '/tpl/GM_temp_node/web3sdk', com_dir + '/web3sdk')
         # copy ca.crt to web3sdk conf dir
         shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt',
                     com_dir + '/web3sdk/conf')
         # copy client.keystore to web3sdk conf dir
         shutil.copy(ca.get_GM_agent_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
+        shutil.move(com_dir + '/web3sdk/conf/applicationContext_GM.xml',
+                    com_dir + '/web3sdk/conf/applicationContext.xml')
     else:
-        # web3sdk
-        shutil.copytree(path.get_path() + '/tpl/web3sdk', com_dir + '/web3sdk')
         # copy ca.crt to web3sdk conf dir
         shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt',
                     com_dir + '/web3sdk/conf')
         # copy client.keystore to web3sdk conf dir
         shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
+        shutil.move(com_dir + '/web3sdk/conf/applicationContext_NB.xml',
+                    com_dir + '/web3sdk/conf/applicationContext.xml')
 
 
     # copy scripts to common dir

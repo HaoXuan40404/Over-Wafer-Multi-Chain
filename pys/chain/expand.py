@@ -5,6 +5,7 @@ import shutil
 
 from pys import path
 from pys import utils
+from pys.tool.java import JAVA
 from pys.log import logger
 from pys.log import consoler
 from pys.chain import parser
@@ -126,6 +127,10 @@ def chain_expand(cfg, dir):
     logger.debug(' cfg is %s, dir is %s', cfg, dir)
 
     try:
+
+        # check java env
+        java = JAVA()
+        
         try:
             # parser and check config if valid
             cc = ConfigConf(cfg)

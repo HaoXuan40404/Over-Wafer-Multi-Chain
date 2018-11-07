@@ -1,13 +1,19 @@
+#!/usr/bin/python
 # coding:utf-8
 
 import argparse
 import os
 import sys
 
+from pys import path
+# init path info first
+owmc_dir = os.path.split(os.path.realpath(__file__))[0]
+sys.path.append(owmc_dir + '/pys')
+path.set_path(owmc_dir)
+
 from pys import mconf
 from pys import ca
 from pys import ansible
-from pys import path
 from pys import version
 from pys.log import logger
 from pys.log import consoler
@@ -22,20 +28,21 @@ def init():
     """
 
     # init pwd dir
-    pwd = os.getcwd()
-    sys.path.append(pwd + '/pys')
-    path.set_path(pwd)
+    # owmc_dir = os.getcwd()
+    owmc_dir = os.path.split(os.path.realpath(__file__))[0]
+    sys.path.append(owmc_dir + '/pys')
+    path.set_path(owmc_dir)
 
-    logger.info('main init ,pwd is %s', pwd)
+    logger.info('main init ,owmc_dir is %s', owmc_dir)
 
     # parser mchain.conf for project initialize
-    mconf.parser(pwd + '/conf/mchain.conf')
+    mconf.parser(owmc_dir + '/conf/mchain.conf')
 
     # init agent name
     ca.set_agent(mconf.get_agent())
 
     # init ca dir
-    ca.set_ca_path(pwd + '/data/ca/' + ca.get_agent())
+    ca.set_ca_path(owmc_dir + '/data/ca/' + ca.get_agent())
 
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
@@ -45,16 +52,17 @@ def Usage():
     """
 
     parser = argparse.ArgumentParser(
-        description=' Build fisco-bcos install pkg for multi chain and manage the chain installation package builded with ansible. ')
+        description=' Build fisco-bcos install pkg for multi chain and manage the chain  package with ansible. ')
 
     parser.add_argument('--version',
                         action='store_true', help='show OWMC\'s version. ')
-    parser.add_argument('--init', action='store_true',
+    parser.add_argument('--ansibleinit', nargs=1, metavar=(' hosts config file '),
                         help=' initialize ansible configuration file, need sudo permissions. ')
     parser.add_argument('--cainit', action='store_true',
                         help=' initialize cert. ')
-    
-    pkg_group = parser.add_argument_group(' Build, Expand, Export, List Chain Package Options.')
+
+    pkg_group = parser.add_argument_group(
+        ' Build, Expand, Export, List Chain Package Options ')
     pkg_group.add_argument('--build', nargs=2, metavar=('./config.conf or ./conf/',
                                                         'fisco_path'), help=' build chain packages with the specified configuration file')
     pkg_group.add_argument('--expand', nargs=2, metavar=('./config.conf, dir'),
@@ -64,10 +72,10 @@ def Usage():
     pkg_group.add_argument('--pkglist', nargs='+', metavar=('all or chain_id'
                                                             ), help='list build packages info.')
     pkg_group.add_argument('--direct', action='store_true',
-                           help='effect with --export/-E, with this opt, package of chain will export without directory reordering')
+                           help='follow --export/-E, package of chain will export without reordering')
 
     mgr_group = parser.add_argument_group(
-        ' Manage Published Chain With Ansible Options .')
+        ' Manage Published Chain With Ansible Options ')
     mgr_group.add_argument('--publish', nargs='+', metavar=('chain_id:version'
                                                             ), help='publish packages')
     mgr_group.add_argument('--start', nargs='+', metavar=('all or chain_id or',
@@ -86,32 +94,33 @@ def Usage():
                                                             ), help='list published packages info.')
     mgr_group.add_argument('--lshost', nargs='+', metavar=('host_ip'),
                            help='ls published packages\' host')
-    mgr_group.add_argument('-f', '--force', action='store_true',
-                           help='effect with --publish/-p, with this opt, all package of chain will be republished')
+    mgr_group.add_argument('--force', action='store_true',
+                           help='follow --publish/-p, all package of chain will be republished')
 
     tools_group = parser.add_argument_group(
-        ' Other Tools Options .')
-    tools_group.add_argument('-t', '--telnet', nargs='+', metavar=(
+        ' Other Tools Options ')
+    tools_group.add_argument('--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('-g', '--gm', action='store_true',
                            help='effect with --***ca, this opt will generate gm cert')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
-                        help='check build environment')
+                             help='check build environment')
     tools_group.add_argument('--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
-                                                            'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
+                                                                'shell cmd or shell file, eg ： \'ls -lt\'〝test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
-                                                               'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
+                                                                   'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     tools_group.add_argument('--chainca', nargs=1, metavar=('chain_dir',),
-                        help='generate root cert')
+                             help='generate root cert')
     tools_group.add_argument('--agencyca', nargs=3, metavar=('agency_dir',
-                                                        'chain_dir', ' agency_name'), help='generate agency cert')
+                                                             'chain_dir', ' agency_name'), help='generate agency cert')
     tools_group.add_argument('--nodeca', nargs=3, metavar=('agency_dir',
-                                                      'node _dir', 'node_name'), help='generate node cert')
+                                                           'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
-                                                     'agency_dir'), help='generate sdk cert')
-
+                                                          'agency_dir'), help='generate sdk cert')
+    tools_group.add_argument('--gm', action='store_true', help='is gm ca action.')
 
     args = parser.parse_args()
+    os.path.exists
     if args.version:
         version.version()
     elif args.build:
@@ -180,11 +189,10 @@ def Usage():
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
-        chain_name = args.chainca[1]
         if args.gm:
-            ca.gm_generate_root_ca(chain_dir, chain_name)
+            ca.gm_generate_root_ca(chain_dir)
         else:
-            ca.generate_root_ca(chain_dir, chain_name)
+            ca.generate_root_ca(chain_dir)
         consoler.info(' chain cert end.')
     elif args.agencyca:
         consoler.info(' agency cert begin.')
@@ -225,8 +233,8 @@ def Usage():
         telnet_list = args.telnet
         opr_tools.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
-    elif args.init:
-        opr_init_chain.init_chain()
+    elif args.ansibleinit:
+        opr_init_chain.init_chain(args.ansibleinit[0])
         consoler.info(' ansible init success.')
     elif args.cainit:
         consoler.info(' cert init begin.')
@@ -237,10 +245,10 @@ def Usage():
         opr_export.export_package(
             args.export[0], args.export[1], args.export[2], args.direct)
         consoler.info(' export operation end.')
-    elif args.ls_host:
-        consoler.info(' ls_host operation begin.')
-        opr_list.ls_host(args.ls_host)
-        consoler.info(' ls_host operation end.')
+    elif args.lshost:
+        consoler.info(' lshost operation begin.')
+        opr_list.ls_host(args.lshost)
+        consoler.info(' lshost operation end.')
     else:
         consoler.error(
             '\033[1;31m invalid operation,  \"python main.py -h\" can be used to show detailed usage. \033[0m')
