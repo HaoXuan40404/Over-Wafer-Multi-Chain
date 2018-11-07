@@ -245,9 +245,6 @@ function deps_check()
         done
     ;;
     esac
-
-    openssl_check
-    java_check
 }
 
 #openssl 1.0.2 be requied.
@@ -311,4 +308,6 @@ elif [ "$1" == "java_check" ];then
 elif [ "$1" == "all" ];then
     deps_install
     deps_check
+    openssl_check
+    java_check
 fi
