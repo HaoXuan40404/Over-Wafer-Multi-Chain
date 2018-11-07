@@ -81,7 +81,7 @@ function install()
     sudo sed -i "s|./log/all.log|${install_dir}/owmc/log/all.log|g" ${install_dir}/owmc/conf/logging.conf 1> /dev/null
     sudo ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
     sudo chmod -R 777 ${install_dir}/owmc
-    sudo chomd 777 /usr/bin/owmc
+    sudo chmod 777 /usr/bin/owmc
 
     # install deps and check if deps install success.
     bash $dirpath/scripts/tools/deps_install.sh
