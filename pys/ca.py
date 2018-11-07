@@ -154,7 +154,7 @@ def generator_agent_ca(dir, ca, agent):
     try:
         ca = os.path.abspath(ca) 
         dir = os.path.abspath(dir) 
-        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh ' + ca + ' ' + dir + ' ' + agent)
+        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_agency_cert ' + ca + ' ' + dir + ' ' + agent)
         if not status:
             logger.info(' Generate %s cert successful! dir is %s.'%(agent, dir + '/' + agent))
         else:
@@ -179,7 +179,7 @@ def generator_node_ca(agent, dir, node):
     _dir = os.path.abspath(dir) 
     agent = os.path.abspath(agent) 
     try:
-        (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh ' + agent + ' ' + _dir + '/ ' + node)
+        (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_node_cert ' + agent + ' ' + _dir + '/ ' + node)
         if not status:
             logger.info(' Generate %s cert successful! dir is %s.', node, _dir + '/' + node)
         else:
@@ -202,7 +202,7 @@ def generator_sdk_ca(agency_dir,sdk_dir):
     dir = os.path.abspath(agency_dir)
     sdk_dir = os.path.abspath(sdk_dir)
     try:
-        (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh ' + dir + ' ' + sdk_dir)
+        (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_sdk_cert ' + dir + ' ' + sdk_dir)
         if not status:
             consoler.info(' Generate sdk cert successful! dir is %s.',  sdk_dir + '/sdk')
             logger.info(' Generate sdk cert successful! dir is %s.', sdk_dir + '/sdk')
