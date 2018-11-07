@@ -129,7 +129,10 @@ def generate_root_ca(dir):
         dir {[path]} -- [root cert path]
     """
     try:
+        dir = os.path.abspath(dir)
+        os.chdir(path.get_path() + '/scripts/ca/')
         (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_chain_cert ' + dir)
+        os.chdir(path.get_path())
         if status != 0:
             logger.warn(' cts.sh failed! status is %d, output is %s, dir is %s.', status, result, dir)
             raise MCError('cts.sh failed! status is %d, output is %s, dir is %s.' % (status, result, dir))
@@ -154,7 +157,9 @@ def generator_agent_ca(dir, ca, agent):
     try:
         ca = os.path.abspath(ca) 
         dir = os.path.abspath(dir) 
+        os.chdir(path.get_path() + '/scripts/ca/')
         (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_agency_cert ' + ca + ' ' + dir + ' ' + agent)
+        os.chdir(path.get_path())
         if not status:
             logger.info(' Generate %s cert successful! dir is %s.'%(agent, dir + '/' + agent))
         else:
@@ -179,7 +184,9 @@ def generator_node_ca(agent, dir, node):
     _dir = os.path.abspath(dir) 
     agent = os.path.abspath(agent) 
     try:
+        os.chdir(path.get_path() + '/scripts/ca/')
         (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_node_cert ' + agent + ' ' + _dir + '/ ' + node)
+        os.chdir(path.get_path())
         if not status:
             logger.info(' Generate %s cert successful! dir is %s.', node, _dir + '/' + node)
         else:
@@ -202,7 +209,9 @@ def generator_sdk_ca(agency_dir,sdk_dir):
     dir = os.path.abspath(agency_dir)
     sdk_dir = os.path.abspath(sdk_dir)
     try:
+        os.chdir(path.get_path() + '/scripts/ca/')
         (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_sdk_cert ' + dir + ' ' + sdk_dir)
+        os.chdir(path.get_path())
         if not status:
             consoler.info(' Generate sdk cert successful! dir is %s.',  sdk_dir + '/sdk')
             logger.info(' Generate sdk cert successful! dir is %s.', sdk_dir + '/sdk')
