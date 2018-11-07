@@ -101,8 +101,6 @@ def Usage():
         ' Other Tools Options ')
     tools_group.add_argument('--telnet', nargs='+', metavar=(
         '\'all\' or host_ip or chain_id'), help='test ansible')
-    tools_group.add_argument('-g', '--gm', action='store_true',
-                           help='effect with --***ca, this opt will generate gm cert')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                              help='check build environment')
     tools_group.add_argument('--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',

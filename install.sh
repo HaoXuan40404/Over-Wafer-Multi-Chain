@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
@@ -24,8 +24,8 @@ function format()
 {
     dir=$1
 	find $dir -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
-    find $dir -name "*.sh"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
-    find $dir -name "web3sdk"|  while read LINE; do chmod +x $LINE; dos2unix $LINE 2>/dev/null ; done
+    find $dir -name "*.sh"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
+    find $dir -name "web3sdk"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
 }
 
 #owmc install dir, default '/usr/local/'
@@ -77,17 +77,19 @@ function install()
     sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
     sudo cp -r $dirpath/release_note.txt ${install_dir}/owmc/
     format ${install_dir}/owmc/
-    sed -i "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
-    sed -i "s|./log/all.log|${install_dir}/owmc/log/all.log|g" ${install_dir}/owmc/conf/logging.conf 1> /dev/null
-    ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
+    sudo sed -i "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
+    sudo sed -i "s|./log/all.log|${install_dir}/owmc/log/all.log|g" ${install_dir}/owmc/conf/logging.conf 1> /dev/null
+    sudo ln -s ${install_dir}/owmc/main.py /usr/bin/owmc
+    sudo chmod -R 777 ${install_dir}/owmc
+    sudo chomd 777 /usr/bin/owmc
 
     # install deps and check if deps install success.
     bash $dirpath/scripts/tools/deps_install.sh
 
     if [ $gm == "true" ];then
         echo " install gm deps tassl => "
-        chmod o+x  ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
-        bash  ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
+        sudo chmod 777  ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
+        sudo bash ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
     fi
 
     echo " owmc install success ! "

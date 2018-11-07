@@ -50,3 +50,7 @@ $ ansible 127.0.0.1 -m ping
 }
 
 ```
+
+## ansible配置相关
+
+关于ansible配置的更多问题或希望了解关于ansible更多的操作，可以参考[ansible官方文档](https://ansible-tran.readthedocs.io/en/latest/)

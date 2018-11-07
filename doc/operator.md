@@ -2,25 +2,50 @@
 
 ## 部署物料包
 ```
-$ git clone https://github.com/ywy2090/multi-chain.git
-$ cd multi-chain
+$ git clone https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain.git
+$ git checkout dev
 ```
-多链物料包结构如下所示，相关操作会在对应命令中进行解释
+### 安装OWMC
+用户需要安装OWMC，安装脚本相关参数如图所示：
 ```
-|-- conf
-|-- data
-|-- format.sh
-|-- log
-|-- main.py
-|-- new.md
-|-- pys
-|-- README.md
-|-- release_note.txt
-|-- scripts
-`-- tpl
+./install.sh -h
+Usage:
+Optional:
+    -d  <dir>           The dir of owmc will be install. (default: /usr/loca/)
+    -p  <path>          The python path. (default: /usr/bin/python)
+    -g                  Install guomi deps. (default: not install guomi deps.)
+    -f                  Install owmc even if it has been installed.
+    -h                  This help.
+Example:
+    bash install.sh
+    bash install.sh -d /usr/local -p /usr/bin/python -f -g
+```
+- -d 命令 指定安装路径
+  
+OWMC默认安装在/usr/local路径下，-d命令会将OWMC安装在指定路径，
+- -p 命令 指定python路径
+  
+-p命令将指定用户的python路径，OWMC默认依赖/usr/bin/python下的python，由于OWMC需要依赖python2.7或3.5以上版本，用户可以指定python路径
+- -g 命令 国密环境初始化
+  
+-g命令会安装fisco bcos需要的国密依赖，使用国密版fisco bcos必须指定次命令
+- -f 命令 强制从新安装OWMC
+  
+用户可以使用-f命令从新安装owmc
+- -h 命令 帮助命令
+  
+-h命令会显示install脚本的帮助信息
+
+示例：
+
+如用户希望在/usr/local下安装国密版owmc，使用/usr/bin/python的python版本，执行：
+```
+$ bash install.sh -d /usr/local -p /usr/bin/python -f -g
 ```
 
+
 # 初始化命令
+用户执行安装命令后，可以使用owmc的相关操作，功能介绍如下
 
 ## 查询命令 -h
 ```
