@@ -68,6 +68,13 @@ class Fisco:
                 self.revision = str(int(version[2]))
 
             logger.info(' fisco-bcos is %s', self)
+
+            # parser fisco-bcos version and check it.
+            if not self.is_13_version():
+                logger.error(
+                    ' fisco-bcos is not 1.3.x version, not support now, %s', fisco)
+                raise MCError(
+                    ' fisco-bcos is not 1.3.x version, not support now, %s' % fisco)
             
         else:
             logger.error(' fisco-bcos --version invalid format, fisco-bcos is %s, status is %d, output is %s', self.fisco_path, status, output)

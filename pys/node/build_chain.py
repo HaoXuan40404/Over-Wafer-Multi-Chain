@@ -6,6 +6,7 @@ from pys.tool import utils
 from pys.log import logger
 from pys.node import build_pkg
 from pys.node import temp_node
+from pys.data_mgr.port import AllChainPort
 from pys.error.exp import MCError
 
 def build(cc, fisco):

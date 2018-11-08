@@ -24,16 +24,10 @@ def build(cfg, fisco_path):
 
     logger.info('build cfg is %s, fisco is %s ', cfg, fisco_path)
     try:
-        # parser fisco-bcos version and check it.
-        fisco = Fisco(fisco_path)
-        if not fisco.is_13_version():
-            logger.error(
-                ' fisco-bcos is not 1.3.x version, not support now, %s', fisco)
-            raise MCError(
-                ' fisco-bcos is not 1.3.x version, not support now, %s' % fisco)
         
         # check java env
         java = JAVA()
+        fisco = Fisco(fisco_path)
 
         # parser and check config if valid
         ccs = ConfigConfs(cfg).get_ccs()

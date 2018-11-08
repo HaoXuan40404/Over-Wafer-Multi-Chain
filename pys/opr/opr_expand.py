@@ -81,9 +81,7 @@ def expand_on_nonexist_chain(cc, dir):
 
     # parser fisco-bcos version and check it.
     fisco = Fisco(fisco_path)
-    if not fisco.is_13_version():
-        raise MCError(
-            ' fisco-bcos is not 1.3.x version, not support now, version is %s' % fisco)
+    logger.debug(' fisco is %s', fisco)
 
     acp = AllChainPort()
     # port check
