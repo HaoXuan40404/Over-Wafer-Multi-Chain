@@ -105,7 +105,7 @@ def Usage():
     mgr_group.add_argument('--lshost', nargs='+', metavar=('host_ip'),
                            help='ls published packages\' host')
     mgr_group.add_argument('--force', action='store_true',
-                           help='follow --publish/-p, all package of chain will be republished')
+                           help='follow --publish, all package of chain will be republished')
 
     tools_group = parser.add_argument_group(
         ' Other Tools Options ')
@@ -125,7 +125,8 @@ def Usage():
                                                            'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
                                                           'agency_dir'), help='generate sdk cert')
-    tools_group.add_argument('--gm', action='store_true', help='is gm ca action.')
+    tools_group.add_argument('--gm', action='store_true',
+                             help='follow ----chainca/--agencyca/--agencyca/--sdkca, is gm ca operation.')
 
     args = parser.parse_args()
     os.path.exists
