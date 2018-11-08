@@ -84,7 +84,7 @@ function install()
     sudo chmod 777 /usr/bin/owmc
 
     # install deps and check if deps install success.
-    bash $dirpath/scripts/tools/deps_install.sh
+    bash $dirpath/scripts/tools/deps.sh "all"
 
     if [ $gm == "true" ];then
         echo " install gm deps tassl => "
