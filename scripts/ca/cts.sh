@@ -2,6 +2,9 @@
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
 
+cert_conf_path=$dirpath/cert.cnf
+
+
 EXIT_CODE=-1
 
 check_env() {
@@ -92,7 +95,6 @@ gen_chain_cert() {
     fi
     openssl genrsa -out $chaindir/ca.key 2048
     openssl req -new -x509 -days 3650 -subj "/CN=$name/O=fiscobcos/OU=chain" -key $chaindir/ca.key -out $chaindir/ca.crt
-    cp cert.cnf $chaindir
 
     if [ $? -eq 0 ]; then
         echo "build chain ca succussful!"
@@ -114,11 +116,11 @@ gen_agency_cert() {
     mkdir -p $agencydir
 
     openssl genrsa -out $agencydir/agency.key 2048
-    openssl req -new -sha256 -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/agency.key -config $chain/cert.cnf -out $agencydir/agency.csr
+    openssl req -new -sha256 -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/agency.key -config ${cert_conf_path} -out $agencydir/agency.csr
     openssl x509 -req -days 3650 -sha256 -CA $chain/ca.crt -CAkey $chain/ca.key -CAcreateserial\
-        -in $agencydir/agency.csr -out $agencydir/agency.crt  -extensions v4_req -extfile $chain/cert.cnf
+        -in $agencydir/agency.csr -out $agencydir/agency.crt  -extensions v4_req -extfile ${cert_conf_path}
     
-    cp $chain/ca.crt $chain/cert.cnf $agencydir/
+    cp $chain/ca.crt $agencydir/
     cp $chain/ca.crt $agencydir/ca-agency.crt
     more $agencydir/agency.crt | cat >>$agencydir/ca-agency.crt
     rm -f $agencydir/agency.csr
@@ -134,9 +136,9 @@ gen_cert_secp256k1() {
     openssl ecparam -out $certpath/${type}.param -name secp256k1
     openssl genpkey -paramfile $certpath/${type}.param -out $certpath/${type}.key
     openssl pkey -in $certpath/${type}.key -pubout -out $certpath/${type}.pubkey
-    openssl req -new -sha256 -subj "/CN=${name}/O=fiscobcos/OU=${type}" -key $certpath/${type}.key -config $capath/cert.cnf -out $certpath/${type}.csr
+    openssl req -new -sha256 -subj "/CN=${name}/O=fiscobcos/OU=${type}" -key $certpath/${type}.key -config ${cert_conf_path} -out $certpath/${type}.csr
     openssl x509 -req -days 3650 -sha256 -in $certpath/${type}.csr -CAkey $capath/agency.key -CA $capath/agency.crt\
-        -force_pubkey $certpath/${type}.pubkey -out $certpath/${type}.crt -CAcreateserial -extensions v3_req -extfile $capath/cert.cnf
+        -force_pubkey $certpath/${type}.pubkey -out $certpath/${type}.crt -CAcreateserial -extensions v3_req -extfile ${cert_conf_path}
     openssl ec -in $certpath/${type}.key -outform DER | tail -c +8 | head -c 32 | xxd -p -c 32 | cat >$certpath/${type}.private
     rm -f $certpath/${type}.csr
 }
