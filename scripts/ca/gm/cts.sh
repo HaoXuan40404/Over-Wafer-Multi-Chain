@@ -1,9 +1,8 @@
 #!/bin/bash
-###########################################################
-# create by feinenxiang
-###########################################################
+dirpath="$(cd "$(dirname "$0")" && pwd)"
+cd $dirpath
 
-OPENSSL_CMD=/data/app/fiscocert/cert/opengm/bin/openssl
+OPENSSL_CMD={GM_PATH}
 EXIT_CODE=-1
 
 check_openssl_gm() {
