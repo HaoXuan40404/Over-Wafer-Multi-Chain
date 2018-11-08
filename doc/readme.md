@@ -14,7 +14,7 @@ OWMC在使用时，依赖相关软件的配置，以下是需要的相关软件�
 
 
 ### [java1.8](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/javacheck.md)
-FISCO BCOS中需要使用Oracle JDK 1.8(java 1.8)环境, 在CentOS/Ubuntu中默认安装或者通过yum/apt安装的JDK均为openJDK, 并不符合使用的要求, 本文是一份简单的Oracle Java 1.8的配置文档。
+FISCO BCOS中需要使用Oracle JDK 1.8(java 1.8)或openJDK1.9以上版本, 在CentOS/Ubuntu中默认安装或者通过yum/apt安装的JDK均为openJDK1.8, 并不符合使用的要求, 本文是一份简单的Oracle Java 1.8的配置文档。
 
 ### [python安装](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/pythoncheck.md)
 OWMC需要使用python2.7或3.5以上版本来生成相关安装包，本文是python的配置文档。
