@@ -99,4 +99,4 @@ tassl_url="https://github.com/jntass"
 tassl_install_cmd="bash config --prefix=${target_dir} no-shared && make -j2 && make install"
 download_and_install "${tassl_url}" "${tassl_name}" "${tassl_install_cmd}"
 
-sed -i "s:{GM_PATH}:${GM_FOLDER}/bin/openssl:g" ${GM_FOLDER}/cert_tools.sh
+sed -i "s:{GM_PATH}:${GM_FOLDER}/bin/openssl:g" ${GM_FOLDER}/cts.sh

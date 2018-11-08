@@ -222,7 +222,7 @@ gen_sdk_cert() {
     sdkpath=$sdkph'/'$sdk
     dir_must_not_exists "$sdkpath"
     mkdir -p $sdkpath
-    mypass=123456
+    
     cat >$sdkpath/RSA.cnf <<EOF
 [ca]
 default_ca=default_ca
@@ -258,7 +258,7 @@ EOF
     openssl x509 -req -days 3650 -CA $sdkpath/ca.crt -CAkey $sdkpath/ca.key -CAcreateserial\
         -in $sdkpath/server.csr -out $sdkpath/server.crt -extensions v3_req -extfile $sdkpath/RSA.cnf
     
-    read_password
+    mypass=123456
     openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdkpath/server.crt -inkey $sdkpath/server.key -out $sdkpath/keystore.p12
     keytool -importkeystore -srckeystore $sdkpath/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
         -destkeystore $sdkpath/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 
