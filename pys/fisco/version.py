@@ -2,10 +2,10 @@
 
 import re
 import os
-from pys.exp import MCError
+from pys.error.exp import MCError
 from pys.log import logger
 from pys.log import consoler
-from pys import utils
+from pys.tool import utils
 
 class Fisco:
     def __init__(self, fisco_path):

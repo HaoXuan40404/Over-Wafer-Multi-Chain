@@ -1,1 +1,1 @@
-__all__ = ['build', 'bootstrapsnode','config','godminer','temp_node', 'fisco_version']
+__all__ = ['build_pkg', 'bootstrapsnode','config','godminer','temp_node']

@@ -1,18 +1,18 @@
 # coding:utf-8
 import os
-from pys import utils
-from pys import ansible
+from pys.tool import utils
+from pys.tool import ansible
 from pys.log import logger
 from pys.log import consoler
-from pys.chain import meta
-from pys.chain import data
-from pys.chain.chain import Chain
+from pys.data_mgr import meta
+from pys.data_mgr import data
+from pys.data_mgr.chain import Chain
 from pys.node import config
-from pys.chain.port import HostPort
-from pys.chain.package import HostNodeDirs
+from pys.data_mgr.port import HostPort
+from pys.data_mgr.package import HostNodeDirs
 
-from pys.chain.chain import Chain
-from pys.exp import MCError
+from pys.data_mgr.chain import Chain
+from pys.error.exp import MCError
 
 
 def publish_chain(chains, force = False):

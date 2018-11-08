@@ -9,7 +9,7 @@ from pys import path
 from pys.log import logger
 from pys.log import consoler
 from pys.node import config
-from pys.exp import MCError
+from pys.error.exp import MCError
 
 def GM_temp_node_build(dir, port, fisco):
     """Generate GM temp node package

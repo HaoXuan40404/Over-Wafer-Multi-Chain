@@ -1,9 +1,9 @@
 # coding:utf-8
 import os
 import shutil
-from pys import utils
-from pys.chain.chain import Chain
-from pys.chain import data
+from pys.tool import utils
+from pys.data_mgr.chain import Chain
+from pys.data_mgr import data
 from pys.log import consoler, logger
 from pys.opr import opr_tools
 

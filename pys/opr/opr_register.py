@@ -1,7 +1,7 @@
-from pys.chain.meta import Meta
+from pys.data_mgr.meta import Meta
 from pys.log import consoler, logger
-from pys.exp import MCError
-from pys import ansible
+from pys.error.exp import MCError
+from pys.tool import ansible
 
 
 def register(chain_id, host, node):

@@ -4,22 +4,21 @@ import sys
 import shutil
 
 from pys import path
-from pys import utils
+from pys.tool import utils
 from pys.tool.java import JAVA
 from pys.log import logger
 from pys.log import consoler
-from pys.chain import parser
-from pys.chain import data
+from pys.conf import build_chain_conf
+from pys.data_mgr import data
 from pys.node import build
-from pys.node import temp_node
-from pys.exp import MCError
-from pys.chain.names import Names
+from pys.error.exp import MCError
+from pys.data_mgr.names import Names
 from pys.node.bootstrapsnode import P2pHosts
 from pys.node.bootstrapsnode import P2pHost
-from pys.chain.parser import ConfigConf
-from pys.chain.port import AllChainPort
+from pys.conf.build_chain_conf import ConfigConf
+from pys.data_mgr.port import AllChainPort
 
-from pys.node.fisco_version import Fisco
+from pys.fisco.version import Fisco
 
 def expand_on_exist_chain(cc):
 

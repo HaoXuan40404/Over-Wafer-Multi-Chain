@@ -1,9 +1,9 @@
 # coding:utf-8
 import os
 
-from pys import ansible, utils
-from pys.chain import data
-from pys.chain.meta import *
+from pys.tool import ansible, utils
+from pys.data_mgr import data
+from pys.data_mgr.meta import *
 from pys.log import consoler, logger
 
 def check_chain(chain):

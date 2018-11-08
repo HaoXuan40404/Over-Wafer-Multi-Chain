@@ -6,12 +6,12 @@ import codecs
 import sys
 import os
 
-from pys import utils
+from pys.conf import utils
 from pys.log import logger, consoler
 
-from pys.chain.chain import Chain
-from pys.chain.port import Port
-from pys.exp import MCError
+from pys.data_mgr.chain import Chain
+from pys.data_mgr.port import Port
+from pys.error.exp import MCError
 
 class NodeEle:
     def __init__(self, node_desc):
