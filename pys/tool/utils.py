@@ -86,7 +86,7 @@ def replace(filepath, old, new):
 
     status, output = getstatusoutput(cmd)
     if status != 0:
-        logger.error(' replace failed, new is %s, old is %s, file is %s ', new, old, filepath)
+        logger.error(' replace failed, new is %s, old is %s, file is %s, status is %s, output is %s ', new, old, filepath, str(status), output)
         return False
     
     return True
