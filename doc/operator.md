@@ -395,6 +395,8 @@ $ owmc --export chain_id version $export_path/ --direct
 *** 本部分命令依赖ansible ***
 
 ## 发布多链安装包 --publish命令
+在用户推送安装包之前，建议首先检查目标服务器环境依赖，推荐使用--envcheck命令进行检测。
+
 publish为多链的发布命令，用户需要制定链id和版本号，中间用":"隔开
 ```
 $ owmc --publish chain_id_1:version_1 chain_id_2:version_2 ...
@@ -557,7 +559,7 @@ $ owmc --check 12345:127.0.0.1 12346:127.0.0.2 12347:127.0.0.3
 
 
 ## 检查目标服务器环境依赖 --envcheck命令
-本命令可以检测目标服务器环境依赖是否满足
+本命令可以检测目标服务器环境依赖是否满足，当运维服务器生成安装包后，建议用户在推送安装包之前首先检测目标服务器环境
 
 ```
 $ owmc --envcheck all  or host_ip ...
