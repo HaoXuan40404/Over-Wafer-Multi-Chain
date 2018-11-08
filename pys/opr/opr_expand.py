@@ -10,7 +10,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.conf import build_chain_conf
 from pys.data_mgr import data
-from pys.node import build
+from pys.node import build_chain
 from pys.error.exp import MCError
 from pys.data_mgr.names import Names
 from pys.node.bootstrapsnode import P2pHosts

@@ -2,7 +2,7 @@
 
 import os
 import shutil
-from pys import utils
+from pys.tool import utils
 from pys.log import logger, consoler
 from pys.data_mgr import data
 from pys.data_mgr.chain import Chain

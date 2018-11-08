@@ -4,7 +4,7 @@ import os
 import sys
 import configparser
 import codecs
-from pys.conf import utils
+from pys.tool import utils
 from pys import path
 from pys.log import logger
 from pys.error.exp import MCError
