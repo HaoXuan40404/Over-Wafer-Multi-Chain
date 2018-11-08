@@ -4,9 +4,8 @@ cd $dirpath
 
 cert_conf_path=$dirpath/cert.cnf
 
-
 EXIT_CODE=-1
-
+mypass=123456
 check_env() {
     version=`openssl version 2>&1 | grep 1.0.2`
     [ -z "$version" ] && {
@@ -221,7 +220,7 @@ gen_sdk_cert() {
     gen_cert_secp256k1 "$agency" "$sdkpath" "$sdk" sdk
     cp $agency/ca-agency.crt $sdkpath/ca.crt
     
-    mypass="123456"
+    
     openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdkpath/sdk.crt -inkey $sdkpath/sdk.key -out $sdkpath/keystore.p12
     keytool -importkeystore -srckeystore $sdkpath/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
         -destkeystore $sdkpath/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 

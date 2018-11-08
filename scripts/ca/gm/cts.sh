@@ -7,6 +7,8 @@ cert_conf_path=$dirpath/cert.cnf
 OPENSSL_CMD={GM_PATH}
 EXIT_CODE=-1
 
+mypass=123456
+
 check_openssl_gm() {
     if [ ! -f "$OPENSSL_CMD" ]; then
         echo "please install openssl guomi version or change OPENSSL_CMD variable!"
@@ -261,7 +263,7 @@ EOF
     openssl x509 -req -days 3650 -CA $sdkpath/ca.crt -CAkey $sdkpath/ca.key -CAcreateserial\
         -in $sdkpath/server.csr -out $sdkpath/server.crt -extensions v3_req -extfile $sdkpath/RSA.cnf
     
-    mypass=123456
+    
     openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdkpath/server.crt -inkey $sdkpath/server.key -out $sdkpath/keystore.p12
     keytool -importkeystore -srckeystore $sdkpath/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
         -destkeystore $sdkpath/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 
