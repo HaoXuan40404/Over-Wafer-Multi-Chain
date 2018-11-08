@@ -2,8 +2,12 @@
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
 
+cert_conf_path=$dirpath/cert.cnf
+
 OPENSSL_CMD={GM_PATH}
 EXIT_CODE=-1
+
+mypass=123456
 
 check_openssl_gm() {
     if [ ! -f "$OPENSSL_CMD" ]; then
@@ -106,8 +110,8 @@ gen_chain_cert() {
     fi
 
 	$OPENSSL_CMD genpkey -paramfile gmsm2.param -out $chaindir/gmca.key
-	$OPENSSL_CMD req -config cert.cnf -x509 -days 3650 -subj "/CN=$name/O=fiscobcos/OU=chain" -key $chaindir/gmca.key -extensions v3_ca -out $chaindir/gmca.crt
-    cp gmsm2.param cert.cnf $chaindir
+	$OPENSSL_CMD req -config ${cert_conf_path} -x509 -days 3650 -subj "/CN=$name/O=fiscobcos/OU=chain" -key $chaindir/gmca.key -extensions v3_ca -out $chaindir/gmca.crt
+    cp gmsm2.param $chaindir
 
     if [ $? -eq 0 ]; then
         echo "build chain ca succussful!"
@@ -129,11 +133,11 @@ gen_agency_cert() {
     mkdir -p $agencydir
 
     $OPENSSL_CMD genpkey -paramfile $chain/gmsm2.param -out $agencydir/gmagency.key
-    $OPENSSL_CMD req -new -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/gmagency.key -config $chain/cert.cnf -out $agencydir/gmagency.csr
+    $OPENSSL_CMD req -new -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/gmagency.key -config ${cert_conf_path} -out $agencydir/gmagency.csr
     $OPENSSL_CMD x509 -req -days 3650 -CA $chain/gmca.crt -CAkey $chain/gmca.key -CAcreateserial\
-        -in $agencydir/gmagency.csr -out $agencydir/gmagency.crt -extfile $chain/cert.cnf -extensions v3_agency_root
+        -in $agencydir/gmagency.csr -out $agencydir/gmagency.crt -extfile ${cert_conf_path} -extensions v3_agency_root
 
-    cp $chain/gmca.crt $chain/cert.cnf $chain/gmsm2.param $agencydir/
+    cp $chain/gmca.crt $chain/gmsm2.param $agencydir/
     rm -rf $agencydir/*.csr
     echo "build $name agency cert successful!"
 }
@@ -143,25 +147,26 @@ gen_node_cert() {
     agency=`getname "$agpath"`
     nodepath="$3"
     node="$4"
-    ndpath=$nodepath'/'$node
+    ndpath=$nodepath
     dir_must_exists "$agpath"
     file_must_exists "$agpath/gmagency.key"
     check_name agency "$agency"
-    dir_must_not_exists "$ndpath"
     check_name node "$node"
-    mkdir -p $ndpath
+    if [ ! -d $ndpath ]; then
+        mkdir -p $ndpath
+    fi
     
     echo "gen signature certificate with guomi algorithm:"
     $OPENSSL_CMD genpkey -paramfile $agpath/gmsm2.param -out $ndpath/gmnode.key
-    $OPENSSL_CMD req -new -key $ndpath/gmnode.key -subj "/CN=$node/O=fiscobcos/OU=node" -config $agpath/cert.cnf -out $ndpath/gmnode.csr
+    $OPENSSL_CMD req -new -key $ndpath/gmnode.key -subj "/CN=$node/O=fiscobcos/OU=node" -config ${cert_conf_path} -out $ndpath/gmnode.csr
     $OPENSSL_CMD x509 -req -CA $agpath/gmagency.crt -CAkey $agpath/gmagency.key -days 3650 -CAcreateserial\
-        -in $ndpath/gmnode.csr -out $ndpath/gmnode.crt -extfile $agpath/cert.cnf -extensions v3_req
+        -in $ndpath/gmnode.csr -out $ndpath/gmnode.crt -extfile ${cert_conf_path} -extensions v3_req
     
     echo "gen encryption certificate with guomi algorithm:"
     $OPENSSL_CMD genpkey -paramfile $agpath/gmsm2.param -out $ndpath/gmennode.key
-    $OPENSSL_CMD req -new -key $ndpath/gmennode.key -subj "/CN=$node/O=fiscobcos/OU=ennode" -config $agpath/cert.cnf -out $ndpath/gmennode.csr
+    $OPENSSL_CMD req -new -key $ndpath/gmennode.key -subj "/CN=$node/O=fiscobcos/OU=ennode" -config ${cert_conf_path} -out $ndpath/gmennode.csr
     $OPENSSL_CMD x509 -req -CA $agpath/gmagency.crt -CAkey $agpath/gmagency.key -days 3650 -CAcreateserial\
-        -in $ndpath/gmennode.csr -out $ndpath/gmennode.crt -extfile $agpath/cert.cnf -extensions v3enc_req
+        -in $ndpath/gmennode.csr -out $ndpath/gmennode.crt -extfile ${cert_conf_path} -extensions v3enc_req
     
     $OPENSSL_CMD ec -in $ndpath/gmnode.key -outform DER | tail -c +8 | head -c 32 | xxd -p -c 32 | cat >$ndpath/gmnode.private
     #nodeid is pubkey
@@ -222,7 +227,7 @@ gen_sdk_cert() {
     sdkpath=$sdkph'/'$sdk
     dir_must_not_exists "$sdkpath"
     mkdir -p $sdkpath
-    mypass=123456
+    
     cat >$sdkpath/RSA.cnf <<EOF
 [ca]
 default_ca=default_ca
@@ -251,14 +256,14 @@ EOF
 
     #gen ca cert
     openssl genrsa -out $sdkpath/ca.key 2048
-    openssl req -config $agpath/cert.cnf -new -x509 -days 3650 -subj "/CN=$sdk/O=fiscobcos/OU=gmsdkca" -key $sdkpath/ca.key -out $sdkpath/ca.crt
+    openssl req -config ${cert_conf_path} -new -x509 -days 3650 -subj "/CN=$sdk/O=fiscobcos/OU=gmsdkca" -key $sdkpath/ca.key -out $sdkpath/ca.crt
     #gen sdk cert
     openssl genrsa -out $sdkpath/server.key 2048
-    openssl req -new -subj "/CN=$sdk/O=fiscobcos/OU=gmsdk" -key $sdkpath/server.key -config $agpath/cert.cnf -out $sdkpath/server.csr
+    openssl req -new -subj "/CN=$sdk/O=fiscobcos/OU=gmsdk" -key $sdkpath/server.key -config ${cert_conf_path} -out $sdkpath/server.csr
     openssl x509 -req -days 3650 -CA $sdkpath/ca.crt -CAkey $sdkpath/ca.key -CAcreateserial\
         -in $sdkpath/server.csr -out $sdkpath/server.crt -extensions v3_req -extfile $sdkpath/RSA.cnf
     
-    read_password
+    
     openssl pkcs12 -export -name client -passout "pass:$mypass" -in $sdkpath/server.crt -inkey $sdkpath/server.key -out $sdkpath/keystore.p12
     keytool -importkeystore -srckeystore $sdkpath/keystore.p12 -srcstoretype pkcs12 -srcstorepass $mypass\
         -destkeystore $sdkpath/client.keystore -deststoretype jks -deststorepass $mypass -alias client 2>/dev/null 
