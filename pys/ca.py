@@ -129,20 +129,12 @@ def generate_root_ca(dir):
         dir {[path]} -- [root cert path]
     """
     try:
-        dest_dir = path.get_path() + '/scripts/ca/.temp'
-        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cert_tools.sh gen_chain_cert ' + '.temp')
+        dir = os.path.abspath(dir)
+        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_chain_cert ' + dir)
         if status != 0:
-            logger.warn(' cert_tools.sh failed! status is %d, output is %s, dir is %s.', status, result, dir)
-            raise MCError('cert_tools.sh failed! status is %d, output is %s, dir is %s.' % (status, result, dir))
-        logger.info(' cert_tools.sh success! status is %d, output is %s, dir is %s.', status, result, dir)
-        if not check_ca_exist(dest_dir):
-            logger.warn(' ca.crt or ca.key not exist, dir is %s.', dir)
-            raise MCError(' ca.crt or ca.key not exist, dir is %s.' % dir)
-        
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-        shutil.copy(dest_dir + '/ca.crt', dir)
-        shutil.copy(dest_dir + '/ca.key', dir)
+            logger.warn(' cts.sh failed! status is %d, output is %s, dir is %s.', status, result, dir)
+            raise MCError('cts.sh failed! status is %d, output is %s, dir is %s.' % (status, result, dir))
+        logger.info(' cts.sh success! status is %d, output is %s, dir is %s.', status, result, dir)
         logger.info(' Generate root cert success, dir is %s', dir)
         consoler.info(' Generate root cert success, dir is %s' % dir)
     except MCError as me:
@@ -150,9 +142,6 @@ def generate_root_ca(dir):
     except Exception as e:
         consoler.error(' \033[1;31m Generate root cert failed! excepion is %s.\033[0m', e)
         logger.error('  Generate root cert failed! Result is %s'%result)
-    finally:
-        if os.path.exist(dest_dir):
-            shutil.rmtree(dest_dir) 
 
 
 def generator_agent_ca(dir, ca, agent):
@@ -163,26 +152,21 @@ def generator_agent_ca(dir, ca, agent):
         ca {[path]} -- [root cert path]
         agent {[string]} -- [agency name]
     """
-
-    ca = os.path.abspath(ca) 
-    dir = os.path.abspath(dir) 
-    sh_path =  path.get_path() + '/scripts/ca/'
-    if os.path.exists(ca) and os.path.isfile(ca + '/ca.crt') and os.path.isfile(ca +  '/ca.key') and os.path.isfile(ca + '/cert.cnf'):
-        logger.info('ca_path completed.')
-    else:
-        consoler.error(' \033[1;31m   Generate %s cert failed! Cant find cert in %s. \033[0m',agent, ca)
-        raise Exception(' Generate %s cert failed! Cant find cert in %s. '%(agent, ca))
-    ca = path.get_path() + '/' + ca 
-    os.chdir(sh_path)
-    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_agency_cert ' + ca + ' ' + dir + '/' + agent)
-    os.chdir(path.get_path())
-    if not status:
-        logger.info(' Generate %s cert successful! dir is %s.'%(agent, dir + '/' + agent))
-    else:
-        consoler.error(' \033[1;31m Generate %s cert failed! Please check your network, and try to check your opennssl version.\033[0m')
-        logger.error('  Generate %s cert failed! Result is %s'%(agent, result))
-        raise Exception(' Generate %s cert failed! Result is %s'%(agent, result))
-
+    try:
+        ca = os.path.abspath(ca) 
+        dir = os.path.abspath(dir) 
+        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_agency_cert ' + ca + ' ' + dir + ' ' + agent)
+        if not status:
+            logger.info(' Generate %s cert successful! dir is %s.'%(agent, dir + '/' + agent))
+        else:
+            consoler.error(' \033[1;31m Generate %s cert failed! Please check your network, and try to check your opennssl version.\033[0m')
+            logger.error('  Generate %s cert failed! Result is %s'%(agent, result))
+            raise MCError(' Generate %s cert failed! Result is %s'%(agent, result))
+    except MCError as me:
+        consoler.error(' \033[1;31m %s \033[0m', me)
+    except Exception as e:
+        consoler.error(' \033[1;31m Generate root cert failed! excepion is %s.\033[0m', e)
+        logger.error('  Generate root cert failed! Result is %s'%result) 
 
 
 def generator_node_ca(agent, dir, node):
@@ -193,32 +177,21 @@ def generator_node_ca(agent, dir, node):
         node {[string]} -- [node name]
         dir {[path]} -- [node cert path]
     """
-    sh_path =  path.get_path() + '/scripts/ca/'
     _dir = os.path.abspath(dir) 
     agent = os.path.abspath(agent) 
     try:
-        get_agent = agent.split('/')
-        agent_name = get_agent[len(get_agent)-1]
+        (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_node_cert ' + agent + ' ' + _dir + '/ ' + node)
+        if not status:
+            logger.info(' Generate %s cert successful! dir is %s.', node, _dir + '/' + node)
+        else:
+            consoler.error(' \033[1;31m Generate node cert failed! Please check your network, and try to check your opennssl version.\033[0m')
+            logger.error('  Generate %s cert failed! Result is %s'%(node, result))
+            raise MCError(' Generate %s cert failed! Result is %s'%(node, result))
+    except MCError as me:
+        consoler.error(' \033[1;31m %s \033[0m', me)
     except Exception as e:
-        consoler.error(' \033[1;31m   Generate %s cert failed! %s. \033[0m',agent_name, e)
-        raise Exception(' Generate %s cert failed! %s.',agent_name, e)
-    if os.path.exists(agent) and os.path.isfile(agent +  '/agency.crt') and os.path.isfile(agent + '/agency.key'):
-        try:
-            os.chdir(sh_path)
-            (status, result)= utils.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent + ' ' + _dir + '/ ' + node)
-            os.chdir(path.get_path())
-        except Exception as e:
-            logger.error('  Generate %s cert failed! %s.'%(agent_name, e))
-            raise Exception(' Generate %s cert failed! %s.'%(agent_name, e))
-    else:
-        logger.error('  Generate %s cert failed! Cant find %s.'%(agent_name, agent))
-        raise Exception(' Generate %s cert failed! Cant find %s.'%(agent_name, agent))
-    if not status:
-        logger.info(' Generate %s cert successful! dir is %s.', node, _dir + '/' + node)
-    else:
-        consoler.error(' \033[1;31m Generate root cert failed! Please check your network, and try to check your opennssl version.\033[0m')
-        logger.error('  Generate %s cert failed! Result is %s' %(node, result))
-        raise Exception(' Generate %s cert failed! Result is %s' %(node, result))
+        consoler.error(' \033[1;31m Generate root cert failed! excepion is %s.\033[0m', e)
+        logger.error('  Generate root cert failed! Result is %s'%result)
 
 def generator_sdk_ca(agency_dir,sdk_dir):
     """[generate sdkcert]
@@ -229,29 +202,19 @@ def generator_sdk_ca(agency_dir,sdk_dir):
     """
     dir = os.path.abspath(agency_dir)
     sdk_dir = os.path.abspath(sdk_dir)
-    sh_path =  path.get_path() + '/scripts/ca/'
-    if os.path.exists(dir) and os.path.isfile(dir +  '/agency.crt') and os.path.isfile(dir + '/agency.key'):
-        try:
-            get_agent = dir.split('/')
-            agent_name = get_agent[len(get_agent)-1]
-            logger.debug("name is "+agent_name)
-            os.chdir(sh_path)
-            (status, result)= utils.getstatusoutput('./cert_tools.sh  gen_sdk_cert ' + dir + ' ' + sdk_dir + '/sdk')
-            os.chdir(path.get_path())
-        except Exception as e:
-            logger.error('  Copy %s cert failed! %s.'%(agent_name, e))
-            raise Exception(' Copy %s cert failed! %s.'%(agent_name, e))
-            
-    else:
-        logger.error('  Copy %s cert failed! %s.' %(agent_name, e))
-        raise Exception(' Copy %s cert failed! %s.'%(agent_name, e))
-
-    if not status:
-        consoler.info(' Generate %s cert successful! dir is %s.', agent_name, sdk_dir + '/sdk')
-        logger.info(' Generate %s cert successful! dir is %s.', agent_name, sdk_dir + '/sdk')
-    else:
-        logger.error('  Generate sdk cert failed! Result is %s' %result)
-        raise Exception(' Generate sdk cert failed! Result is %s' %result)
+    try:
+        (status, result)= utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ca/cts.sh gen_sdk_cert ' + dir + ' ' + sdk_dir)
+        if not status:
+            consoler.info(' Generate sdk cert successful! dir is %s.',  sdk_dir + '/sdk')
+            logger.info(' Generate sdk cert successful! dir is %s.', sdk_dir + '/sdk')
+        else:
+            logger.error('  Generate sdk cert failed! Result is %s' %result)
+            raise MCError(' Generate sdk cert failed! Result is %s' %result)
+    except MCError as me:
+        consoler.error(' \033[1;31m %s \033[0m', me)
+    except Exception as e:
+        consoler.error(' \033[1;31m Generate root cert failed! excepion is %s.\033[0m', e)
+        logger.error('  Generate root cert failed! Result is %s'%result)
 
 
 def gm_generate_root_ca(dir, chain = '12345'):
@@ -266,7 +229,7 @@ def gm_generate_root_ca(dir, chain = '12345'):
     temp_path = path.get_path() + '/cert__temp'
     shutil.copytree(sh_path, temp_path)
     os.chdir(path.get_path() + '/cert_temp/gm')
-    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_chain_cert ' + chain)
+    (status, result) = utils.getstatusoutput('./cts.sh gen_chain_cert ' + chain)
     os.chdir(path.get_path())
     if not os.path.exists(dir + '/' + chain):
         os.makedirs(dir + '/' + chain)
@@ -313,7 +276,7 @@ def gm_generator_agent_ca(dir, ca, agent):
         consoler.error(' \033[1;31m   Generate %s cert failed! Cant find cert in %s. \033[0m',agent, ca)
         logger.error(' Generate %s cert failed! Cant find cert in %s. ' %(agent, ca))
     os.chdir(path.get_path() + '/cert_temp/gm')
-    (status, result) = utils.getstatusoutput('./cert_tools.sh gen_agency_cert ' + agent)
+    (status, result) = utils.getstatusoutput('./cts.sh gen_agency_cert ' + agent)
     os.chdir(path.get_path())
     if not status:
         try: 
@@ -367,7 +330,7 @@ def gm_generator_node_ca(agent, dir, node):
             shutil.copytree(agent, temp_path + '/gm/' + agent_name)
             os.chdir(path.get_path() + '/cert_temp/gm')
             shutil.copy('./cert.cnf',agent_name)
-            (status, result)= utils.getstatusoutput('./cert_tools.sh gen_node_cert ' + agent_name + ' ' + node)
+            (status, result)= utils.getstatusoutput('./cts.sh gen_node_cert ' + agent_name + ' ' + node)
             os.chdir(path.get_path())
         except Exception as e:
             if os.path.exists(temp_path):
@@ -427,7 +390,7 @@ def gm_generator_sdk_ca(agency_dir,sdk_dir):
             shutil.copytree(dir, temp_path +  '/gm/' +agent_name)
             logger.debug("name is "+agent_name)
             os.chdir(path.get_path() + '/cert_temp/gm')
-            (status, result)= utils.getstatusoutput('./cert_tools.sh  gen_sdk_cert ' + agent_name + ' sdk')
+            (status, result)= utils.getstatusoutput('./cts.sh  gen_sdk_cert ' + agent_name + ' sdk')
             os.chdir(path.get_path())
         except Exception as e:
             if os.path.exists(temp_path):

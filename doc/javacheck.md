@@ -1,5 +1,5 @@
 # FISCO BCOS JAVA配置文档
-FISCO BCOS中需要使用Oracle JDK 1.8(java 1.8)环境, 在CentOS/Ubuntu中默认安装或者通过yum/apt安装的JDK均为openJDK, 并不符合使用的要求, 本文是一份简单的Oracle Java 1.8的安装教程.
+FISCO BCOS中需要使用**Oracle JDK 1.8以上(java 1.8)环境或是open jdk 1.9以上版本**, 在CentOS/Ubuntu中默认安装或者通过yum/apt安装的JDK均为openJDK1.8, 并不符合使用的要求, 本文是一份简单的Oracle Java 1.8的安装教程.
 
 假设安装目录为/usr/local/
 ## 1.下载.  

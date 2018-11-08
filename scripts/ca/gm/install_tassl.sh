@@ -1,4 +1,7 @@
 #!/bin/bash
+###########################################################
+# create by feinenxiang
+###########################################################
 
 EXIT_CODE=-1
 cur_dir=`pwd`
@@ -71,18 +74,18 @@ function download_and_install() {
 }
 
 function install_deps_centos() {
-    execute_cmd "sudo yum -y install flex >/dev/null 2>&1"
-    execute_cmd "sudo yum -y install bison >/dev/null 2>&1"
-    execute_cmd "sudo yum -y install gcc >/dev/null 2>&1"
-    execute_cmd "sudo yum -y install gcc-c++ >/dev/null 2>&1"
+    execute_cmd "sudo yum -y install flex"
+    execute_cmd "sudo yum -y install bison"
+    execute_cmd "sudo yum -y install gcc"
+    execute_cmd "sudo yum -y install gcc-c++"
 }
 
 
 function install_deps_ubuntu() {
-    execute_cmd "sudo apt-get install -y flex >/dev/null 2>&1"
-    execute_cmd "sudo apt-get install -y bison >/dev/null 2>&1"
-    execute_cmd "sudo apt-get install -y gcc >/dev/null 2>&1"
-    execute_cmd "sudo apt-get install -y g++ >/dev/null 2>&1"
+    execute_cmd "sudo apt-get install -y flex"
+    execute_cmd "sudo apt-get install -y bison"
+    execute_cmd "sudo apt-get install -y gcc"
+    execute_cmd "sudo apt-get install -y g++"
 }
 
 if grep -Eqi "Ubuntu" /etc/issue || grep -Eq "Ubuntu" /etc/*-release; then

@@ -18,9 +18,9 @@ Over-Wafer-Multi-Chain OWMC搭建是针对机构内同时部署多条链的物�
 执行
 
 ```
-git clone https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain.git
+$ git clone https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain.git
 
-git checkout dev
+$ git checkout dev
 ```
 
 OWMC的相关流程如下:

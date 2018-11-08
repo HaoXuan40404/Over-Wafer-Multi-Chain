@@ -103,9 +103,8 @@ def Usage():
         '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                              help='check build environment')
-
     tools_group.add_argument('--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
-                                                                'shell cmd or shell file, eg ： \'ls -lt\'、test.sh'), help='execute a shell command or shell file on remote server')
+                                                                'shell cmd or shell file, eg ： \'ls -lt\'〝test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                    'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     tools_group.add_argument('--chainca', nargs=1, metavar=('chain_dir',),
@@ -117,6 +116,7 @@ def Usage():
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
                                                           'agency_dir'), help='generate sdk cert')
     tools_group.add_argument('--gm', action='store_true', help='is gm ca action.')
+
     args = parser.parse_args()
     os.path.exists
     if args.version:

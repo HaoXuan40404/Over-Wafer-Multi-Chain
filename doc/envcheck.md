@@ -89,84 +89,28 @@ sudo yum/apt -y install openssl
 yum/apt不存在openssl, 可以参考下面的替换apt/yum源.
 
 #### yum/apt源检查 
-物料包工作过程中会使用yum/apt安装一些依赖项, 当前yum/apt源无法下载到相关依赖时, 工作工程中可能会出现一些问题
-对此建议可以提前检查yum/apt源。 
-##### 检查列表
-在服务器上面依次执行下面命令:
-```
-CentOS 依赖
-        sudo yum -y install bc
-        sudo yum -y install gettext
-        sudo yum -y install cmake3
-        sudo yum -y install git
-        sudo yum -y install gcc-c++
-        sudo yum -y install openssl
-        sudo yum -y install openssl-devel
-        sudo yum -y install leveldb-devel
-        sudo yum -y install curl-devel
-        sudo yum -y install libmicrohttpd-devel
-        sudo yum -y install gmp-devel
-        sudo yum -y install lsof
-        sudo yum -y install crudini
-        sudo yum -y install libuuid-devel
-
-Ubuntu 依赖
-        sudo apt-get -y install gettext
-        sudo apt-get -y install bc
-        sudo apt-get -y install cmake
-        sudo apt-get -y install git
-        sudo apt-get -y install gcc-c++
-        sudo apt-get -y install openssl
-        sudo apt-get -y install build-essential libboost-all-dev
-        sudo apt-get -y install libcurl4-openssl-dev libgmp-dev
-        sudo apt-get -y install libleveldb-dev  libmicrohttpd-dev
-        sudo apt-get -y install libminiupnpc-dev
-        sudo apt-get -y install libssl-dev libkrb5-dev
-        sudo apt-get -y install lsof
-        sudo apt-get -y install crudini
-        sudo apt-get -y install uuid-dev
-
-```
+物料包工作过程中会使用yum/apt安装一些依赖项, 当前yum/apt源无法下载到相关依赖时, 工作工程中可能会出现一些问题,
+对此建议可以提前检查yum/apt镜像仓库。 
 
 如果apt/yum安装某些项失败, 说明apt/yum源不存在该依赖项.
 
-##### 替换yum/apt源
-yum/apt源如果不满足要求, 可以考虑将源替换为阿里云的源.
 
-- CentOS更换阿里云yum源
-```
-1. 备份   
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base-bak.repo
-2. 下载   
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-3. 更新yum缓存   
-yum makecache
-```
-- Ubuntu 16.04更换阿里云源  
-```
-1. 备份  
-sudo cp /etc/apt/sources.list /etc/apt/sources.list.old
-2. 修改source.list 
-sudo vim /etc/apt/source.list
-添加以下信息
-# deb cdrom:[Ubuntu 16.04 LTS _Xenial Xerus_ - Release amd64 (20160420.1)]/ xenial main restricted
-deb-src http://archive.ubuntu.com/ubuntu xenial main restricted #Added by software-properties
-deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted
-deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted multiverse universe #Added by software-properties
-deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted
-deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted multiverse universe #Added by software-properties
-deb http://mirrors.aliyun.com/ubuntu/ xenial universe
-deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe
-deb http://mirrors.aliyun.com/ubuntu/ xenial multiverse
-deb http://mirrors.aliyun.com/ubuntu/ xenial-updates multiverse
-deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse #Added by software-properties
-deb http://archive.canonical.com/ubuntu xenial partner
-deb-src http://archive.canonical.com/ubuntu xenial partner
-deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted
-deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted multiverse universe #Added by software-properties
-deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
-deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse
 
-3. 更新apt缓存    
-sudo apt-get update
+- CentOS安装案例云进行仓库
+```
+$ wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+$ rpm -ivh epel-release-latest-7.noarch.rpm
+$ yum repolist      ##检查是否已添加至源列表
+```
+
+- Ubuntu 配置software-properties-common  
+```
+$ sudo apt-get update
+$ sudo apt-get -y install apt-transport-https ca-certificates curl software-properties-common
+$ curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -
+之后输入软件源信息
+
+```
+
+
+
