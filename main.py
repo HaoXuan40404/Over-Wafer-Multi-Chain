@@ -138,7 +138,7 @@ def Usage():
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
-        opr_expand.chain_expand(args.expand[0], args.expand[1])
+        opr_expand.expand(args.expand[0], args.expand[1])
         consoler.info(' expand operation end.')
     elif args.check:
         consoler.info(' check operation begin.')
