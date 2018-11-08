@@ -143,13 +143,14 @@ gen_node_cert() {
     agency=`getname "$agpath"`
     nodepath="$3"
     node="$4"
-    ndpath=$nodepath'/'$node
+    ndpath=$nodepath
     dir_must_exists "$agpath"
     file_must_exists "$agpath/gmagency.key"
     check_name agency "$agency"
-    dir_must_not_exists "$ndpath"
     check_name node "$node"
-    mkdir -p $ndpath
+    if [ ! -d $ndpath ]; then
+        mkdir -p $ndpath
+    fi
     
     echo "gen signature certificate with guomi algorithm:"
     $OPENSSL_CMD genpkey -paramfile $agpath/gmsm2.param -out $ndpath/gmnode.key

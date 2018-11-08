@@ -151,14 +151,15 @@ gen_node_cert() {
     agency=`getname "$agpath"`
     nodepath="$3"
     node="$4"
-    ndpath=$nodepath'/'$node
+    ndpath=$nodepath
     dir_must_exists "$agpath"
     file_must_exists "$agpath/agency.key"
     check_name agency "$agency"
-    dir_must_not_exists "$ndpath"
     check_name node "$node"
+    if [ ! -d $ndpath ]; then
+        mkdir -p $ndpath
+    fi
 
-    mkdir -p $ndpath
     gen_cert_secp256k1 "$agpath" "$ndpath" "$node" node
     #nodeid is pubkey
     openssl ec -in $ndpath/node.key -text -noout | sed -n '7,11p' | tr -d ": \n" | awk '{print substr($0,3);}' | cat >$ndpath/node.nodeid
