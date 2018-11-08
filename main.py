@@ -104,7 +104,7 @@ def Usage():
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                              help='check build environment')
     tools_group.add_argument('--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
-                                                                'shell cmd or shell file, eg ： \'ls -lt\'〝test.sh'), help='execute a shell command or shell file on remote server')
+                                                                'shell cmd or shell file, e.g. \'ls -lt\' test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
                                                                    'file or dir to be push.', 'dst dir.'), help='push one file or dir to remote server.')
     tools_group.add_argument('--chainca', nargs=1, metavar=('chain_dir',),
@@ -187,39 +187,27 @@ def Usage():
     elif args.chainca:
         consoler.info(' chain cert begin.')
         chain_dir = args.chainca[0]
-        if args.gm:
-            ca.gm_generate_root_ca(chain_dir)
-        else:
-            ca.generate_root_ca(chain_dir)
+        ca.generate_root_ca(chain_dir, args.gm)
         consoler.info(' chain cert end.')
     elif args.agencyca:
         consoler.info(' agency cert begin.')
         agency_dir = args.agencyca[0]
         chain_dir = args.agencyca[1]
         agency_name = args.agencyca[2]
-        if args.gm:
-            ca.gm_generator_agent_ca(agency_dir, chain_dir, agency_name)
-        else:
-            ca.generator_agent_ca(agency_dir, chain_dir, agency_name)
+        ca.generator_agent_ca(agency_dir, chain_dir, agency_name, args.gm)
         consoler.info(' agency cert end.')
     elif args.nodeca:
         consoler.info(' agency cert begin.')
         agency_dir = args.nodeca[0]
         node_dir = args.nodeca[1]
         node_name = args.nodeca[2]
-        if args.gm:
-            ca.gm_generator_node_ca(agency_dir, node_dir, node_name)
-        else:
-            ca.generator_node_ca(agency_dir, node_dir, node_name)
+        ca.generator_node_ca(agency_dir, node_dir, node_name, args.gm)
         consoler.info(' agency cert end.')
     elif args.sdkca:
         consoler.info(' sdk cert begin.')
         sdk_dir = args.sdkca[0]
         agency_dir = args.sdkca[1]
-        if args.gm:
-            ca.gm_generator_sdk_ca(agency_dir, sdk_dir)
-        else:
-            ca.generator_sdk_ca(agency_dir, sdk_dir)
+        ca.generator_sdk_ca(agency_dir, sdk_dir, args.gm)
         consoler.info(' sdk cert end.')
     elif args.envcheck:
         consoler.info(' envcheck operation begin.')
