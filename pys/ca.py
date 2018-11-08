@@ -172,7 +172,7 @@ def generator_agent_ca(dir, ca, agent, gm = False):
         consoler.error(' \033[1;31m %s \033[0m', me)
     except Exception as e:
         consoler.error(' \033[1;31m Generate root cert failed! excepion is %s.\033[0m', e)
-        logger.error('  Generate root cert failed! Result is %s'%result) 
+        logger.error('  Generate root cert failed! Result is %s'%result)
 
 
 def generator_node_ca(agent, dir, node, gm = False):
@@ -340,11 +340,3 @@ def init_ca(cert_path):
         raise Exception("Init cert failed! files not completed")
 
     return 0
-
-
-
-
-
-
-
-

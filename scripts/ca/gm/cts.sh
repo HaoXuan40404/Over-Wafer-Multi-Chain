@@ -131,7 +131,7 @@ gen_agency_cert() {
     mkdir -p $agencydir
 
     $OPENSSL_CMD genpkey -paramfile $chain/gmsm2.param -out $agencydir/gmagency.key
-    $OPENSSL_CMD req -new -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/gmagency.key -config $${cert_conf_path} -out $agencydir/gmagency.csr
+    $OPENSSL_CMD req -new -subj "/CN=$name/O=fiscobcos/OU=agency" -key $agencydir/gmagency.key -config ${cert_conf_path} -out $agencydir/gmagency.csr
     $OPENSSL_CMD x509 -req -days 3650 -CA $chain/gmca.crt -CAkey $chain/gmca.key -CAcreateserial\
         -in $agencydir/gmagency.csr -out $agencydir/gmagency.crt -extfile ${cert_conf_path} -extensions v3_agency_root
 
