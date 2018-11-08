@@ -72,8 +72,8 @@ def build_node_dir(chain, node, fisco, port, index):
 
     if fisco.is_gm():
         if ca.check_agent_gmca_exist(ca.get_GM_ca_path()):
-            ca.gm_generator_node_ca(ca.get_GM_agent_path(),
-                node_dir + '/data', 'node' + str(index))
+            ca.generator_node_ca(ca.get_GM_agent_path(),
+                node_dir + '/data', 'node' + str(index), True)
             shutil.copytree(ca.get_GM_agent_path() + '/sdk', node_dir + '/data/sdk')
             shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt', node_dir + '/data/')
             shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.key', node_dir + '/data/')
