@@ -11,6 +11,7 @@ from pys.conf.build_chain_conf import ConfigConfs
 from pys.data_mgr.names import Names
 from pys.error.exp import MCError
 from pys.fisco.version import Fisco
+from pys.node import build_chain
 
 
 def build(cfg, fisco_path):
@@ -47,7 +48,7 @@ def build(cfg, fisco_path):
                     chain_name = cc.get_chain().get_name()
                     consoler.info(
                         ' build install package for chain %s version %s.', chain_id, chain_version)
-                    build_cfg(cc, fisco)
+                    build_chain.build(cc, fisco)
                     if ns.append(chain_id, chain_name):
                         nsc = nsc + 1
                     consoler.info(

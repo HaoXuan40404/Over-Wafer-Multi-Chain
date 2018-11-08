@@ -8,7 +8,7 @@ from pys.node import build_pkg
 from pys.node import temp_node
 from pys.error.exp import MCError
 
-def build_chain(cc, fisco):
+def build(cc, fisco):
     """build all install package for one chain base on cc 
 
     Arguments:
