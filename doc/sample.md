@@ -55,7 +55,15 @@ owmc --envcheck all
 ```
 $ owmc --build ./conf/sample_12345_v1.0.conf /usr/local/bin/fisco-bcos
 ```
+### 确定安装路径
+在部署安装包之前，用户可以修改推送的路径，修改./conf/mchain.conf
+```
+$ vim ./conf/mchain.conf
+```
+其中dir=/data/app的/data/app即为用户希望推送到对应服务器的位置，请确保所在用户拥有访问该路径的权限。
 ### 部署安装包
+
+###
 ```
 $ owmc --publish 12345:v1.0.0 12346:v1.0.0
 ```
