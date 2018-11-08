@@ -32,7 +32,6 @@ def build(cfg, fisco_path):
         # parser and check config if valid
         ccs = ConfigConfs(cfg).get_ccs()
         ns = Names()
-        nsc = 0
         # build all chain
         if len(ccs) != 0:
             for cc in ccs.values():
@@ -43,15 +42,13 @@ def build(cfg, fisco_path):
                     consoler.info(
                         ' build install package for chain %s version %s.', chain_id, chain_version)
                     build_chain.build(cc, fisco)
-                    if ns.append(chain_id, chain_name):
-                        nsc = nsc + 1
+                    ns.append(chain_id, chain_name)
                     consoler.info(
                         ' \t build install package for chain %s version %s success.', chain_id, chain_version)
                 except MCError as me:
                     logger.error(me)
                     consoler.error(' \033[1;31m \t %s \033[0m', me)
                     
-            if nsc > 0:
                 ns.write()
         else:
             consoler.info(' build operation will do nothing.')

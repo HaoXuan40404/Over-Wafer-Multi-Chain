@@ -138,9 +138,7 @@ def chain_expand(cfg, dir):
         if os.path.exists(cc.get_chain().data_dir()):
             ns = Names()
             expand_on_exist_chain(cc)
-            chain = cc.get_chain()
-            if ns.append(chain.get_id(), chain.get_name()):
-                ns.write()
+            ns.write()
         else:
             expand_on_nonexist_chain(cc, dir)
         
