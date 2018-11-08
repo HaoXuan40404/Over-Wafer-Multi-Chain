@@ -50,7 +50,7 @@ def expand_on_exist_chain(cc):
     # expand install dir for every server
     for node in cc.get_nodes():
         try:
-            build.expand_host_dir(chain, node, port, fisco)
+            build_chain.expand_host_dir(chain, node, port, fisco)
         except Exception as e:
             logger.error(' expand failed, chain id is %s, chain version is %s, exception is %s.',
                      chain_id, chain_version, e)
@@ -98,11 +98,11 @@ def expand_on_nonexist_chain(cc, dir):
         shutil.copy(bootstrapnodesjson, chain.data_dir() + '/')
 
         # create common dir
-        build.build_common_dir(chain, fisco)
+        build_chain.build_common_dir(chain, fisco)
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.expand_host_dir(chain, node, port, fisco)
+            build_chain.expand_host_dir(chain, node, port, fisco)
 
     except Exception as e:
         if os.path.exists(chain.data_dir()):
