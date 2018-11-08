@@ -82,7 +82,7 @@ def replace(filepath, old, new):
     if not os.path.exists(filepath):
         return False
 
-    cmd = "sed -i 's|%s|%s|g %s' " % (old, new, filepath)
+    cmd = "sed -i 's|%s|%s|g' %s " % (old, new, filepath)
 
     status, output = getstatusoutput(cmd)
     if status != 0:
