@@ -55,7 +55,7 @@ def build(cfg, fisco_path):
 
     except MCError as me:
         logger.error(me)
-        consoler.error(me)
+        consoler.error(' \033[1;31m \t %s \033[0m', me)
 
     logger.info(' chain build end.')
     
