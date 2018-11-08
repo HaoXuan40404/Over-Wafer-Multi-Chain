@@ -44,124 +44,6 @@ $ bash install.sh -d /usr/local -p /usr/bin/python -f -g
 ```
 
 
-# 初始化命令
-用户执行安装命令后，可以使用owmc的相关操作，功能介绍如下
-
-## 查询命令 -h
-```
-owmc -h
-```
-可以查询到相关的操作命令
-```
-owmc -h
-usage: owmc [-h] [--version] [--ansibleinit  hosts config file] [--cainit]
-            [--build ./config.conf or ./conf/ fisco_path]
-            [--expand ./config.conf, dir ./config.conf, dir]
-            [--export chain_id chain_version dest_path]
-            [--pkglist all or chain_id [all or chain_id ...]] [--direct]
-            [--publish chain_id:version [chain_id:version ...]]
-            [--start all or chain_id or [chain_id:host_ip ...]]
-            [--stop all or chain_id or [chain_id:host_ip ...]]
-            [--register chain_id  host_ip node]
-            [--unregister chain_id  host_ip node]
-            [--diagnose all or chain_id or [chain_id:host_ip ...]]
-            [--check all or chain_id or [chain_id:host_ip ...]]
-            [--publist all or chain_id or [all or chain_id or ...]]
-            [--lshost host_ip [host_ip ...]] [--force]
-            [--telnet 'all' or host_ip or chain_id ['all' or host_ip or chain_id ...]]
-            [--envcheck all or host_ip [all or host_ip ...]]
-            [--docmd  host ip or chain id or 'all' shell cmd or shell file, eg ： 'ls -lt'?test.sh]
-            [--pushfile host ip or chain id or 'all' file or dir to be push. dst dir.]
-            [--chainca chain_dir]
-            [--agencyca agency_dir chain_dir  agency_name]
-            [--nodeca agency_dir node _dir node_name]
-            [--sdkca sdk_dir agency_dir] [--gm]
-
-```
-以上是物料包支持的相关操作，解释如下。
-
-## 查看多链物料包版本 --help命令
-
-## 查看多链物料包版本 --version命令
-本命令用于查看当前多链物料包版本
-```
-$ owmc --version
-or
-$ owmc -v
-```
-会得到如下提示
-```
-INFO | v1.1.0
-```
-
-## 初始化ansible --init命令
-用户在配置conf/hosts时，需要用到本命令。
-
-本命令需要sudo权限对ansible的配置进行修改，用户每次修改hosts.conf都需要运行本命令。
-
-```
-$ python main.py --init
-```
-会得到如下提示
-```
-INFO | ansible init success
-```
-**注意，用户如果需要修改主机配置，则每次修改完./conf/hosts.conf后都需要执行init_ansible命令**
-
-用户可以指定参数all查询配置的所有服务器，或是指定某些服务器ip查询对应服务器依赖。
-
-## 初始化机构证书命令 --cainit命令
-物理多链默认mchain.conf配置中的的机构名称为WB，并且在ca目录下已经存储了WB的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
-
-注意，用户需要提供需要的对应机构的证书。(可以参考证书生成命令)
-
-```
-$ owmc --cainit ./cert_path
-```
-./cert_path为用户指定的证书文件夹，证书文件夹下应该包含链证书，机构文件夹包含机构证书和包含sdk证书的sdk文件夹，示例如下：
-
-```
-.
-├── ca.crt
-├── ca.key
-└── WB
-    ├── agency.crt
-    ├── agency.csr
-    ├── agency.key
-    ├── agency.srl
-    ├── ca-agency.crt
-    ├── ca.crt
-    ├── cert.cnf
-    └── sdk
-        ├── ca.crt
-        └── client.keystore
-或是
-.
-├── gmca.crt
-├── gmca.key
-├── gmca.srl
-├── gmsm2.param
-└── WB
-    ├── gmagency.crt
-    ├── gmagency.key
-    ├── gmca.crt
-    ├── gmsm2.param
-    └── sdk
-        ├── ca.crt
-        ├── ca.key
-        ├── cert.cnf
-        ├── client.keystore
-        ├── server.crt
-        └── server.key
-```
-本命令同时支持国密证书和非国密证书的初始化。
-
-**注意，用户如果需要修改主机配置，则每次修改完./conf/hosts.conf后都需要执行init_ansible命令**
-
-用户可以指定参数all查询配置的所有服务器，或是指定某些服务器ip查询对应服务器依赖。
-
-# 安装包操作命令
-
 
 ## 文件介绍
 
@@ -302,14 +184,133 @@ node2=127.0.0.3 127.0.0.3 2
 * 第1个节点的端口：p2p 30343、rpc 8555、channel 8831
 * 第2个节点的端口：p2p 30344、rpc 8556、channel 8832
 
+
+# 初始化命令
+用户执行安装命令后，可以使用owmc的相关操作，功能介绍如下
+
+## 查询命令 -h
+```
+owmc -h
+```
+可以查询到相关的操作命令
+```
+owmc -h
+usage: owmc [-h] [--version] [--ansibleinit  hosts config file] [--cainit]
+            [--build ./config.conf or ./conf/ fisco_path]
+            [--expand ./config.conf, dir ./config.conf, dir]
+            [--export chain_id chain_version dest_path]
+            [--pkglist all or chain_id [all or chain_id ...]] [--direct]
+            [--publish chain_id:version [chain_id:version ...]]
+            [--start all or chain_id or [chain_id:host_ip ...]]
+            [--stop all or chain_id or [chain_id:host_ip ...]]
+            [--register chain_id  host_ip node]
+            [--unregister chain_id  host_ip node]
+            [--diagnose all or chain_id or [chain_id:host_ip ...]]
+            [--check all or chain_id or [chain_id:host_ip ...]]
+            [--publist all or chain_id or [all or chain_id or ...]]
+            [--lshost host_ip [host_ip ...]] [--force]
+            [--telnet 'all' or host_ip or chain_id ['all' or host_ip or chain_id ...]]
+            [--envcheck all or host_ip [all or host_ip ...]]
+            [--docmd  host ip or chain id or 'all' shell cmd or shell file, eg ： 'ls -lt'?test.sh]
+            [--pushfile host ip or chain id or 'all' file or dir to be push. dst dir.]
+            [--chainca chain_dir]
+            [--agencyca agency_dir chain_dir  agency_name]
+            [--nodeca agency_dir node _dir node_name]
+            [--sdkca sdk_dir agency_dir] [--gm]
+
+```
+以上是物料包支持的相关操作，解释如下。
+
+## 查看多链物料包版本 --help命令
+
+## 查看多链物料包版本 --version命令
+本命令用于查看当前多链物料包版本
+```
+$ owmc --version
+or
+$ owmc -v
+```
+会得到如下提示
+```
+INFO | v1.1.0
+```
+
+## 初始化ansible --init命令
+用户在配置conf/hosts时，需要用到本命令。
+
+本命令需要sudo权限对ansible的配置进行修改，用户每次修改hosts.conf都需要运行本命令。
+
+```
+$ python main.py --init
+```
+会得到如下提示
+```
+INFO | ansible init success
+```
+**注意，用户如果需要修改主机配置，则每次修改完./conf/hosts.conf后都需要执行init_ansible命令**
+
+用户可以指定参数all查询配置的所有服务器，或是指定某些服务器ip查询对应服务器依赖。
+
+## 初始化机构证书命令 --cainit命令
+物理多链默认mchain.conf配置中的的机构名称为WB，并且在ca目录下已经存储了WB的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
+
+注意，用户需要提供需要的对应机构的证书。(可以参考证书生成命令)
+
+```
+$ owmc --cainit ./cert_path
+```
+./cert_path为用户指定的证书文件夹，证书文件夹下应该包含链证书，机构文件夹包含机构证书和包含sdk证书的sdk文件夹，示例如下：
+
+```
+.
+├── ca.crt
+├── ca.key
+└── WB
+    ├── agency.crt
+    ├── agency.csr
+    ├── agency.key
+    ├── agency.srl
+    ├── ca-agency.crt
+    ├── ca.crt
+    ├── cert.cnf
+    └── sdk
+        ├── ca.crt
+        └── client.keystore
+或是
+.
+├── gmca.crt
+├── gmca.key
+├── gmca.srl
+├── gmsm2.param
+└── WB
+    ├── gmagency.crt
+    ├── gmagency.key
+    ├── gmca.crt
+    ├── gmsm2.param
+    └── sdk
+        ├── ca.crt
+        ├── ca.key
+        ├── cert.cnf
+        ├── client.keystore
+        ├── server.crt
+        └── server.key
+```
+本命令同时支持国密证书和非国密证书的初始化。
+
+**注意，用户如果需要修改主机配置，则每次修改完./conf/hosts.conf后都需要执行init_ansible命令**
+
+用户可以指定参数all查询配置的所有服务器，或是指定某些服务器ip查询对应服务器依赖。
+
+# 安装包操作命令
+
+
+
 ## 生成多链安装包 --build命令
 本命令是解析用户输入的conf文件，生成相应安装包的命令。用户使用前需要确保运维服务器可以启动1.3版本的fisco-bcos，并且对应服务器的环境可以启动fisco-bcos,根据用户指定的fisco-bcos版本，可以生成国密或非国密的链，目前支持1.3版本的fisco-bcos。
 
 *** 注意，如果用户需要修改机构名称，需要先执行cainit命令，初始化需要机构的证书名称。 ***
 
 *** 注意，如果用户需要生成国密安装包，需要在安装时加上-g命令，安装国密证书库（只需要在运维服务器上安装即可） ***
-
-
 
 ### 生成单条链
 命令有两个input参数，分别为conf配置和fisco-bcos路径，示例如下
@@ -390,6 +391,7 @@ $ owmc --export chain_id version $export_path/ --direct
 ```
 
 # 多链管理工具
+
 *** 本部分命令依赖ansible ***
 
 ## 发布多链安装包 --publish命令
