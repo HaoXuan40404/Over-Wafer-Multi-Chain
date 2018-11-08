@@ -5,8 +5,8 @@ import os
 import subprocess
 from pys.log import logger
 from pys.log import consoler
-from pys.node.bootstrapsnode import P2pHosts
-from pys.node.bootstrapsnode import P2pHost
+from pys.build.bootstrapsnode import P2pHosts
+from pys.build.bootstrapsnode import P2pHost
 
 def valid_chain_id(chain_id):
     """[Determine if the chain id is valid]

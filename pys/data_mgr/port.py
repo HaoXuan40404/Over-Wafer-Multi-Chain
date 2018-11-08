@@ -8,7 +8,7 @@ from pys.data_mgr.package import VerHosts
 from pys.data_mgr.package import ChainVers
 from pys.data_mgr.package import AllChain
 from pys.data_mgr.chain import Chain
-from pys.node import config
+from pys.build import config
 from pys.error.exp import MCError
 
 

@@ -7,7 +7,7 @@ from pys.log import consoler
 from pys.data_mgr import meta
 from pys.data_mgr import data
 from pys.data_mgr.chain import Chain
-from pys.node import config
+from pys.build import config
 from pys.data_mgr.port import HostPort
 from pys.data_mgr.package import HostNodeDirs
 

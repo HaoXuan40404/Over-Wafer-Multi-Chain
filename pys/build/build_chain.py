@@ -4,8 +4,8 @@ import shutil
 
 from pys.tool import utils
 from pys.log import logger
-from pys.node import build_pkg
-from pys.node import temp_node
+from pys.build import build_pkg
+from pys.build import temp_node
 from pys.data_mgr.port import AllChainPort
 from pys.error.exp import MCError
 

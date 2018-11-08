@@ -9,7 +9,7 @@ from pys.tool import ca, utils
 from pys.data_mgr.package import HostNodeDirs
 from pys.error.exp import MCError
 from pys.log import logger
-from pys.node import config
+from pys.build import config
 
 
 def build_node_dir(chain, node, fisco, port, index):

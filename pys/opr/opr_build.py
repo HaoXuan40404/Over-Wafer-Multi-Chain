@@ -11,7 +11,7 @@ from pys.conf.build_chain_conf import ConfigConfs
 from pys.data_mgr.names import Names
 from pys.error.exp import MCError
 from pys.fisco.version import Fisco
-from pys.node import build_chain
+from pys.build import build_chain
 
 
 def build(cfg, fisco_path):
