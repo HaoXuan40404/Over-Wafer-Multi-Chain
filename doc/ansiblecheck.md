@@ -28,16 +28,17 @@ $ sudo apt-get install ansible
 $ ssh-keygen -t rsa
 ```
 
+P.S. 生成的密钥会在owmc的init命令中使用
+
 需要在sshd_config文件中开启key认证
 ```
 $ vim /etc/ssh/sshd_config
 PubkeyAuthentication yes  //将该项改为yes 
 ```
-修改完成后，通过/etc/init.d/sshd restart 重启ssh服务重新加载配置。
-之后在OWMC物料包文件夹下执行
+修改完成后，通过sudo service sshd restart重启ssh服务重新加载配置。
 
 ## 检测
-配置完成之后，使用下述命令进行测试
+配置完成之后，使用下述命令进行测试，用以检测用户的ansible是否安装成功。其中127.0.0.1不需要替换
 ```
 $ ansible 127.0.0.1 -m ping
 ```

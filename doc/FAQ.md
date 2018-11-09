@@ -2,6 +2,10 @@
 常问问题
 
 ## 系统环境错误
+
+- yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 失败
+
+yum源出现问题，请确定yum源正常
 - ERROR - Unsupported or unidentified Linux distro.  
 
 当前linux系统不支持, 目前FISCO-BCOS支持CentOS 7.2+、Ubuntu 16.04。
