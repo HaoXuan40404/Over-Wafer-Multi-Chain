@@ -96,7 +96,7 @@ yum/apt不存在openssl, 可以参考下面的替换apt/yum源.
 
 
 
-- CentOS安装案例云进行仓库
+- CentOS安装阿里云远程仓库
 ```
 $ wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 $ rpm -ivh epel-release-latest-7.noarch.rpm
