@@ -83,9 +83,9 @@ class God:
     def load(self):
 
         if self.fisco.is_gm():
-            god_file = get_god_path() + '/godInfo.txt'
-        else:
             god_file = get_gm_god_path() + '/godInfo.txt'
+        else:
+            god_file = get_god_path() + '/godInfo.txt'
 
         return  self.fromGod(god_file)
 
@@ -98,11 +98,11 @@ class God:
             with open(god_file) as f:
                 for line in f.readlines():
                     line = line.strip()
-                    if line.start_with('address'):
+                    if line.startswith('address'):
                         address = line.split(':')[1].strip()
-                    elif line.start_with('publicKey'):
+                    elif line.startswith('publicKey'):
                         publicKey = line.split(':')[1].strip()
-                    elif line.start_with('privateKey'):
+                    elif line.startswith('privateKey'):
                         privateKey = line.split(':')[1].strip()
                 logger.info(' god config success, file is %s, address is %s, publicKey : %s, privateKey : %s', 
                 god_file, address, publicKey, privateKey)
