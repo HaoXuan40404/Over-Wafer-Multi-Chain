@@ -11,17 +11,28 @@ owmc_dir = os.path.split(os.path.realpath(__file__))[0]
 sys.path.append(owmc_dir + '/pys')
 path.set_path(owmc_dir)
 
-from pys import mconf
-from pys import ca
-from pys import ansible
+from pys.conf import mconf
+from pys.tool import ca
+from pys.tool import ansible
 from pys import version
 from pys.log import logger
 from pys.log import consoler
-from pys.opr import opr_check, opr_tools, opr_init_chain, opr_start, opr_stop, opr_check, opr_env_check, opr_diagnose, opr_list, opr_export, opr_register
-from pys.chain import build
-from pys.chain import expand
-from pys.chain import publish
-
+from pys.opr import opr_check
+from pys.opr import opr_tools
+from pys.opr import opr_init_chain
+from pys.opr import opr_start
+from pys.opr import opr_stop
+from pys.opr import opr_check
+from pys.opr import opr_env_check
+from pys.opr import opr_diagnose
+from pys.opr import opr_list
+from pys.opr import opr_export
+from pys.opr import opr_register
+from pys.opr import opr_publish
+from pys.opr import opr_build
+from pys.opr import opr_expand
+from pys.opr import opr_god
+from pys.fisco import god
 
 def init():
     """[init function]
@@ -43,6 +54,9 @@ def init():
 
     # init ca dir
     ca.set_ca_path(owmc_dir + '/data/ca/' + ca.get_agent())
+
+    # init god dir
+    god.set_god_path(owmc_dir + '/data/god/')
 
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
@@ -95,14 +109,14 @@ def Usage():
     mgr_group.add_argument('--lshost', nargs='+', metavar=('host_ip'),
                            help='ls published packages\' host')
     mgr_group.add_argument('--force', action='store_true',
-                           help='follow --publish/-p, all package of chain will be republished')
+                           help='follow --publish, all package of chain will be republished')
 
     tools_group = parser.add_argument_group(
         ' Other Tools Options ')
-    tools_group.add_argument('--telnet', nargs='+', metavar=(
-        '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--envcheck', nargs='+', metavar=('all or host_ip'),
                              help='check build environment')
+    tools_group.add_argument('--telnet', nargs='+', metavar=(
+        '\'all\' or host_ip or chain_id'), help='test ansible')
     tools_group.add_argument('--docmd', nargs=2, metavar=(' host ip or chain id or \'all\'',
                                                                 'shell cmd or shell file, e.g. \'ls -lt\' test.sh'), help='execute a shell command or shell file on remote server')
     tools_group.add_argument('--pushfile', nargs=3, metavar=('host ip or chain id or \'all\'',
@@ -115,19 +129,26 @@ def Usage():
                                                            'node _dir', 'node_name'), help='generate node cert')
     tools_group.add_argument('--sdkca', nargs=2, metavar=('sdk_dir',
                                                           'agency_dir'), help='generate sdk cert')
-    tools_group.add_argument('--gm', action='store_true', help='is gm ca action.')
+    tools_group.add_argument('--gm', action='store_true',
+                             help='follow ----chainca/--agencyca/--agencyca/--sdkca, is gm ca operation.')
+    tools_group.add_argument('--god',nargs=1,metavar=('fiscopath'),
+                             help='god module.')
 
     args = parser.parse_args()
     os.path.exists
     if args.version:
         version.version()
+    elif args.god:
+        consoler.info(' god operation begin.')
+        opr_god.opr_god(args.god[0])
+        consoler.info(' god operation end.')
     elif args.build:
         consoler.info(' build operation begin.')
-        build.chain_build(args.build[0], args.build[1])
+        opr_build.build(args.build[0], args.build[1])
         consoler.info(' build operation end.')
     elif args.expand:
         consoler.info(' expand operation begin.')
-        expand.chain_expand(args.expand[0], args.expand[1])
+        opr_expand.expand(args.expand[0], args.expand[1])
         consoler.info(' expand operation end.')
     elif args.check:
         consoler.info(' check operation begin.')
@@ -142,7 +163,7 @@ def Usage():
     elif args.publish:
         consoler.info(' publish operation begin.')
         chain = args.publish
-        publish.publish_chain(chain, args.force)
+        opr_publish.publish_chain(chain, args.force)
         consoler.info(' publish operation end.')
     elif args.register:
         consoler.info(' register operation begin.')

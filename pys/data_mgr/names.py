@@ -4,14 +4,15 @@ import sys
 import json
 import time
 import shutil
-from pys.chain import data
+from pys.data_mgr import data
 from pys.log import logger
-from pys.exp import MCError
+from pys.error.exp import MCError
 
 
 class Names:
     def __init__(self):
         self.names = {}
+        self.changed = False
         self.load()
 
     def clear(self):
@@ -30,12 +31,16 @@ class Names:
         logger.debug(
             ' append one name  chain id is %s, chain name is %s', chain_id, name)
         self.names[chain_id] = name
+        self.changed = True
         return True
 
     def to_json(self):
         return json.dumps(self, default=lambda obj: obj.__dict__, indent=4)
 
     def write(self):
+        if not self.changed:
+            logger.debug(' do nothing. ')
+            return 
         if not os.path.exists(data.package_names_dir()):
             data.create_names_dir()
 

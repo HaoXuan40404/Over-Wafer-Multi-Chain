@@ -4,10 +4,10 @@ import os
 import sys
 import configparser
 import codecs
-from pys import utils
+from pys.tool import utils
 from pys import path
 from pys.log import logger
-from pys.exp import MCError
+from pys.error.exp import MCError
 
 
 class MchainConf():

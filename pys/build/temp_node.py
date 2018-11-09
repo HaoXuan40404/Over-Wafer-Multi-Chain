@@ -4,12 +4,12 @@ import os
 import shutil
 import time
 
-from pys import utils
+from pys.tool import utils
 from pys import path
 from pys.log import logger
 from pys.log import consoler
-from pys.node import config
-from pys.exp import MCError
+from pys.build import config
+from pys.error.exp import MCError
 
 def GM_temp_node_build(dir, port, fisco):
     """Generate GM temp node package

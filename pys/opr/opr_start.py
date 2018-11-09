@@ -1,10 +1,10 @@
 # coding:utf-8
 import os
 
-from pys import ansible, utils
-from pys.chain import data
-from pys.chain.meta import *
-from pys.chain.package import AllChain, ChainVers, HostNodeDirs, VerHosts
+from pys.tool import ansible, utils
+from pys.data_mgr import data
+from pys.data_mgr.meta import *
+from pys.data_mgr.package import AllChain, ChainVers, HostNodeDirs, VerHosts
 from pys.log import consoler, logger
 
 def start_chain(chain):

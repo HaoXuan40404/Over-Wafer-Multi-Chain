@@ -2,10 +2,10 @@
 
 import os
 import shutil
-from pys import utils
+from pys.tool import utils
 from pys.log import logger, consoler
-from pys.chain import data
-from pys.chain.chain import Chain
+from pys.data_mgr import data
+from pys.data_mgr.chain import Chain
 
 class HostNodeDirs:
     def __init__(self, chain_id, chain_version, host):

@@ -1,82 +1,16 @@
-# coding:utf-8
-
 import os
 import sys
 import shutil
 
-from pys import path,ca
-from pys import utils
+from pys.tool import utils
 from pys.log import logger
-from pys.log import consoler
-from pys.tool.java import JAVA
-from pys.chain.parser import ConfigConfs
-from pys.chain import data
-from pys.node import build
-from pys.node import temp_node
-from pys.chain.names import Names
-from pys.exp import MCError
+from pys.build import build_pkg
+from pys.build import temp_node
+from pys.data_mgr.port import AllChainPort
+from pys.error.exp import MCError
+from pys.fisco import god
 
-from pys.node.fisco_version import Fisco
-from pys.chain.port import AllChainPort
-
-
-def chain_build(cfg, fisco_path):
-    """parser input config file, build install pacakge by 
-
-    Arguments:
-        cfg {string} --config, maybe a config.json or a dictionary of conf,eg: ./conf/config.conf or ./conf
-        fisco_path {string} -- path of fisco-bcos, eg: /usr/local/bin/fisco-bcos
-    """
-
-    logger.info('build cfg is %s, fisco is %s ', cfg, fisco_path)
-    try:
-        # parser fisco-bcos version and check it.
-        fisco = Fisco(fisco_path)
-        if not fisco.is_13_version():
-            logger.error(
-                ' fisco-bcos is not 1.3.x version, not support now, %s', fisco)
-            raise MCError(
-                ' fisco-bcos is not 1.3.x version, not support now, %s' % fisco)
-        
-        # check java env
-        java = JAVA()
-
-        # parser and check config if valid
-        ccs = ConfigConfs(cfg).get_ccs()
-        ns = Names()
-        nsc = 0
-        # build all chain
-        if len(ccs) != 0:
-            for cc in ccs.values():
-                try:
-                    chain_id = cc.get_chain().get_id()
-                    chain_version = cc.get_chain().get_version()
-                    chain_name = cc.get_chain().get_name()
-                    consoler.info(
-                        ' build install package for chain %s version %s.', chain_id, chain_version)
-                    build_cfg(cc, fisco)
-                    if ns.append(chain_id, chain_name):
-                        nsc = nsc + 1
-                    consoler.info(
-                        ' \t build install package for chain %s version %s success.', chain_id, chain_version)
-                except MCError as me:
-                    logger.error(me)
-                    consoler.error(' \033[1;31m \t %s \033[0m', me)
-                    
-            if nsc > 0:
-                ns.write()
-        else:
-            consoler.info(' build operation will do nothing.')
-
-    except MCError as me:
-        logger.error(me)
-        consoler.error(me)
-
-    logger.info(' chain build end.')
-
-
-
-def build_cfg(cc, fisco):
+def build(cc, fisco):
     """build all install package for one chain base on cc 
 
     Arguments:
@@ -117,7 +51,7 @@ def build_cfg(cc, fisco):
 
         # create common dir
   
-        build.build_common_dir(chain, fisco)
+        build_pkg.build_common_dir(chain, fisco)
         if fisco.is_gm():
             # create temp node for export genesis.json file
             temp_node.GM_temp_node_build(dir, port, fisco)
@@ -129,12 +63,13 @@ def build_cfg(cc, fisco):
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.build_host_dir(chain, node, port, fisco, temp_node)
+            build_pkg.build_host_dir(chain, node, port, fisco, temp_node)
 
         # stop temp node and export for genesis.json file
         temp_node.stop_temp_node(dir)
         temp_node.export_genesis(dir)
         temp_node.clean_temp_node(dir)
+    
 
         # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():

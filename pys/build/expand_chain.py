@@ -4,22 +4,20 @@ import sys
 import shutil
 
 from pys import path
-from pys import utils
-from pys.tool.java import JAVA
+from pys.tool import utils
 from pys.log import logger
 from pys.log import consoler
-from pys.chain import parser
-from pys.chain import data
-from pys.node import build
-from pys.node import temp_node
-from pys.exp import MCError
-from pys.chain.names import Names
-from pys.node.bootstrapsnode import P2pHosts
-from pys.node.bootstrapsnode import P2pHost
-from pys.chain.parser import ConfigConf
-from pys.chain.port import AllChainPort
+from pys.conf import build_chain_conf
+from pys.data_mgr import data
+from pys.build import build_pkg
+from pys.error.exp import MCError
+from pys.data_mgr.names import Names
+from pys.build.bootstrapsnode import P2pHosts
+from pys.build.bootstrapsnode import P2pHost
+from pys.conf.build_chain_conf import ConfigConf
+from pys.data_mgr.port import AllChainPort
 
-from pys.node.fisco_version import Fisco
+from pys.fisco.version import Fisco
 
 def expand_on_exist_chain(cc):
 
@@ -52,7 +50,7 @@ def expand_on_exist_chain(cc):
     # expand install dir for every server
     for node in cc.get_nodes():
         try:
-            build.expand_host_dir(chain, node, port, fisco)
+            build_pkg.expand_host_dir(chain, node, port, fisco)
         except Exception as e:
             logger.error(' expand failed, chain id is %s, chain version is %s, exception is %s.',
                      chain_id, chain_version, e)
@@ -82,9 +80,7 @@ def expand_on_nonexist_chain(cc, dir):
 
     # parser fisco-bcos version and check it.
     fisco = Fisco(fisco_path)
-    if not fisco.is_13_version():
-        raise MCError(
-            ' fisco-bcos is not 1.3.x version, not support now, version is %s' % fisco)
+    logger.debug(' fisco is %s', fisco)
 
     acp = AllChainPort()
     # port check
@@ -102,11 +98,11 @@ def expand_on_nonexist_chain(cc, dir):
         shutil.copy(bootstrapnodesjson, chain.data_dir() + '/')
 
         # create common dir
-        build.build_common_dir(chain, fisco)
+        build_pkg.build_common_dir(chain, fisco)
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build.expand_host_dir(chain, node, port, fisco)
+            build_pkg.expand_host_dir(chain, node, port, fisco)
 
     except Exception as e:
         if os.path.exists(chain.data_dir()):
@@ -115,40 +111,3 @@ def expand_on_nonexist_chain(cc, dir):
                      chain_id, chain_version, e)
         raise MCError(' expand failed, chain id is %s, chain version is %s, exception is %s' % (
             chain_id, chain_version, e))
-
-def chain_expand(cfg, dir):
-    """expand operation 
-    
-    Arguments:
-        cfg {string} -- config file path
-        dir {string} -- dir with fisco-bcos, genesis.json, bootstrapsnode.json
-    """
-
-    logger.debug(' cfg is %s, dir is %s', cfg, dir)
-
-    try:
-
-        # check java env
-        java = JAVA()
-        
-        try:
-            # parser and check config if valid
-            cc = ConfigConf(cfg)
-        except Exception as e:
-            raise MCError(
-                ' parser config failed, invalid format, config is %s, exception is %s' % (cfg, e))
-
-        if os.path.exists(cc.get_chain().data_dir()):
-            ns = Names()
-            expand_on_exist_chain(cc)
-            chain = cc.get_chain()
-            if ns.append(chain.get_id(), chain.get_name()):
-                ns.write()
-        else:
-            expand_on_nonexist_chain(cc, dir)
-        
-        consoler.info(' expand install package for chain %s version %s success.', cc.get_chain().get_id(), cc.get_chain().get_version())
-
-    except MCError as me:
-        consoler.error(me)
-        logger.error(me)
