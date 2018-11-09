@@ -7,6 +7,7 @@ from pys.log import logger
 from pys.log import consoler
 from pys.fisco.version import Fisco
 from pys.tool import utils
+import shutil
 
 
 
@@ -51,10 +52,14 @@ class God:
     def export(self):
         try:
             if self.fisco.is_gm():
+                shutil.move(get_gm_god_path() + '/godInfo.txt',
+                get_gm_god_path() + '/godInfo.txt.bak')
                 cmd = self.fisco_path + ' --newaccount ' + get_gm_god_path() + '/godInfo.txt'
                 status, result = utils.getstatusoutput(cmd)
                 logger.debug(' start status, status is %d, output is %s', status, result)
             else:
+                shutil.move(get_god_path() + '/godInfo.txt',
+                get_god_path() + '/godInfo.txt.bak')
                 cmd = self.fisco_path + ' --newaccount ' + get_god_path() + '/godInfo.txt'
                 status, result = utils.getstatusoutput(cmd)
                 logger.debug(' start status, status is %d, output is %s', status, result)
@@ -67,41 +72,48 @@ class God:
             consoler.error(' \033[1;31m %s \033[0m', me)
         except Exception as e:
             consoler.error(' \033[1;31m export godInfo.txt failed! excepion is %s.\033[0m', e)
-            logger.error('  export godInfo.txt failed! Result is %s'%result)
+            logger.error('  export godInfo.txt failed!')
 
     def load(self):
+        #os.path.exists(sjson)
         if self.fisco.is_gm():
             sjson = get_god_path() + '/godInfo.txt'
+            print("sjson path is " + sjson)
             self.fromJson(sjson)
         else:
             sjson = get_gm_god_path() + '/godInfo.txt'
+            print("sjson path is " + sjson)
             self.fromJson(sjson)
 
     def fromJson(self, sjson):
         '''
         resolve .json, convert to config
         '''
+        result=[]
         try : 
             with open(sjson) as f:
-                js = json.load(f)
-                self.address = js['address']
-                self.publicKey = js['publicKey']
-                self.privateKey = js['privateKey']
-                logger.debug(' god config success, file is %s, address is %s, publicKey : %s, privateKey : %s', sjson, str(self.address), str(self.publicKey), str(self.privateKey))
+                for line in f.readlines():
+                    result.append(line)
+                f.close()
+                print result,type(result)
+                address = result[1].split(':')[1]
+                publicKey = result[2].split(':')[1]
+                privateKey = result[3].split(':')[1]
+                address = address.strip('\r\n')
+                publicKey = publicKey.strip('\r\n')
+                privateKey = privateKey.strip('\r\n')
+                self.address = address
+                self.publicKey = publicKey
+                self.privateKey = privateKey
+                consoler.debug(' god config success, file is %s, address is %s, publicKey : %s, privateKey : %s', sjson, str(self.address), str(self.publicKey), str(self.privateKey))
                 return True
         except Exception as e:
-            logger.error(' god config failed, cfg is %s, exception is %s', sjson, e)
+            consoler.error(' god config failed, cfg is %s, exception is %s', sjson, e)
             return False
 
 
 def god(fisco_path):
     god = God(fisco_path)
-    #god.export()
-    print get_god_path()
-    print get_gm_god_path()
-    #god.fromJson(get_gm_god_path())
-    print(god.address)
-    print(god.publicKey)
-    print(god.privateKey)
+    god.export()
     return 0
 
