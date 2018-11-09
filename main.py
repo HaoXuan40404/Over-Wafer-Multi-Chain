@@ -31,6 +31,7 @@ from pys.opr import opr_register
 from pys.opr import opr_publish
 from pys.opr import opr_build
 from pys.opr import opr_expand
+from pys.fisco import god
 
 
 def init():
@@ -53,6 +54,9 @@ def init():
 
     # init ca dir
     ca.set_ca_path(owmc_dir + '/data/ca/' + ca.get_agent())
+
+    # init god dir
+    god.set_god_path(owmc_dir + '/data/god/')
 
     # init ansible push base dir
     ansible.set_dir(mconf.get_ansible_dir())
@@ -127,11 +131,17 @@ def Usage():
                                                           'agency_dir'), help='generate sdk cert')
     tools_group.add_argument('--gm', action='store_true',
                              help='follow ----chainca/--agencyca/--agencyca/--sdkca, is gm ca operation.')
+    tools_group.add_argument('--god',nargs=1,metavar=('fiscopath'),
+                             help='god module.')
 
     args = parser.parse_args()
     os.path.exists
     if args.version:
         version.version()
+    elif args.god:
+        consoler.info(' god operation begin.')
+        god.god(args.god[0])
+        consoler.info(' god operation end.')
     elif args.build:
         consoler.info(' build operation begin.')
         opr_build.build(args.build[0], args.build[1])
