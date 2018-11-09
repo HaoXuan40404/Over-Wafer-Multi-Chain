@@ -2,10 +2,10 @@
 
 import re
 import os
-from pys import utils
-from pys.exp import MCError
+from pys.tool import utils
+from pys.error.exp import MCError
 from pys.log import logger
-from pys import utils
+from pys.tool import utils
 
 class JAVA:
     def __init__(self):

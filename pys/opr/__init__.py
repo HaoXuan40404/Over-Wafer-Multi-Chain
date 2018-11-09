@@ -1,1 +1,1 @@
-__all__ = ['opr_tools', 'opr_init_chain', 'opr_start', 'opr_stop','opr_check','opr_env_check','opr_monitor','opr_list', 'opr_export']
+__all__ = ['opr_tools', 'opr_init_chain', 'opr_start', 'opr_stop','opr_check','opr_env_check','opr_monitor','opr_list', 'opr_export', 'opr_publish', 'opr_build', 'opr_expand']

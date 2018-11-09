@@ -1,8 +1,7 @@
 #coding:utf-8
 
 import os
-from pys.chain import data
-import os
+from pys.data_mgr import data
 
 class Chain:
     """

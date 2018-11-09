@@ -1,11 +1,12 @@
 #coding:utf-8
 
 import re
+import os
 import subprocess
 from pys.log import logger
 from pys.log import consoler
-from pys.node.bootstrapsnode import P2pHosts
-from pys.node.bootstrapsnode import P2pHost
+from pys.build.bootstrapsnode import P2pHosts
+from pys.build.bootstrapsnode import P2pHost
 
 def valid_chain_id(chain_id):
     """[Determine if the chain id is valid]
@@ -78,14 +79,17 @@ def replace(filepath, old, new):
         old {[string]} -- [old string]
         new {[string]} -- [new string]
     """
+    if not os.path.exists(filepath):
+        return False
 
-    with open(filepath, 'r+') as f:
-        all_lines = f.readlines()
-        f.seek(0)  
-        f.truncate() 
-        for line in all_lines:
-            line = line.replace(old, new)
-            f.write(line)
+    cmd = "sed -i 's|%s|%s|g' %s " % (old, new, filepath)
+
+    status, output = getstatusoutput(cmd)
+    if status != 0:
+        logger.error(' replace failed, new is %s, old is %s, file is %s, status is %s, output is %s ', new, old, filepath, str(status), output)
+        return False
+    
+    return True
 
 def getstatusoutput(cmd):
     """replace commands.getstatusoutput
