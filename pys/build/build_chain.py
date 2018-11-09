@@ -8,6 +8,7 @@ from pys.build import build_pkg
 from pys.build import temp_node
 from pys.data_mgr.port import AllChainPort
 from pys.error.exp import MCError
+from pys.fisco import god
 
 def build(cc, fisco):
     """build all install package for one chain base on cc 
@@ -68,7 +69,7 @@ def build(cc, fisco):
         temp_node.stop_temp_node(dir)
         temp_node.export_genesis(dir)
         temp_node.clean_temp_node(dir)
-        
+    
 
         # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():

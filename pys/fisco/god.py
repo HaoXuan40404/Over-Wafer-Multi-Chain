@@ -117,6 +117,7 @@ class God:
 def god(fisco_path):
     god = God(fisco_path)
     god.export()
+    god.replace('./')
     
     
     return 0
