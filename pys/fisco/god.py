@@ -48,11 +48,11 @@ class God:
     def replace(self,genesis_path):
         (address, publicKey, privateKey) = ('', '', '')
         if self.fisco.is_gm():
-            god_file = get_gm_god_path() + '/godInfo.txt.bak' 
+            god_file = get_gm_god_path() + '/godInfo.txt' 
         else:
-            god_file = get_god_path() + '/godInfo.txt.bak'
+            god_file = get_god_path() + '/godInfo.txt'
         (address, publicKey, privateKey) = self.fromGod(god_file)
-        utils.replace(genesis_path,address, self.address)
+        utils.replace(genesis_path, self.address, address)
     
     def export(self):
         try:
