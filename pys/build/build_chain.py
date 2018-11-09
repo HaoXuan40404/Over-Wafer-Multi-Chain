@@ -68,6 +68,7 @@ def build(cc, fisco):
         temp_node.stop_temp_node(dir)
         temp_node.export_genesis(dir)
         temp_node.clean_temp_node(dir)
+        
 
         # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():

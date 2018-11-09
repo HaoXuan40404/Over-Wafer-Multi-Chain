@@ -43,24 +43,29 @@ def get_gm_god_path():
 class God:
     def __init__(self, fisco_path):
         self.fisco = Fisco(fisco_path)
-        self.fisco_path = fisco_path
-        self.address = ''
-        self.publicKey = ''
-        self.privateKey = ''
-        self.load()
+        (self.address, self.publicKey, self.privateKey) = self.load()
+
+    def replace(self,genesis_path):
+        (address, publicKey, privateKey) = ('', '', '')
+        if self.fisco.is_gm():
+            god_file = get_gm_god_path() + '/godInfo.txt.bak' 
+        else:
+            god_file = get_god_path() + '/godInfo.txt.bak'
+        (address, publicKey, privateKey) = self.fromGod(god_file)
+        utils.replace(genesis_path,address, self.address)
     
     def export(self):
         try:
             if self.fisco.is_gm():
                 shutil.move(get_gm_god_path() + '/godInfo.txt',
                 get_gm_god_path() + '/godInfo.txt.bak')
-                cmd = self.fisco_path + ' --newaccount ' + get_gm_god_path() + '/godInfo.txt'
+                cmd = self.fisco.get_fisco_path() + ' --newaccount ' + get_gm_god_path() + '/godInfo.txt'
                 status, result = utils.getstatusoutput(cmd)
                 logger.debug(' start status, status is %d, output is %s', status, result)
             else:
                 shutil.move(get_god_path() + '/godInfo.txt',
                 get_god_path() + '/godInfo.txt.bak')
-                cmd = self.fisco_path + ' --newaccount ' + get_god_path() + '/godInfo.txt'
+                cmd = self.fisco.get_fisco_path() + ' --newaccount ' + get_god_path() + '/godInfo.txt'
                 status, result = utils.getstatusoutput(cmd)
                 logger.debug(' start status, status is %d, output is %s', status, result)
             if status != 0:
@@ -73,47 +78,46 @@ class God:
         except Exception as e:
             consoler.error(' \033[1;31m export godInfo.txt failed! excepion is %s.\033[0m', e)
             logger.error('  export godInfo.txt failed!')
+    
 
     def load(self):
-        #os.path.exists(sjson)
-        if self.fisco.is_gm():
-            sjson = get_god_path() + '/godInfo.txt'
-            print("sjson path is " + sjson)
-            self.fromJson(sjson)
-        else:
-            sjson = get_gm_god_path() + '/godInfo.txt'
-            print("sjson path is " + sjson)
-            self.fromJson(sjson)
 
-    def fromJson(self, sjson):
+        if self.fisco.is_gm():
+            god_file = get_god_path() + '/godInfo.txt'
+        else:
+            god_file = get_gm_god_path() + '/godInfo.txt'
+
+        return  self.fromGod(god_file)
+
+    def fromGod(self, god_file):
         '''
         resolve .json, convert to config
         '''
-        result=[]
+        (address, publicKey, privateKey) = ('', '', '')
         try : 
-            with open(sjson) as f:
+            with open(god_file) as f:
                 for line in f.readlines():
-                    result.append(line)
-                f.close()
-                print result,type(result)
-                address = result[1].split(':')[1]
-                publicKey = result[2].split(':')[1]
-                privateKey = result[3].split(':')[1]
-                address = address.strip('\r\n')
-                publicKey = publicKey.strip('\r\n')
-                privateKey = privateKey.strip('\r\n')
-                self.address = address
-                self.publicKey = publicKey
-                self.privateKey = privateKey
-                consoler.debug(' god config success, file is %s, address is %s, publicKey : %s, privateKey : %s', sjson, str(self.address), str(self.publicKey), str(self.privateKey))
-                return True
+                    line = line.strip()
+                    if line.start_with('address'):
+                        address = line.split(':')[1].strip()
+                    elif line.start_with('publicKey'):
+                        publicKey = line.split(':')[1].strip()
+                    elif line.start_with('privateKey'):
+                        privateKey = line.split(':')[1].strip()
+                logger.info(' god config success, file is %s, address is %s, publicKey : %s, privateKey : %s', 
+                god_file, address, publicKey, privateKey)
+                return  (address, publicKey, privateKey)
         except Exception as e:
-            consoler.error(' god config failed, cfg is %s, exception is %s', sjson, e)
-            return False
+            logger.error(' god config failed, cfg is %s, exception is %s', god_file, e)
+            raise e
+
+
 
 
 def god(fisco_path):
     god = God(fisco_path)
     god.export()
+    
+    
     return 0
 
