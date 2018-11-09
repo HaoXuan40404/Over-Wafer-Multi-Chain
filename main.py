@@ -31,8 +31,8 @@ from pys.opr import opr_register
 from pys.opr import opr_publish
 from pys.opr import opr_build
 from pys.opr import opr_expand
+from pys.opr import opr_god
 from pys.fisco import god
-
 
 def init():
     """[init function]
@@ -140,7 +140,7 @@ def Usage():
         version.version()
     elif args.god:
         consoler.info(' god operation begin.')
-        god.god(args.god[0])
+        opr_god.opr_god(args.god[0])
         consoler.info(' god operation end.')
     elif args.build:
         consoler.info(' build operation begin.')

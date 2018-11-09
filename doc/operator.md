@@ -635,20 +635,7 @@ INFO |  telnet end.
 ```
 
 
-## 组合命令 --gm 国密命令相关
---gm命令只能和证书生成命令组合使用，使用前请确保在安装owmc时安装了国密版本
 
-fisco bcos支持用户提前生成需要的节点证书，用户需要在目录下按照文档说明结构存放所有的节点证书，存放结构为
-chainID/version/hostip/node_index/
-如12345/v1.0.0/127.0.0.1/node0/
-需要存放
-ca.crt agency.crt node.key node.pubkey node.crt
-
-用户在使用build命令时，可以组合--gm命令，指定证书路径生成多链。
-```
-$ owmc --chainca ./dir_chain_ca(SET) --gm
-```
-执行安装后会生成国密版本的证书
 
 
 
@@ -703,7 +690,24 @@ $ owmc -p 12345:v1.0.0 -f
 ## ca证书相关操作 
 多链物料包允许用户生成相应证书，fisco bcos的证书相关介绍请参考-[证书介绍](https://fisco-bcos-documentation.readthedocs.io/zh_CN/feature-multichain/docs/usage/cert_permission.html)，操作如下
 
+### 组合命令 --gm 国密命令相关
+--gm命令只能和证书生成命令组合使用，使用前请确保在安装owmc时安装了国密版本
+
+fisco bcos支持用户提前生成需要的节点证书，用户需要在目录下按照文档说明结构存放所有的节点证书，存放结构为
+chainID/version/hostip/node_index/
+如12345/v1.0.0/127.0.0.1/node0/
+需要存放
+ca.crt agency.crt node.key node.pubkey node.crt
+
+用户在使用build命令时，可以组合--gm命令，指定证书路径生成多链。
+```
+$ owmc --chainca ./dir_chain_ca(SET) --gm
+```
+执行安装后会生成国密版本的证书
+
 ### 生成根证书 --chainca命令
+
+
 用户可以指定目录，生成根证书
 ```
 owmc --chainca ./dir_chain_ca(SET)

@@ -8,6 +8,7 @@ from pys.log import consoler
 from pys.fisco.version import Fisco
 from pys.tool import utils
 import shutil
+from pys import path
 
 
 
@@ -45,15 +46,19 @@ class God:
         self.fisco = Fisco(fisco_path)
         (self.address, self.publicKey, self.privateKey) = self.load()
 
-    def replace(self,genesis_path):
+    def replace(self):
         (address, publicKey, privateKey) = ('', '', '')
         if self.fisco.is_gm():
             god_file = get_gm_god_path() + '/godInfo.txt' 
+            (address, publicKey, privateKey) = self.fromGod(god_file)
+            genesis_path = path.get_path() + '/tpl/GM_temp_node/genesis.json'
+            utils.replace(genesis_path, self.address, address)
         else:
             god_file = get_god_path() + '/godInfo.txt'
-        (address, publicKey, privateKey) = self.fromGod(god_file)
-        utils.replace(genesis_path, self.address, address)
-    
+            (address, publicKey, privateKey) = self.fromGod(god_file)
+            genesis_path = path.get_path() + '/tpl/temp_node/genesis.json'
+            utils.replace(genesis_path, self.address, address)
+        
     def export(self):
         try:
             if self.fisco.is_gm():
@@ -111,14 +116,4 @@ class God:
             logger.error(' god config failed, cfg is %s, exception is %s', god_file, e)
             raise e
 
-
-
-
-def god(fisco_path):
-    god = God(fisco_path)
-    god.export()
-    god.replace('./')
-    
-    
-    return 0
 
