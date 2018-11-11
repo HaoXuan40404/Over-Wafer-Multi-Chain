@@ -5,8 +5,6 @@ import os
 import subprocess
 from pys.log import logger
 from pys.log import consoler
-from pys.build.bootstrapsnode import P2pHosts
-from pys.build.bootstrapsnode import P2pHost
 
 def valid_chain_id(chain_id):
     """[Determine if the chain id is valid]
@@ -129,19 +127,6 @@ def port_in_use(port):
     logger.debug('port is %s, status is %s, output is %s', port, status, output)
 
     return status == 0
-
-
-def create_bootstrapnodes(nodes, port, path):
-    """generate bootstrapnodes.json file
-    """
-
-    phs = P2pHosts()
-    for node in nodes:
-        for index in range(node.get_node_num()):
-            phs.add_p2p_host(
-                P2pHost(node.get_p2p_ip(), port.get_p2p_port() + index))
-    with open(path + '/bootstrapnodes.json', "w+") as f:
-        f.write(phs.to_json())
 
 
 

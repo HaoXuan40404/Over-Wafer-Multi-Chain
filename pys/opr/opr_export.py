@@ -1,6 +1,7 @@
 # coding:utf-8
 import os
 import shutil
+from pys import path
 from pys.tool import utils
 from pys.data_mgr.chain import Chain
 from pys.data_mgr import data
@@ -25,14 +26,14 @@ def export_package(chain_id, chain_version, dest, direct):
             if not os.path.exists(dest):
                 os.makedirs(dest)
             dir = chain.data_dir()
-            for host in os.listdir(dir):
-                if not utils.valid_ip(host):
-                    logger.debug('not invalid host_ip ' + host)
-                    continue
 
-                if direct:
-                    utils.getstatusoutput('cp -r ' + dir  + '/*'  + ' ' + dest)
-                else:
+            if direct:
+                utils.getstatusoutput('cp -r ' + dir  + '/*'  + ' ' + dest)
+            else:
+                for host in os.listdir(dir):
+                    if not utils.valid_ip(host):
+                        logger.debug('not invalid host_ip ' + host)
+                        continue
                     utils.getstatusoutput('cp -r ' + dir + '/' + host + ' ' + dest + '/')
                     utils.getstatusoutput('cp -r ' + dir + '/' + 'common' + '/*' +   ' ' + dest + '/' + host)
 

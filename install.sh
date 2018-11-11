@@ -23,8 +23,9 @@ function sudo_permission_check()
 function format()
 {
     dir=$1
-	find $dir -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
+    find $dir -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
     find $dir -name "*.sh"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
+    find $dir -name "*.py"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
     find $dir -name "web3sdk"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
 }
 
@@ -76,7 +77,7 @@ function install()
     sudo cp -r $dirpath/data  ${install_dir}/owmc/
     sudo cp -r $dirpath/main.py  ${install_dir}/owmc/
     sudo cp -r $dirpath/release_note.txt ${install_dir}/owmc/
-    format ${install_dir}/owmc/
+    sudo format ${install_dir}/owmc/
     sudo sed -i "s|/usr/bin/python|${python_env}|g" ${install_dir}/owmc/main.py 1> /dev/null
     sudo sed -i "s|./log/all.log|${install_dir}/owmc/log/all.log|g" ${install_dir}/owmc/conf/logging.conf 1> /dev/null
     sudo ln -s ${install_dir}/owmc/main.py /usr/bin/owmc

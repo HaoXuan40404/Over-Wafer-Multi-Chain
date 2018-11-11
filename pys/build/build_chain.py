@@ -46,10 +46,9 @@ def build(cc, fisco):
         os.makedirs(dir)
 
         # generate bootstrapsnode.json
-        utils.create_bootstrapnodes(cc.get_nodes(), port, dir)
+        cc.to_p2p_nodes().writeFile(dir + '/bootstrapnodes.json')
 
         # create common dir
-  
         build_pkg.build_common_dir(chain, fisco)
         if fisco.is_gm():
             # create temp node for export genesis.json file
@@ -74,9 +73,6 @@ def build(cc, fisco):
             for index in range(node.get_node_num()):
                 shutil.copy(dir + '/genesis.json', dir + '/' +
                             node.get_host_ip() + '/node' + str(index))
-
-        utils.replace(dir + '/common/web3sdk/conf/applicationContext.xml',
-                      'NODE@HOSTIP', 'node0@127.0.0.1:%d' % port.get_channel_port())
 
         logger.info(' build end ok, chain is %s', chain)
 

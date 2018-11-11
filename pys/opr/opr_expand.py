@@ -12,8 +12,6 @@ from pys.conf import build_chain_conf
 from pys.build import expand_chain
 from pys.error.exp import MCError
 from pys.data_mgr.names import Names
-from pys.build.bootstrapsnode import P2pHosts
-from pys.build.bootstrapsnode import P2pHost
 from pys.conf.build_chain_conf import ConfigConf
 
 def expand(cfg, dir):

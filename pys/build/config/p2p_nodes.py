@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+from pys.log import logger
 """Generate boots .json, which is a configuration file for nodes to perform p2p link
 
 """
@@ -10,9 +11,16 @@ class P2pHost:
     def __init__(self, host, p2pport):
         self.host = host
         self.p2pport = str(p2pport)
+    
+    def to_nodes(self, count):
+        str=''
+        for idx in count:
+            str += ('<value>node%s@%s:%s</value>' % (str(idx), self.host, (self.p2pport + idx)))
+        logger.debug(' web3sdk list string is %s .', str)
+        return str
 
     def __repr__(self):
-        return 'host %s, p2pport %d' % (self.host, self.p2pport)
+        return 'host %s, p2pport %s' % (self.host, self.p2pport)
 
 class P2pHosts:
     def __init__(self):
@@ -30,6 +38,15 @@ class P2pHosts:
 
     def clear(self):
         self.nodes = []
+    
+    def writeFile(self, file):
+        try:
+            with open(file, "w+") as f:
+                f.write(self.to_json())
+            logger.info(' write file success, file is %s', file)
+        except Exception as e:
+            logger.error(' write file failed, file is %s, exception is $s,', file, e)
+            raise e
 
     def from_json(self, json):
         '''

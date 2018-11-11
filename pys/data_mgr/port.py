@@ -8,7 +8,7 @@ from pys.data_mgr.package import VerHosts
 from pys.data_mgr.package import ChainVers
 from pys.data_mgr.package import AllChain
 from pys.data_mgr.chain import Chain
-from pys.build import config
+from pys.build.config.config import Config
 from pys.error.exp import MCError
 
 
@@ -98,7 +98,7 @@ class HostPort:
             self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
         for node in hn.get_node_dirs():
             cfg_json = host_dir + '/' + node + '/config.json'
-            cf = config.Config(self.chain_id)
+            cf = Config(self.chain_id)
             if cf.fromJson(cfg_json):
                 p = Port(int(cf.get_rpc_port()), int(
                     cf.get_p2p_port()), int(cf.get_channel_port()))

@@ -12,8 +12,6 @@ from pys.data_mgr import data
 from pys.build import build_pkg
 from pys.error.exp import MCError
 from pys.data_mgr.names import Names
-from pys.build.bootstrapsnode import P2pHosts
-from pys.build.bootstrapsnode import P2pHost
 from pys.conf.build_chain_conf import ConfigConf
 from pys.data_mgr.port import AllChainPort
 
