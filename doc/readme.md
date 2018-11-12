@@ -7,7 +7,9 @@ Over-Wafer-Multi-Chain(OWMC)是针对机构内同时部署多条链的物料包�
 列如：在一台服务器上，配置好与其他服务器的ssh密钥，生成三条链，每条链在三台服务器上有三个节点，将安装包推给对应服务器，启动节点，组成三条区块链网络。
 
 OWMC支持使用ansible维护和自主维护方式，如下图所示：
-![]()
+
+![](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/owmc-1.jpg)
+
 1.使用ansbile
 
 用户在运维服务器上生成安装包，使用ansible对后台服务器进行操作，将安装包推送给后台服务器，启动节点，对区块链网络进行维护。
@@ -18,8 +20,10 @@ OWMC支持使用ansible维护和自主维护方式，如下图所示：
 
 
 OWMC自动化运维管理工具的示意图如下所示：
-![]()
-以生成安装包，并推送到对应服务器上为例。
+
+![](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/owmc-build-1.jpg)
+
+上图以生成安装包，并推送到对应服务器上为例。
 
 用户在运维服务器上使用build命令生成多链安装包，之后使用publish命令，将安装包推送到对应后台服务器上，对多条链进行操作。
 
