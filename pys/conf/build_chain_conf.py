@@ -240,4 +240,4 @@ class ConfigConfs:
                     logger.warn(' parser cfg %s end exception, e %s ', c, e)
 
         else:
-            raise MCError(' invalid config, neither directory nor file, config is %s' % self.cfg)
+            raise MCError(' invalid config, %s not exist' % self.cfg)
