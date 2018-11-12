@@ -141,7 +141,7 @@ class Temp:
         #    raise MCError(' node action all failed, output is %s ' % output)
 
     def export(self):
-        export_command = 'bash ' + self.export_shell_file() + ' ' + self.dir() + '/../genesis.json'
+        export_command = 'bash ' + self.export_shell_file() + ' ' + self.chain().data_dir() + '/genesis.json'
         status, output = utils.getstatusoutput(export_command)
         if not os.path.exists(self.dir() + '/../genesis.json'):
             logger.error('export genesis.json failed, output is %s', output)

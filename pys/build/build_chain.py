@@ -35,7 +35,7 @@ def build(cc, fisco):
                       (chain_id, chain_version))
 
     try:
-
+        temp = None
         acp = AllChainPort()
         # port check
         for node in cc.get_nodes():
@@ -75,7 +75,9 @@ def build(cc, fisco):
         logger.info(' build end ok, chain is %s', chain)
 
     except Exception as e:
-        temp.clean()
+        if not temp is None:
+            temp.clean()
+            
         if os.path.exists(dir):
             shutil.rmtree(dir)
 
