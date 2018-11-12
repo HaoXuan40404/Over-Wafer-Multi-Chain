@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 
 import os
 import shutil
@@ -91,7 +91,7 @@ class Temp:
             shutil.copy(self.fisco.get_fisco_path(), self.dir() + '/node/')
             # config.json for temp node
             Config('12345', self.port.get_rpc_port(),
-                   self.port.get_p2p_port(), self.port.get_channel_port(), True).writeFile(self.dir() + '/node/config.json')
+                   self.port.get_p2p_port(), self.port.get_channel_port(), self.is_gm()).writeFile(self.dir() + '/node/config.json')
 
             # web3sdk config for temp node
             utils.replace(self.dir() + '/web3sdk/conf/applicationContext.xml', 'WEB3SDK_NODES_LIST',
@@ -140,7 +140,9 @@ class Temp:
         #    raise MCError(' node action all failed, output is %s ' % output)
 
     def export(self):
-        export_command = 'bash ' + self.export_shell_file() + ' ' + self.chain.data_dir() + '/genesis.json'
+        self.stop()
+        export_command = 'bash ' + self.export_shell_file() + ' ' + \
+            self.chain.data_dir() + '/genesis.json'
         status, output = utils.getstatusoutput(export_command)
         if not os.path.exists(self.dir() + '/../genesis.json'):
             logger.error('export genesis.json failed, output is %s', output)
