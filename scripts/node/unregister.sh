@@ -38,14 +38,14 @@ check_file $nodefile
 check_file $configfile
 check_file $nodeidfile
 
+# check java version
+bash scripts/tools/deps.sh java_check
+
 nodeid=$(cat `pwd`/node$index/data/node.nodeid)
 register_or_not $nodeid
 if [ $? -ne 0 ];then
     echo " OK! node$index has not been registered."; exit 0;
 fi
-
-# check java version
-bash scripts/tools/deps.sh java_check
 
 bash web3sdk/bin/web3sdk NodeAction cancelNode file:`pwd`/node$index/data/node.json
 if [ $? -ne 0 ];then
