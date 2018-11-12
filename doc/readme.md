@@ -37,7 +37,7 @@ FISCO BCOS对网络、yum源等外部环境存在依赖, 为减少搭建过程�
 部署OWMC时需要用到ansible进行多服务器的数据流传输，ansible是基于Python开发，集合了众多运维工具的优点，实现了批量系统配置、批量程序部署、批量运行命令等功能的一个自动化运维工具。本文是OWMC ansible的配置文档。
 
 
-## [OWMC极简操作手册](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/sample.md)
+## [OWMC搭建范例](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/sample.md)
 用户通过本章可以快速体验搭建一条区块链
 
 ## [OWMC使用手册](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/operator.md)
