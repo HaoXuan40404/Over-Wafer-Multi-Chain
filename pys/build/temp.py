@@ -141,7 +141,7 @@ class Temp:
         #    raise MCError(' node action all failed, output is %s ' % output)
 
     def export(self):
-        export_command = self.export_shell_file() + self.dir() + '/genesis.json'
+        export_command = self.export_shell_file() + self.dir() + '/../genesis.json'
         status, output = utils.getstatusoutput(export_command)
         if not os.path.exists(self.dir() + '/genesis.json'):
             logger.error('export genesis.json failed, output is %s', output)
@@ -186,24 +186,3 @@ class Temp:
 
     def is_gm(self):
         return self.fisco.is_gm()
-
-
-def export_genesis(dir):
-    """ export genesis.json from temp node
-    
-    Arguments:
-        dir {string} -- temp node dir
-        
-    Returns:
-        bool --  if export success, return True, if not False will return.
-    """
-
-    cmd = 'bash %s/temp/node/export.sh %s/%s' % (dir, dir, 'genesis.json')
-    status, output = utils.getstatusoutput(cmd)
-    if not os.path.exists(dir + '/genesis.json'):
-        logger.warn('export genesis.json failed, output is %s', output)
-        raise MCError(
-            ' export genesis.json failed, dir is %s, output is %s.' % (dir, output))
-    else:
-        logger.debug('export status, status is %d, output is %s',
-                     status, output)
