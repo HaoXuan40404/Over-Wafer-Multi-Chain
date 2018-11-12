@@ -5,7 +5,9 @@ import shutil
 from pys.tool import utils
 from pys.log import logger
 from pys.build import build_pkg
-from pys.build import temp_node
+# from pys.build import temp_node
+from pys.build.temp import Temp
+from pys.build.tool import web3_conf_by_chain
 from pys.data_mgr.port import AllChainPort
 from pys.error.exp import MCError
 
@@ -33,16 +35,15 @@ def build(cc, fisco):
                       (chain_id, chain_version))
 
     try:
-        dir = chain.data_dir()
 
         acp = AllChainPort()
-        
         # port check
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 # create dir for every node on the server
                 acp.port_conflicts_outside_chain(chain.get_id(), node.get_host_ip(), port.to_port(index))
-
+        
+        dir = chain.data_dir()
         os.makedirs(dir)
 
         # generate bootstrapsnode.json
@@ -50,34 +51,31 @@ def build(cc, fisco):
 
         # create common dir
         build_pkg.build_common_dir(chain, fisco)
-        if fisco.is_gm():
-            # create temp node for export genesis.json file
-            temp_node.GM_temp_node_build(dir, port, fisco)
-        else:
-            # create temp node for export genesis.json file
-            temp_node.temp_node_build(dir, port, fisco)
-        # start temp node
-        temp_node.start_temp_node(dir, port)
+        # build and start temp node for node info register
+        temp = Temp(chain, fisco, port)
 
         # build install dir for every server
         for node in cc.get_nodes():
-            build_pkg.build_host_dir(chain, node, port, fisco, temp_node)
+            build_pkg.build_host_dir(chain, node, port, fisco, temp)
 
         # stop temp node and export for genesis.json file
-        temp_node.stop_temp_node(dir)
-        temp_node.export_genesis(dir)
-        temp_node.clean_temp_node(dir)
+        temp.stop()
+        temp.export()
+        temp.clean()
 
         # copy genesis.json bootstrapnodes.json
         for node in cc.get_nodes():
             for index in range(node.get_node_num()):
                 shutil.copy(dir + '/genesis.json', dir + '/' +
                             node.get_host_ip() + '/node' + str(index))
+        
+        # web3sdk conf
+        web3_conf_by_chain(chain, fisco.is_gm())
 
         logger.info(' build end ok, chain is %s', chain)
 
     except Exception as e:
-        temp_node.clean_temp_node(dir)
+        temp.clean()
         if os.path.exists(dir):
             shutil.rmtree(dir)
 

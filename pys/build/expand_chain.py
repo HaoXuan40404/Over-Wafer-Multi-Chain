@@ -14,6 +14,7 @@ from pys.error.exp import MCError
 from pys.data_mgr.names import Names
 from pys.conf.build_chain_conf import ConfigConf
 from pys.data_mgr.port import AllChainPort
+from pys.build.tool import web3_conf_by_chain
 
 from pys.fisco.version import Fisco
 
@@ -54,6 +55,8 @@ def expand_on_exist_chain(cc):
                      chain_id, chain_version, e)
             raise MCError(' expand failed, chain id is %s, chain version is %s, exception is %s' % (
             chain_id, chain_version, e))
+    
+    web3_conf_by_chain(chain, fisco.is_gm())
 
 def expand_on_nonexist_chain(cc, dir):
     
@@ -101,6 +104,9 @@ def expand_on_nonexist_chain(cc, dir):
         # build install dir for every server
         for node in cc.get_nodes():
             build_pkg.expand_host_dir(chain, node, port, fisco)
+        
+        # update web3sdk config
+        web3_conf_by_chain(chain, fisco.is_gm())
 
     except Exception as e:
         if os.path.exists(chain.data_dir()):

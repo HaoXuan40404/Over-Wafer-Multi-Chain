@@ -1,1 +1,1 @@
-__all__ = ['build_pkg','temp_node','build_chain','expand_chain']
+__all__ = ['build_pkg','temp_node','build_chain','expand_chain', 'tool']

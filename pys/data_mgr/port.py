@@ -98,6 +98,9 @@ class HostPort:
             self.chain_id, self.chain_version).data_dir() + '/' + self.host + '/'
         for node in hn.get_node_dirs():
             cfg_json = host_dir + '/' + node + '/config.json'
+            if not os.path.exists(cfg_json):
+                logger.error(' config not exist, config is %s .', cfg_json)
+                continue
             cf = Config(self.chain_id)
             if cf.fromJson(cfg_json):
                 p = Port(int(cf.get_rpc_port()), int(

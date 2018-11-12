@@ -112,11 +112,11 @@ def build_host_dir(chain, node, port, fisco, temp=None):
         # register node info to node manager contract
         if not temp is None:
             if fisco.is_gm():
-                temp.registerNode(chain.data_dir(), host_dir + ('/node%d' %
-                                                   index) + '/data/gmnode.json')
+                temp.register(host_dir + ('/node%d' %
+                                          index) + '/data/gmnode.json')
             else:
-                temp.registerNode(chain.data_dir(), host_dir + ('/node%d' %
-                                                   index) + '/data/node.json')
+                temp.register(host_dir + ('/node%d' %
+                                          index) + '/data/node.json')
 
     logger.info('build_host_dir end.')
 
@@ -157,8 +157,8 @@ def build_common_dir(chain, fisco):
         # copy client.keystore to web3sdk conf dir
         shutil.copy(ca.get_GM_agent_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
-        shutil.move(com_dir + '/web3sdk/conf/applicationContext_GM.xml', 
-                    com_dir + '/web3sdk/conf/applicationContext.xml')
+        # shutil.move(com_dir + '/web3sdk/conf/applicationContext_GM.xml', 
+        #            com_dir + '/web3sdk/conf/applicationContext.xml')
 
     else:
         # copy ca.crt to web3sdk conf dir
@@ -167,8 +167,8 @@ def build_common_dir(chain, fisco):
         # copy client.keystore to web3sdk conf dir
         shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
-        shutil.move(com_dir + '/web3sdk/conf/applicationContext_NB.xml', 
-                    com_dir + '/web3sdk/conf/applicationContext.xml')
+        # shutil.move(com_dir + '/web3sdk/conf/applicationContext_NB.xml', 
+        #            com_dir + '/web3sdk/conf/applicationContext.xml')
 
     # copy scripts to common dir
     shutil.copy(path.get_path() + '/scripts/node/start.sh', com_dir)

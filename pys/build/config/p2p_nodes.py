@@ -11,13 +11,6 @@ class P2pHost:
     def __init__(self, host, p2pport):
         self.host = host
         self.p2pport = str(p2pport)
-    
-    def to_nodes(self, count):
-        str=''
-        for idx in count:
-            str += ('<value>node%s@%s:%s</value>' % (str(idx), self.host, (self.p2pport + idx)))
-        logger.debug(' web3sdk list string is %s .', str)
-        return str
 
     def __repr__(self):
         return 'host %s, p2pport %s' % (self.host, self.p2pport)
