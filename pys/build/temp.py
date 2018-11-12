@@ -117,7 +117,7 @@ class Temp:
                     status, output)
 
     def stop(self):
-        stop_command = 'bash' + self.stop_shell_file()
+        stop_command = 'bash ' + self.stop_shell_file()
         if not os.path.exists(self.stop_shell_file()):
             logger.debug('stop file not exist, file is %s. ', stop_command)
             return
