@@ -44,6 +44,9 @@ if [ $? -ne 0 ];then
     echo " OK! node$index has not been registered."; exit 0;
 fi
 
+# check java version
+bash scripts/tools/deps.sh java_check
+
 bash web3sdk/bin/web3sdk NodeAction cancelNode file:`pwd`/node$index/data/node.json
 if [ $? -ne 0 ];then
     error " NodeAction cancelNode operation failed."

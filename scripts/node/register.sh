@@ -58,6 +58,9 @@ if [ $? -eq 0 ];then
     echo " OK! node$index has been registered."; exit 0;
 fi
 
+# check java version
+bash scripts/tools/deps.sh java_check
+
 # https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_syncing
 bash web3sdk/bin/web3sdk NodeAction registerNode file:`pwd`/node$index/data/node.json
 if [ $? -ne 0 ];then
