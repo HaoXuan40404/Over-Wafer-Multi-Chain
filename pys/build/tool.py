@@ -15,7 +15,7 @@ def web3_conf_by_chain(chain, gm=False, web3_conf_path=None):
 
     web3_connect_nodes_list = ''
     for host, hp in cvp.get_ports().items():
-        for node, port in hp.get_ports():
+        for node, port in hp.get_ports().items():
             web3_connect_nodes_list += ('<value>%s_%s@%s:%d</value>' %
                                         (host, node, host, port.get_channel_port()))
 
