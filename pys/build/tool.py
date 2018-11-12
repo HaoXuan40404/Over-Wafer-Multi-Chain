@@ -14,7 +14,7 @@ def web3_conf_by_chain(chain, gm=False, web3_conf_path=None):
     cvp = ChainVerPort(chain.get_id(), chain.get_version())
 
     web3_connect_nodes_list = ''
-    for host, hp in cvp.get_ports():
+    for host, hp in cvp.get_ports().items():
         for node, port in hp.get_ports():
             web3_connect_nodes_list += ('<value>%s_%s@%s:%d</value>' %
                                         (host, node, host, port.get_channel_port()))
@@ -35,14 +35,3 @@ def web3_conf_by_chain(chain, gm=False, web3_conf_path=None):
 
     return utils.replace(web3_conf_path, 'WEB3SDK_NODES_LIST',
                          web3_connect_nodes_list)
-
-
-def temp_web3_conf(port, web3_conf_path=None):
-    """generate connect list for temp node web3sdk config
-    
-    Arguments:
-        chain {Chain} -- chain
-    """
-    logger.debug(' temp web3 config path is %s .', web3_conf_path)
-    web3_connect_nodes_list = '<value>node0@127.0.0.1:%s</value>' % port.get_channel_port()
-    return web3_connect_nodes_list

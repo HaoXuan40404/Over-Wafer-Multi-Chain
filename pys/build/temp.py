@@ -10,7 +10,6 @@ from pys.log import logger
 from pys.log import consoler
 from pys.build.config.config import Config
 from pys.error.exp import MCError
-from pys.build.tool import temp_web3_conf
 
 
 class Temp:
