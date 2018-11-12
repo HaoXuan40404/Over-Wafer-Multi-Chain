@@ -19,15 +19,12 @@ def web3_conf_by_chain(chain, gm=False, web3_conf_path=None):
             web3_connect_nodes_list += ('<value>%s_%s@%s:%d</value>' %
                                         (host, node, host, port.get_channel_port()))
 
-    if (not web3_conf_path is None) and os.path.exists(web3_conf_path) and os.path.isfile(web3_conf_path):
-        utils.replace(web3_conf_path, 'WEB3SDK_NODES_LIST',
-                      web3_connect_nodes_list)
-    if not os.path.exists(web3_conf_path):
+    if (web3_conf_path is None) or (not os.path.exists(web3_conf_path)):
         if gm:
-            shutil.move(chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext_GM.xml',
+            shutil.copy(chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext_GM.xml',
                         chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext.xml')
         else:
-            shutil.move(chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext_NB.xml',
+            shutil.copy(chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext_NB.xml',
                         chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext.xml')
         web3_conf_path = chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext.xml'
 
