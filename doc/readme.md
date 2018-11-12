@@ -6,22 +6,28 @@ Over-Wafer-Multi-Chain(OWMC)是针对机构内同时部署多条链的物料包�
 
 列如：在一台服务器上，配置好与其他服务器的ssh密钥，生成三条链，每条链在三台服务器上有三个节点，将安装包推给对应服务器，启动节点，组成三条区块链网络。
 
+OWMC支持使用ansible维护和自主维护方式，如下图所示：
+![]()
+1.使用ansbile
+
+用户在运维服务器上生成安装包，使用ansible对后台服务器进行操作，将安装包推送给后台服务器，启动节点，对区块链网络进行维护。
+
+2.自主维护
+
+用户在运维服务器上生成安装包，采用自己机构运维管理方式，将安装包推送到后台服务器，启动节点，对区块链网络进行维护。
+
+
+OWMC自动化运维管理工具的示意图如下所示：
+![]()
+以生成安装包，并推送到对应服务器上为例。
+
+用户在运维服务器上使用build命令生成多链安装包，之后使用publish命令，将安装包推送到对应后台服务器上，对多条链进行操作。
+
+
+
 ## [系统环境检测](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/envcheck.md)
 FISCO BCOS对网络、yum源等外部环境存在依赖, 为减少搭建过程中遇到的问题,建议在使用之前对整个搭建的环境进行检查。  
 
-## [软件依赖]()
-OWMC在使用时，依赖相关软件的配置，以下是需要的相关软件配置流程
-
-
-### [java1.8](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/javacheck.md)
-FISCO BCOS中需要使用Oracle JDK 1.8(java 1.8)或openJDK1.9以上版本, 在CentOS/Ubuntu中默认安装或者通过yum/apt安装的JDK均为openJDK1.8, 并不符合使用的要求, 本文是一份简单的Oracle Java 1.8的配置文档。
-
-### [python安装](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/pythoncheck.md)
-OWMC需要使用python2.7或3.5以上版本来生成相关安装包，本文是python的配置文档。
-
-
-### [ansible](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/ansiblecheck.md)
-**只需要在运维服务器上部署ansible即可**
 
 **用户可以使用 [OWMC自主维护使用手册]()自行导出安装包，不用ansible进行维护**
 部署OWMC时需要用到ansible进行多服务器的数据流传输，ansible是基于Python开发，集合了众多运维工具的优点，实现了批量系统配置、批量程序部署、批量运行命令等功能的一个自动化运维工具。本文是OWMC ansible的配置文档。
@@ -36,8 +42,6 @@ OWMC需要使用python2.7或3.5以上版本来生成相关安装包，本文是p
 
 ## [OWMC自主维护使用手册](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/export.md)
 如果用户不希望使用ansible进行操作，OWCM也支持用户如同物料包操作一般，将安装包导出到自己需要的路径下进行维护。
-
-
 
 
 ## [FAQ](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/FAQ.md)

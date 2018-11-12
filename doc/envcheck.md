@@ -1,6 +1,23 @@
-# 环境依赖
+# 运维主机环境依赖
 
-本章内容包括用户的操作系统检测以及启动fisco bcos需要的环境检测
+本部分内容包括用户的操作系统检测以及启动fisco bcos需要的环境检测，以下部分只需要运维服务器安装满足即可
+
+## [软件依赖]()
+OWMC在使用时，还需要依赖相关软件的配置，以下是需要的相关软件配置流程
+
+
+
+
+### [python安装](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/pythoncheck.md)
+OWMC需要使用python2.7或3.5以上版本来生成相关安装包，本文是python的配置文档。
+
+
+### [ansible](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/ansiblecheck.md)
+**只需要在运维服务器上部署ansible即可**
+
+
+
+# FISCO BCOS 环境依赖
 
 在使用OWMC物料包之前，需要确保所有电脑的操作系统满足fisco bcos的运行条件。
 
@@ -111,6 +128,11 @@ $ curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key
 之后输入软件源信息
 
 ```
+
+### [java1.8](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/blob/dev/doc/javacheck.md)
+FISCO BCOS中的web3sdk需要使用Oracle JDK 1.8(java 1.8)或openJDK1.9以上版本, 在CentOS/Ubuntu中默认安装或者通过yum/apt安装的JDK均为openJDK1.8, 并不符合使用的要求, 本文是一份简单的Oracle Java 1.8的配置文档，若要使用web3sdk，则需要按照此文档进行配置。
+
+
 
 
 
