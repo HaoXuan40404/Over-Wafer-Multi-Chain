@@ -21,12 +21,12 @@ def web3_conf_by_chain(chain, gm=False, web3_conf_path=None):
 
     if (web3_conf_path is None) or (not os.path.exists(web3_conf_path)):
         if gm:
-            shutil.copy(chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext_GM.xml',
-                        chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext.xml')
+            shutil.copy(chain.data_dir() + '/' + 'common/web3sdk/conf/applicationContext_GM.xml',
+                        chain.data_dir() + '/' + 'common/web3sdk/conf/applicationContext.xml')
         else:
-            shutil.copy(chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext_NB.xml',
-                        chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext.xml')
-        web3_conf_path = chain.data_dir() + '/' + 'common/web3sdk/common/applicationContext.xml'
+            shutil.copy(chain.data_dir() + '/' + 'common/web3sdk/conf/applicationContext_NB.xml',
+                        chain.data_dir() + '/' + 'common/web3sdk/conf/applicationContext.xml')
+        web3_conf_path = chain.data_dir() + '/' + 'common/web3sdk/conf/applicationContext.xml'
 
     logger.info('  web3sdk config file is %s', web3_conf_path)
 
