@@ -258,7 +258,7 @@ def Usage():
         consoler.info(' lshost operation end.')
     else:
         consoler.error(
-            '\033[1;31m invalid operation,  \"python main.py -h\" can be used to show detailed usage. \033[0m')
+            '\033[1;31m invalid operation,  \"owmc -h\" can be used to show detailed usage. \033[0m')
     return 0
 
 def main():

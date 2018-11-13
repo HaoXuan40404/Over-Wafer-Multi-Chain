@@ -241,8 +241,9 @@ INFO | v1.1.0
 本命令需要sudo权限对ansible的配置进行修改，用户每次修改hosts.conf都需要运行本命令。
 
 ```
-$ python main.py --init
+$ owmc --init ./conf/hosts.conf
 ```
+第二项为hosts.conf的地址，请确保已经修改正确
 会得到如下提示
 ```
 INFO | ansible init success
