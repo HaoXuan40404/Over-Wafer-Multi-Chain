@@ -10,7 +10,7 @@ from pys.error.exp import MCError
 
 def init_chain(hosts_conf):
     try:
-        (status, result) = utils.getstatusoutput('sudo bash ' + path.get_path() + '/scripts/hostsname.sh' + ' ' + hosts_conf)
+        (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/hostsname.sh' + ' ' + hosts_conf)
         if status != 0:
             logger.warn(' host.conf init failed! status is %d, output is %s, dir is %s.', status, result, dir)
             raise MCError('host.conf failed! status is %d, output is %s, dir is %s.' % (status, result, dir))

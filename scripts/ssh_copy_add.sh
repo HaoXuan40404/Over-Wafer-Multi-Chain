@@ -10,5 +10,6 @@ do
 sshpass -p ${passwd} ssh-copy-id -i ~/.ssh/id_rsa.pub -p ${port} ${user}@${ip} >/dev/null 2>&1 & 
 done
 ssh-agent bash
+eval `ssh-agent`
 ssh-add ~/.ssh/id_rsa
-exit
+exit 0
