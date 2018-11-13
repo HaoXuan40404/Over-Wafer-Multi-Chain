@@ -77,6 +77,7 @@ username 127.0.0.5 36000 123
 ```
 owmc --ansibleinit ./conf/hosts.conf
 ```
+第二项为hosts.conf的地址，请确保已经修改正确
 ### 检查环境
 ```
 owmc --envcheck all
