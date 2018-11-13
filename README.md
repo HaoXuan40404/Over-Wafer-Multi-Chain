@@ -2,7 +2,7 @@
 
 ## 技术文档
 
-访问[FISCO BCOS 物理多链物料包使用手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/feature-multichain/docs/mulchain/index.html)，内容包括：
+访问[FISCO BCOS 物理多链物料包使用手册](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/tree/dev/doc)，内容包括：
 
 - 环境依赖
 - FISCO BCOS JAVA配置文档

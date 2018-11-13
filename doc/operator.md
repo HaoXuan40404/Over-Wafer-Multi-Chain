@@ -24,7 +24,7 @@ Example:
   
 OWMC默认安装在/usr/local路径下，-d命令会将OWMC安装在指定路径，
 - -p 命令 指定python路径
-  
+
 -p命令将指定用户的python路径，OWMC默认依赖/usr/bin/python下的python，由于OWMC需要依赖python2.7或3.5以上版本，用户可以指定python路径
 - -g 命令 国密环境初始化
   
@@ -235,14 +235,15 @@ $ owmc -v
 INFO | v1.1.0
 ```
 
-## 初始化ansible --init命令
+## 初始化ansible --ansibleinit命令
 用户在配置conf/hosts时，需要用到本命令。
 
 本命令需要sudo权限对ansible的配置进行修改，用户每次修改hosts.conf都需要运行本命令。
 
 ```
-$ python main.py --init
+$ owmc --init ./conf/hosts.conf
 ```
+第二项为hosts.conf的地址，请确保已经修改正确
 会得到如下提示
 ```
 INFO | ansible init success
