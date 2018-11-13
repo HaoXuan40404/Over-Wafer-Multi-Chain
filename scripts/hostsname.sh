@@ -7,7 +7,7 @@ if [ ! -f ${hosts_conf} ];then
     echo " hosts_conf not exist, host_conf is ${hosts_conf}"; exit 1;
 fi
 
-mv /etc/ansible/hosts /etc/ansible/hosts.bak
+sudo mv /etc/ansible/hosts /etc/ansible/hosts.bak
 cat ${hosts_conf} | while read user ip port passwd
 do
 sudo echo -n $ip >> /etc/ansible/hosts
