@@ -14,7 +14,7 @@ class MchainConf():
     """mchain.conf configuration
     """
 
-    agent_name = 'WB'
+    agent_name = 'FISCO'
     ansible_dir = '/data'
     sys_address = '0xe4cd3e488cbf0a98e8ecd8bc5eefaf10e5d54905'
     gm_sys_address = '0xee80d7c98cb9a840b9c4df742f61336770951875'
