@@ -75,7 +75,7 @@ username 127.0.0.5 36000 123
 
 ### 初始化环境
 ```
-owmc --init
+--ansibleinit ./conf/hosts.conf
 ```
 ### 检查环境
 ```

@@ -1,5 +1,6 @@
 #!/bin/bash
 #set -e
+source ./scripts/tools/deps.sh
 
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
@@ -41,12 +42,21 @@ function install()
     sudo_permission_check
 
     py_version=$($python_env -V 2>&1 | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '})
+    py_pip=pip -V 2>&1 | awk {'print $2'} | awk -F. {' print $1"."$2"."$3 '}
+
     # params check
     if [ -z "${py_version}" ];then
         alarm " not invalid python path, path is ${python_env}."; exit 1;
     fi
 
     echo " python version is ${py_version}, python path is ${python_env}"
+    if [ os_check = "ubuntu" ];then
+        sudo apt-get install python-pip
+    elif [ os_check = "centos" ];then
+        sudo yum install python-pip
+    fi
+    echo "install configparser "
+    sudo pip install configparser
 
     if [ -f $owmc ];then
         if $force == "true";then
@@ -94,6 +104,7 @@ function install()
     fi
 
     sudo chmod 777 $install_dir/owmc
+
 
     echo " owmc install success ! "
 }

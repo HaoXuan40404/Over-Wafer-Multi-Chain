@@ -24,7 +24,7 @@ Example:
   
 OWMC默认安装在/usr/local路径下，-d命令会将OWMC安装在指定路径，
 - -p 命令 指定python路径
-  
+
 -p命令将指定用户的python路径，OWMC默认依赖/usr/bin/python下的python，由于OWMC需要依赖python2.7或3.5以上版本，用户可以指定python路径
 - -g 命令 国密环境初始化
   

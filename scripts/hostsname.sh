@@ -14,4 +14,5 @@ echo -n $ip >> /etc/ansible/hosts
 echo -n " ansible_ssh_user="$user >> /etc/ansible/hosts
 echo -n " ansible_port="$port >> /etc/ansible/hosts
 echo " ansible_ssh_pass="$passwd >> /etc/ansible/hosts
+echo "[$ip]:36000 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBA0hhTKXKn4brChqhd3wtdbWpwiipbOK/wTRGmxX7uuo8kxUGGrLUl35CamwIvtGpngCVVMnKdeZfu4aPARXDX0=" >> ~/.ssh/known_hosts
 done
