@@ -45,7 +45,7 @@
 						<property name="clientCertPassWord" value="123456" />
                         <property name="connectionsStr">
 							<list>
-								<value>NODE@HOSTIP</value>  
+								WEB3SDK_NODES_LIST
 							</list>
 						</property>
                     </bean>

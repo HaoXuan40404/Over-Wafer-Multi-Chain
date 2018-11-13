@@ -29,14 +29,17 @@ class Config:
     '''
     object of fisco-bcos config.json ,  generate config.json
     '''
-    def __init__(self, networkid):
+    def __init__(self, networkid, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT, gm = False):
         self.sealEngine = SEALENGINE
-        self.systemproxyaddress = SYSTEMPROXYADDRESS
+        if gm:
+            self.systemproxyaddress = GM_SYSTEMPROXYADDRESS
+        else:
+            self.systemproxyaddress = SYSTEMPROXYADDRESS
         self.listenip = LISTEN_IP
         self.cryptomod = CRYPTOMOD
-        self.rpcport = RPCPORT
-        self.p2pport = P2PPORT
-        self.channelPort = CHANNELPORT
+        self.rpcport = str(rpc_port)
+        self.p2pport = str(p2p_port)
+        self.channelPort = str(channel_port)
         self.wallet = WALLET
         self.keystoredir = KEYSTOREDIR
         self.datadir = DATADIR
@@ -73,7 +76,7 @@ class Config:
 
     def __repr__(self):
         return self.toJson()
-
+        
     def toJson(self):
         '''
         config to .json
@@ -96,18 +99,12 @@ class Config:
         except Exception as e:
                 logger.error(' parser config failed, cfg is %s, exception is %s', sjson, e)
                 return False
-            
-
-def build_config_json(network_id, rpc_port = RPCPORT, p2p_port = P2PPORT, channel_port = CHANNELPORT, gm = False):
-    '''
-    build config.json
-    '''
-    cf = Config(network_id)
-    cf.set_rpc_port(rpc_port)
-    cf.set_channel_port(channel_port)
-    cf.set_p2p_port(p2p_port)
-    if gm:
-        cf.set_gm_sys_addr(GM_SYSTEMPROXYADDRESS)
-
-    logger.debug('config json is ' + cf.toJson())
-    return cf.toJson()
+    
+    def writeFile(self, file):
+        try:
+            with open(file, "w+") as f:
+                f.write(self.toJson())
+            logger.debug(' write file success, file is %s', file)
+        except Exception as e:
+            logger.error(' write file failed, file is %s, exception is %s.', file, e)
+            raise e

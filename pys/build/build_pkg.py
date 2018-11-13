@@ -9,8 +9,7 @@ from pys.tool import ca, utils
 from pys.data_mgr.package import HostNodeDirs
 from pys.error.exp import MCError
 from pys.log import logger
-from pys.build import config
-
+from pys.build.config.config import Config
 
 def build_node_dir(chain, node, fisco, port, index):
     """create node${index} dir.
@@ -57,10 +56,8 @@ def build_node_dir(chain, node, fisco, port, index):
     shutil.copy(path.get_path() + '/scripts/node/node_diagnose.sh',
                 node_dir + '/diagnose.sh')
 
-    cfg_json = config.build_config_json(chain.get_id(
-    ), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), fisco.is_gm())
-    with open(node_dir + '/config.json', "w+") as f:
-        f.write(cfg_json)
+    cfg = Config(chain.get_id(), port.get_rpc_port(), port.get_p2p_port(), port.get_channel_port(), fisco.is_gm())
+    cfg.writeFile(node_dir + '/config.json')
 
     os.makedirs(node_dir + '/data')
     os.makedirs(node_dir + '/log')
@@ -72,20 +69,14 @@ def build_node_dir(chain, node, fisco, port, index):
         shutil.copy(chain.data_dir() + '/genesis.json', node_dir + '/')
 
     if fisco.is_gm():
-        if ca.check_agent_gmca_exist(ca.get_GM_ca_path()):
-            ca.generator_node_ca(ca.get_GM_agent_path(),
-                node_dir + '/data', 'node' + str(index), True)
-            shutil.copytree(ca.get_GM_agent_path() + '/sdk', node_dir + '/data/sdk')
-            shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt', node_dir + '/data/')
-            shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.key', node_dir + '/data/')
-            shutil.copy(ca.get_GM_agent_path() + '/sdk/server.crt', node_dir + '/data/')
-            shutil.copy(ca.get_GM_agent_path() + '/sdk/server.key', node_dir + '/data/')
-        else:
-            logger.error(' gm agency cert not completed')
-            raise Exception(' gm agency cert not completed')
+        ca.generator_node_ca(ca.get_GM_agent_path(),
+            node_dir + '/data', 'node' + str(index), True)
+        shutil.copytree(ca.get_GM_agent_path() + '/sdk', node_dir + '/data/sdk')
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.crt', node_dir + '/data/')
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/ca.key', node_dir + '/data/')
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/server.crt', node_dir + '/data/')
+        shutil.copy(ca.get_GM_agent_path() + '/sdk/server.key', node_dir + '/data/')
     else:
-        # ca.generator_node_ca(node_dir + '/data',
-        #                      node.get_p2p_ip(), ca.get_agent_ca_path())
         ca.generator_node_ca(
             ca.get_agent_ca_path(), node_dir + '/data', 'node' + str(index))
 
@@ -121,11 +112,11 @@ def build_host_dir(chain, node, port, fisco, temp=None):
         # register node info to node manager contract
         if not temp is None:
             if fisco.is_gm():
-                temp.registerNode(chain.data_dir(), host_dir + ('/node%d' %
-                                                   index) + '/data/gmnode.json')
+                temp.register(host_dir + ('/node%d' %
+                                          index) + '/data/gmnode.json')
             else:
-                temp.registerNode(chain.data_dir(), host_dir + ('/node%d' %
-                                                   index) + '/data/node.json')
+                temp.register(host_dir + ('/node%d' %
+                                          index) + '/data/node.json')
 
     logger.info('build_host_dir end.')
 
@@ -166,8 +157,9 @@ def build_common_dir(chain, fisco):
         # copy client.keystore to web3sdk conf dir
         shutil.copy(ca.get_GM_agent_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
-        shutil.move(com_dir + '/web3sdk/conf/applicationContext_GM.xml',
-                    com_dir + '/web3sdk/conf/applicationContext.xml')
+        # shutil.move(com_dir + '/web3sdk/conf/applicationContext_GM.xml', 
+        #            com_dir + '/web3sdk/conf/applicationContext.xml')
+
     else:
         # copy ca.crt to web3sdk conf dir
         shutil.copy(ca.get_agent_ca_path() + '/sdk/ca.crt',
@@ -175,9 +167,8 @@ def build_common_dir(chain, fisco):
         # copy client.keystore to web3sdk conf dir
         shutil.copy(ca.get_agent_ca_path() + '/sdk/client.keystore',
                     com_dir + '/web3sdk/conf')
-        shutil.move(com_dir + '/web3sdk/conf/applicationContext_NB.xml',
-                    com_dir + '/web3sdk/conf/applicationContext.xml')
-
+        # shutil.move(com_dir + '/web3sdk/conf/applicationContext_NB.xml', 
+        #            com_dir + '/web3sdk/conf/applicationContext.xml')
 
     # copy scripts to common dir
     shutil.copy(path.get_path() + '/scripts/node/start.sh', com_dir)
@@ -186,8 +177,8 @@ def build_common_dir(chain, fisco):
     shutil.copy(path.get_path() + '/scripts/node/register.sh', com_dir)
     shutil.copy(path.get_path() + '/scripts/node/unregister.sh', com_dir)
     shutil.copy(path.get_path() + '/scripts/node/diagnose.sh', com_dir)
-    shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', com_dir)
-    shutil.copy(path.get_path() + '/scripts/node/node_manager.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/monitor.sh', com_dir)
+    shutil.copy(path.get_path() + '/scripts/node/rmlogs.sh', com_dir)           
 
     # copy scripts dir to common dir
     shutil.copytree(path.get_path() + '/scripts', com_dir + '/scripts')

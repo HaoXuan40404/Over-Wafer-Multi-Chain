@@ -52,6 +52,9 @@ echo "$result" | egrep "false" >/dev/null 2>&1
     error " node${index} is eth_syncing."
 }
 
+# check java version
+bash scripts/tools/deps.sh java_check
+
 nodeid=$(cat `pwd`/node$index/data/node.nodeid)
 register_or_not $nodeid
 if [ $? -eq 0 ];then

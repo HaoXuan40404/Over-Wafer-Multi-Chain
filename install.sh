@@ -23,9 +23,10 @@ function sudo_permission_check()
 function format()
 {
     dir=$1
-	find $dir -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
-    find $dir -name "*.sh"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
-    find $dir -name "web3sdk"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
+    sudo find $dir -name "*.json"|  while read LINE; do  dos2unix $LINE  2>/dev/null ; done
+    sudo find $dir -name "*.sh"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
+    sudo find $dir -name "*.py"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
+    sudo find $dir -name "web3sdk"|  while read LINE; do sudo chmod 777 $LINE; dos2unix $LINE 2>/dev/null ; done
 }
 
 #owmc install dir, default '/usr/local/'
@@ -91,6 +92,8 @@ function install()
         sudo chmod 777  ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
         sudo bash ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
     fi
+
+    sudo chmod 777 $install_dir/owmc
 
     echo " owmc install success ! "
 }

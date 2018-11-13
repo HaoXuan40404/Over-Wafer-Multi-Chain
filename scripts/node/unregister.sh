@@ -38,6 +38,9 @@ check_file $nodefile
 check_file $configfile
 check_file $nodeidfile
 
+# check java version
+bash scripts/tools/deps.sh java_check
+
 nodeid=$(cat `pwd`/node$index/data/node.nodeid)
 register_or_not $nodeid
 if [ $? -ne 0 ];then
