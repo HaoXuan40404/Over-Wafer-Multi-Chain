@@ -235,7 +235,7 @@ $ owmc -v
 INFO | v1.1.0
 ```
 
-## 初始化ansible --init命令
+## 初始化ansible --ansibleinit命令
 用户在配置conf/hosts时，需要用到本命令。
 
 本命令需要sudo权限对ansible的配置进行修改，用户每次修改hosts.conf都需要运行本命令。
