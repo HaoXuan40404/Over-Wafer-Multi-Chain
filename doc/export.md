@@ -80,7 +80,7 @@ INFO | v1.1.0
 ```
 
 ## 初始化机构证书命令 --cainit命令
-物理多链默认mchain.conf配置中的的机构名称为WB，并且在ca目录下已经存储了WB的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
+物理多链默认mchain.conf配置中的的机构名称为FISCO，并且在ca目录下已经存储了FISCO的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
 
 注意，用户需要提供需要的对应机构的证书。(可以参考证书生成命令)
 
@@ -93,7 +93,7 @@ $ owmc --cainit ./cert_path
 .
 ├── ca.crt
 ├── ca.key
-└── WB
+└── FISCO
     ├── agency.crt
     ├── agency.csr
     ├── agency.key
@@ -110,7 +110,7 @@ $ owmc --cainit ./cert_path
 ├── gmca.key
 ├── gmca.srl
 ├── gmsm2.param
-└── WB
+└── FISCO
     ├── gmagency.crt
     ├── gmagency.key
     ├── gmca.crt
@@ -166,7 +166,7 @@ vim mchain.conf
 ; 机构相关配置
 [agent]
 ; 机构名称
-agent_name=WB
+agent_name=FISCO
 
 [ansible]
 ; 部署目录
