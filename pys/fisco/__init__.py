@@ -1,2 +1,2 @@
 # __init__.py
-__all__ = ['version']
+__all__ = ['version','god']

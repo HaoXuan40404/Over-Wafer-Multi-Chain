@@ -10,6 +10,7 @@ from pys.build.temp import Temp
 from pys.build.tool import web3_conf_by_chain
 from pys.data_mgr.port import AllChainPort
 from pys.error.exp import MCError
+from pys.fisco import god
 
 def build(cc, fisco):
     """build all install package for one chain base on cc 
@@ -59,6 +60,7 @@ def build(cc, fisco):
             build_pkg.build_host_dir(chain, node, port, fisco, temp)
 
         # stop temp node and export for genesis.json file
+
         # temp.stop()
         temp.export()
         temp.clean()
