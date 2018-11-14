@@ -11,6 +11,8 @@ from pys.log import logger, consoler
 
 from pys.data_mgr.chain import Chain
 from pys.data_mgr.port import Port
+from pys.build.config.p2p_nodes import P2pHost
+from pys.build.config.p2p_nodes import P2pHosts
 from pys.error.exp import MCError
 
 class NodeEle:
@@ -95,6 +97,15 @@ class ConfigConf:
 
     def get_cfg(self):
         return self.cfg
+    
+    def to_p2p_nodes(self):
+        phs = P2pHosts()
+        for node in self.nodes:
+            for index in range(node.get_node_num()):
+                ph = P2pHost(node.get_p2p_ip(), self.port.get_p2p_port() + index)
+                logger.debug(' add P2pHost : %s', ph)
+                phs.add_p2p_host(ph)
+        return phs
 
     def parser(self):
         '''
@@ -146,7 +157,7 @@ class ConfigConf:
         index = 0
         while True:
             try:
-                n = NodeEle(cf.get('nodes', 'node%u' % index))
+                n = NodeEle(cf.get('pkgs', 'pkg%u' % index))
                 index += 1
                 n.do_parser()
             except Exception as e:
@@ -229,4 +240,4 @@ class ConfigConfs:
                     logger.warn(' parser cfg %s end exception, e %s ', c, e)
 
         else:
-            raise MCError(' invalid config, neither directory nor file, config is %s' % self.cfg)
+            raise MCError(' invalid config, %s not exist' % self.cfg)

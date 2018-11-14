@@ -24,7 +24,7 @@ Example:
   
 OWMC默认安装在/usr/local路径下，-d命令会将OWMC安装在指定路径，
 - -p 命令 指定python路径
-  
+
 -p命令将指定用户的python路径，OWMC默认依赖/usr/bin/python下的python，由于OWMC需要依赖python2.7或3.5以上版本，用户可以指定python路径
 - -g 命令 国密环境初始化
   
@@ -70,7 +70,7 @@ vim mchain.conf
 ; 机构相关配置
 [agent]
 ; 机构名称
-agent_name=WB
+agent_name=FISCO
 
 [ansible]
 ; 部署目录
@@ -235,14 +235,15 @@ $ owmc -v
 INFO | v1.1.0
 ```
 
-## 初始化ansible --init命令
+## 初始化ansible --ansibleinit命令
 用户在配置conf/hosts时，需要用到本命令。
 
 本命令需要sudo权限对ansible的配置进行修改，用户每次修改hosts.conf都需要运行本命令。
 
 ```
-$ python main.py --init
+$ owmc --init ./conf/hosts.conf
 ```
+第二项为hosts.conf的地址，请确保已经修改正确
 会得到如下提示
 ```
 INFO | ansible init success
@@ -252,7 +253,7 @@ INFO | ansible init success
 用户可以指定参数all查询配置的所有服务器，或是指定某些服务器ip查询对应服务器依赖。
 
 ## 初始化机构证书命令 --cainit命令
-物理多链默认mchain.conf配置中的的机构名称为WB，并且在ca目录下已经存储了WB的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
+物理多链默认mchain.conf配置中的的机构名称为FISCO，并且在ca目录下已经存储了FISCO的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
 
 注意，用户需要提供需要的对应机构的证书。(可以参考证书生成命令)
 
@@ -265,7 +266,7 @@ $ owmc --cainit ./cert_path
 .
 ├── ca.crt
 ├── ca.key
-└── WB
+└── FISCO
     ├── agency.crt
     ├── agency.csr
     ├── agency.key
@@ -282,7 +283,7 @@ $ owmc --cainit ./cert_path
 ├── gmca.key
 ├── gmca.srl
 ├── gmsm2.param
-└── WB
+└── FISCO
     ├── gmagency.crt
     ├── gmagency.key
     ├── gmca.crt
@@ -304,9 +305,56 @@ $ owmc --cainit ./cert_path
 # 安装包操作命令
 
 
+## 参数配置
+在生成安装包之前，用户需要对hosts.conf，mchain.conf和sample_12345_v1.0.conf进行链相关属性配置
+```
+cd Over-Wafer-Multi-Chain/
+cd conf/
+```
+### 修改hosts配置
+```
+vim hosts.conf
+```
+
+用户conf文件夹下修改hosts.conf格式如下
+```
+username 127.0.0.1 36000 123
+username 127.0.0.2 36000 123
+username 127.0.0.3 36000 123
+username 127.0.0.4 36000 123
+username 127.0.0.5 36000 123
+```
+第一项为ssh通信用户名，第二项为目标服务器ip 第三项为ssh通信端口号，第四项为ssh通信的密码，用户修改username 和密码为自己服务器的对应参数
+
+### 初始化环境
+```
+owmc --ansibleinit ./conf/hosts.conf
+```
+第二项为hosts.conf的地址，请确保已经修改正确
+### 检查环境
+```
+owmc --envcheck all
+```
+### 生成安装包
+使用前，用户需要自己编译生成fisco bcos可执行文件，假设用户的fisco-bcos程序放在/usr/local/bin/fisco-bcos。
+
+关于如何生成fisco bcos，可以参考[FISCO BCOS操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/)
+
+**tips**用户可以使用whereis fisco-bcos查找具体位置
+```
+$ owmc --build ./conf/sample_12345_v1.0.conf /usr/local/bin/fisco-bcos
+```
+### 确定安装路径
+在部署安装包之前，用户可以修改推送的路径，修改./conf/mchain.conf
+```
+$ vim ./conf/mchain.conf
+```
+其中dir=/data/app的/data/app即为用户希望推送到对应服务器的位置，请确保所在用户拥有访问该路径的权限。
 
 ## 生成多链安装包 --build命令
-本命令是解析用户输入的conf文件，生成相应安装包的命令。用户使用前需要确保运维服务器可以启动1.3版本的fisco-bcos，并且对应服务器的环境可以启动fisco-bcos,根据用户指定的fisco-bcos版本，可以生成国密或非国密的链，目前支持1.3版本的fisco-bcos。
+本命令是解析用户输入的conf文件，生成相应安装包的命令。使用前，用户需要自己编译生成fisco bcos可执行文件，需要确保运维服务器可以启动1.3版本的fisco-bcos，并且对应服务器的环境可以启动fisco-bcos,根据用户指定的fisco-bcos版本，可以生成国密或非国密的链，目前支持1.3版本的fisco-bcos。
+
+关于如何生成fisco bcos，可以参考[FISCO BCOS操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/)
 
 *** 注意，如果用户需要修改机构名称，需要先执行cainit命令，初始化需要机构的证书名称。 ***
 
@@ -397,7 +445,11 @@ $ owmc --export chain_id version $export_path/ --direct
 ## 发布多链安装包 --publish命令
 在用户推送安装包之前，建议首先检查目标服务器环境依赖，推荐使用--envcheck命令进行检测。
 
+在推送安装包前，请确保mchain.conf中的路径已经正确配置
+
 publish为多链的发布命令，用户需要制定链id和版本号，中间用":"隔开
+
+
 ```
 $ owmc --publish chain_id_1:version_1 chain_id_2:version_2 ...
 ```

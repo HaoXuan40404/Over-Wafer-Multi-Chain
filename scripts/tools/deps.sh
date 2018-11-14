@@ -2,6 +2,8 @@
 dirpath="$(cd "$(dirname "$0")" && pwd)"
 cd $dirpath
 
+source ~/.bash_profile
+source ~/.bashrc
 OS_CENTOS='centos'
 OS_UBUNTU='ubuntu'
 OS_REDHAT='redhat'

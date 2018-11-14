@@ -50,7 +50,7 @@ XXX没有安装，请尝试安装该依赖。
   
 多链初始化失败，请从新尝试clone代码
 
-- ERROR | invalid opr,  \"python main.py -h\" can be used to show detailed usage.
+- ERROR | invalid opr,  \"owmc -h\" can be used to show detailed usage.
 
 用户命令输入错误，请检查命令
 

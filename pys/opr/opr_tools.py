@@ -30,7 +30,7 @@ def telnet_ansible(server):
     for i in range(len(server)):
         if utils.valid_ip(server[i]) or server[i] == 'all':
             if ansible.telnet_module(server[i]):
-                consoler.info(' telnet test success, host is %s.', server[i])
+                consoler.info(' telnet test success, host is %s.\n', server[i])
             else:
                 consoler.error(' \033[1;31m telnet test failed, host is %s. \033[0m', server[i])
         else:

@@ -1,9 +1,9 @@
-# OWMC python2.7配置文档
-OWMC需要使用python2.7来生成相关安装包，本文是python2.7的配置文档。有些系统默认的python版本为3.X版本，因此需要对系统的python版本进行配置
+# OWMC python 配置文档
+OWMC需要使用python来生成相关安装包，本文是python2.7的配置文档。有些系统默认的python版本为3.X版本，因此需要对系统的python版本进行配置
 
 ## 安装
 
-### python2.7安装
+### python 安装
 centOS系统
 
 centos系统自带python2.7版本，一般情况下不需要安装，如果python版本比2.7或3.5版本更低，则需要进行更新操作
@@ -22,7 +22,7 @@ $ sudo yum install bzip2-devel
 
 最后安装包configparser
 ```
-$ sudo npm install python-pip
+$ sudo yum install python-pip
 $ sudo pip install configparser
 ```
 ubuntu系统

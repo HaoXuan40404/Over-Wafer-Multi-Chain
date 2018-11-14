@@ -241,8 +241,8 @@ def Usage():
         opr_tools.telnet_ansible(telnet_list)
         consoler.info(' telnet operation end.')
     elif args.ansibleinit:
-        opr_init_chain.init_chain(args.ansibleinit[0])
-        consoler.info(' ansible init success.')
+        opr_init_chain.init_ansible(args.ansibleinit[0],False)
+        consoler.info(' ansible init end.')
     elif args.cainit:
         consoler.info(' cert init begin.')
         ca.init_ca(args.cainit[0])
@@ -258,7 +258,7 @@ def Usage():
         consoler.info(' lshost operation end.')
     else:
         consoler.error(
-            '\033[1;31m invalid operation,  \"python main.py -h\" can be used to show detailed usage. \033[0m')
+            '\033[1;31m invalid operation,  \"owmc -h\" can be used to show detailed usage. \033[0m')
     return 0
 
 def main():

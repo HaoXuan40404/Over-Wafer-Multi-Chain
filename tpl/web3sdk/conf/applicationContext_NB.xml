@@ -32,12 +32,12 @@
 	</bean>
 	
 	<bean id="channelService" class="org.bcos.channel.client.Service">
-		<property name="orgID" value="WB" />
+		<property name="orgID" value="FISCO" />
 		<property name="connectSeconds" value="100" />
 		<property name="connectSleepPerMillis" value="10" />
 		<property name="allChannelConnections">
 			<map>
-				<entry key="WB">
+				<entry key="FISCO">
 					<bean class="org.bcos.channel.handler.ChannelConnections">
 						<property name="caCertPath" value="classpath:ca.crt" />
 						<property name="clientKeystorePath" value="classpath:client.keystore" />
@@ -45,7 +45,7 @@
 						<property name="clientCertPassWord" value="123456" />
                         <property name="connectionsStr">
 							<list>
-								<value>NODE@HOSTIP</value>  
+								WEB3SDK_NODES_LIST
 							</list>
 						</property>
                     </bean>

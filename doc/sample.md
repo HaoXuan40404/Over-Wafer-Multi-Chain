@@ -75,14 +75,17 @@ username 127.0.0.5 36000 123
 
 ### 初始化环境
 ```
-owmc --init
+owmc --ansibleinit ./conf/hosts.conf
 ```
+第二项为hosts.conf的地址，请确保已经修改正确
 ### 检查环境
 ```
 owmc --envcheck all
 ```
 ### 生成安装包
-假设用户的fisco-bcos程序放在/usr/local/bin/fisco-bcos。
+使用前，用户需要自己编译生成fisco bcos可执行文件，假设用户的fisco-bcos程序放在/usr/local/bin/fisco-bcos。
+
+关于如何生成fisco bcos，可以参考[FISCO BCOS操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/)
 
 **tips**用户可以使用whereis fisco-bcos查找具体位置
 ```

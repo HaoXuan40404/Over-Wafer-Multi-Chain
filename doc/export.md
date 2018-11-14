@@ -80,7 +80,7 @@ INFO | v1.1.0
 ```
 
 ## 初始化机构证书命令 --cainit命令
-物理多链默认mchain.conf配置中的的机构名称为WB，并且在ca目录下已经存储了WB的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
+物理多链默认mchain.conf配置中的的机构名称为FISCO，并且在ca目录下已经存储了FISCO的的国密与非国密版的证书。当用户希望用其他机构的证书生成或扩容区块链之前，需要先使用本命令进行证书初始化。
 
 注意，用户需要提供需要的对应机构的证书。(可以参考证书生成命令)
 
@@ -93,7 +93,7 @@ $ owmc --cainit ./cert_path
 .
 ├── ca.crt
 ├── ca.key
-└── WB
+└── FISCO
     ├── agency.crt
     ├── agency.csr
     ├── agency.key
@@ -110,7 +110,7 @@ $ owmc --cainit ./cert_path
 ├── gmca.key
 ├── gmca.srl
 ├── gmsm2.param
-└── WB
+└── FISCO
     ├── gmagency.crt
     ├── gmagency.key
     ├── gmca.crt
@@ -166,7 +166,7 @@ vim mchain.conf
 ; 机构相关配置
 [agent]
 ; 机构名称
-agent_name=WB
+agent_name=FISCO
 
 [ansible]
 ; 部署目录
@@ -281,7 +281,9 @@ node2=127.0.0.3 127.0.0.3 2
 * 第2个节点的端口：p2p 30344、rpc 8556、channel 8832
 
 ## 生成多链安装包 --build命令
-本命令是解析用户输入的conf文件，生成相应安装包的命令。用户使用前需要确保运维服务器可以启动1.3版本的fisco-bcos，并且对应服务器的环境可以启动fisco-bcos,根据用户指定的fisco-bcos版本，可以生成国密或非国密的链，目前支持1.3版本的fisco-bcos。
+本命令是解析用户输入的conf文件，生成相应安装包的命令。使用前，用户需要自己编译生成fisco bcos可执行文件，需要确保运维服务器可以启动1.3版本的fisco-bcos，并且对应服务器的环境可以启动fisco-bcos,根据用户指定的fisco-bcos版本，可以生成国密或非国密的链，目前支持1.3版本的fisco-bcos。
+
+关于如何生成fisco bcos，可以参考[FISCO BCOS操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/)
 
 *** 注意，如果用户需要修改机构名称，需要先执行cainit命令，初始化需要机构的证书名称。 ***
 
