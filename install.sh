@@ -103,7 +103,7 @@ function install()
         sudo bash ${install_dir}/owmc/scripts/ca/gm/install_tassl.sh
     fi
 
-    sudo chmod 777 $install_dir/owmc
+    sudo chmod -R 777 $install_dir/owmc
 
 
     echo " owmc install success ! "

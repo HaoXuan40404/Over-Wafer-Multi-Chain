@@ -59,9 +59,7 @@ def build(cc, fisco):
         for node in cc.get_nodes():
             build_pkg.build_host_dir(chain, node, port, fisco, temp)
 
-        # stop temp node and export for genesis.json file
-
-        # temp.stop()
+        # export for genesis.json file
         temp.export()
         temp.clean()
 
