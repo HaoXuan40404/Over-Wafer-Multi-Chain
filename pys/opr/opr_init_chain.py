@@ -12,6 +12,14 @@ def init_ansible(hosts_conf, add_opr=False):
     try:
         if not os.path.exists(hosts_conf):
             raise MCError('hosts_conf not exisits! ')
+        if add_opr:
+            src = '/etc/ansible/hosts'
+            dst = '/etc/ansible/hosts.bak'
+            if not os.path.exists(src):
+                raise MCError('/etc/ansible/hosts not exisits! ')
+            os.rename(src, dst)
+            f = open(src, 'w')
+            f.close()
         for line in open(hosts_conf):
             line = line.strip()
             host_value = line.split()
@@ -23,13 +31,13 @@ def init_ansible(hosts_conf, add_opr=False):
             port = host_value[2]
             passwd = host_value[3]
             if not utils.valid_string(user):
-                raise Exception('user type error ,user -> %s, host_line -> %s',user, host_value)
+                raise Exception('user type error ,user -> %s, host_line -> %s'%(user, host_value))
             if not utils.valid_ip(ip):
-                raise Exception('ip type error ,ip -> %s, host_line -> %s',ip, host_value)
-            if not utils.valid_port(port):
-                raise Exception('port type error ,ip -> %s, host_line -> %s',port, host_value)
+                raise Exception('ip type error ,ip -> %s, host_line -> %s'%(ip, host_value))
+            if not utils.valid_port(int(port)):
+                raise Exception('port type error ,port -> %s, host_line -> %s' %(port, host_value))
             if not utils.valid_string(passwd):
-                raise Exception('passwd type error ,ip -> %s, host_line -> %s',passwd, host_value)
+                raise Exception('passwd type error ,passwd -> %s, host_line -> %s'%(passwd, host_value))
             (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ansible_init.sh' + ' ' + user + ' ' + ip + ' ' + port + ' ' + passwd)
             if status != 0:
                 logger.warn(' ansible_init failed! status is %d, output is %s.', status, result)
