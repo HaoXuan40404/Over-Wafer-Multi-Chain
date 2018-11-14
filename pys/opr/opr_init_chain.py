@@ -23,7 +23,6 @@ def init_ansible(hosts_conf, add_opr=False):
         for line in open(hosts_conf):
             line = line.strip()
             host_value = line.split()
-            print(host_value,type(host_value))
             if len(host_value) != 4:
                 raise Exception('hosts_conf type error ,host_line -> %s',host_value)
             user = host_value[0]
@@ -42,7 +41,9 @@ def init_ansible(hosts_conf, add_opr=False):
             if status != 0:
                 logger.warn(' ansible_init failed! status is %d, output is %s.', status, result)
                 raise MCError('ansible_init failed! status is %d, output is %s.' % (status, result))
-            opr_tools.telnet_ansible(ip)
+            result = []
+            result.append(ip)
+            opr_tools.telnet_ansible(result)
             logger.info(' ansible_init success! status is %d, output is %s', status, result)
     except MCError as me:
         consoler.error(' \033[1;31m %s \033[0m', me)
