@@ -5,7 +5,7 @@ ip=$2
 port=$3
 passwd=$4
 
-type ansible > /dev/null 2&1 
+type ansible >/dev/null 2>&1 
 if [ $? -ne 0 ];then
     echo 'ansible not installed, pls check it'
     exit 1
