@@ -7,7 +7,7 @@ from pys.tool import utils
 from pys.log import logger
 from pys.log import consoler
 from pys.error.exp import MCError
-
+from pys.opr import opr_tools
 def init_ansible(hosts_conf, add_opr=False):
     try:
         if not os.path.exists(hosts_conf):
@@ -42,6 +42,7 @@ def init_ansible(hosts_conf, add_opr=False):
             if status != 0:
                 logger.warn(' ansible_init failed! status is %d, output is %s.', status, result)
                 raise MCError('ansible_init failed! status is %d, output is %s.' % (status, result))
+            opr_tools.telnet_ansible(ip)
             logger.info(' ansible_init success! status is %d, output is %s', status, result)
     except MCError as me:
         consoler.error(' \033[1;31m %s \033[0m', me)
