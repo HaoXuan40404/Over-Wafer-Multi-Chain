@@ -305,6 +305,51 @@ $ owmc --cainit ./cert_path
 # 安装包操作命令
 
 
+## 参数配置
+在生成安装包之前，用户需要对hosts.conf，mchain.conf和sample_12345_v1.0.conf进行链相关属性配置
+```
+cd Over-Wafer-Multi-Chain/
+cd conf/
+```
+### 修改hosts配置
+```
+vim hosts.conf
+```
+
+用户conf文件夹下修改hosts.conf格式如下
+```
+username 127.0.0.1 36000 123
+username 127.0.0.2 36000 123
+username 127.0.0.3 36000 123
+username 127.0.0.4 36000 123
+username 127.0.0.5 36000 123
+```
+第一项为ssh通信用户名，第二项为目标服务器ip 第三项为ssh通信端口号，第四项为ssh通信的密码，用户修改username 和密码为自己服务器的对应参数
+
+### 初始化环境
+```
+owmc --ansibleinit ./conf/hosts.conf
+```
+第二项为hosts.conf的地址，请确保已经修改正确
+### 检查环境
+```
+owmc --envcheck all
+```
+### 生成安装包
+使用前，用户需要自己编译生成fisco bcos可执行文件，假设用户的fisco-bcos程序放在/usr/local/bin/fisco-bcos。
+
+关于如何生成fisco bcos，可以参考[FISCO BCOS操作手册](https://fisco-bcos-documentation.readthedocs.io/zh_CN/latest/)
+
+**tips**用户可以使用whereis fisco-bcos查找具体位置
+```
+$ owmc --build ./conf/sample_12345_v1.0.conf /usr/local/bin/fisco-bcos
+```
+### 确定安装路径
+在部署安装包之前，用户可以修改推送的路径，修改./conf/mchain.conf
+```
+$ vim ./conf/mchain.conf
+```
+其中dir=/data/app的/data/app即为用户希望推送到对应服务器的位置，请确保所在用户拥有访问该路径的权限。
 
 ## 生成多链安装包 --build命令
 本命令是解析用户输入的conf文件，生成相应安装包的命令。使用前，用户需要自己编译生成fisco bcos可执行文件，需要确保运维服务器可以启动1.3版本的fisco-bcos，并且对应服务器的环境可以启动fisco-bcos,根据用户指定的fisco-bcos版本，可以生成国密或非国密的链，目前支持1.3版本的fisco-bcos。
@@ -400,7 +445,11 @@ $ owmc --export chain_id version $export_path/ --direct
 ## 发布多链安装包 --publish命令
 在用户推送安装包之前，建议首先检查目标服务器环境依赖，推荐使用--envcheck命令进行检测。
 
+在推送安装包前，请确保mchain.conf中的路径已经正确配置
+
 publish为多链的发布命令，用户需要制定链id和版本号，中间用":"隔开
+
+
 ```
 $ owmc --publish chain_id_1:version_1 chain_id_2:version_2 ...
 ```
