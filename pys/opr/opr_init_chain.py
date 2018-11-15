@@ -37,7 +37,7 @@ def init_ansible(hosts_conf, add_opr=False):
                 raise Exception('port type error ,port -> %s, host_line -> %s' %(port, host_value))
             if not utils.valid_string(passwd):
                 raise Exception('passwd type error ,passwd -> %s, host_line -> %s'%(passwd, host_value))
-            (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ansible_init.sh' + ' ' + user + ' ' + ip + ' ' + port + ' ' + passwd)
+            (status, result) = utils.getstatusoutput('bash ' + path.get_path() + '/scripts/ansible_add_ssh.sh' + ' ' + user + ' ' + ip + ' ' + port + ' ' + passwd)
             if status != 0:
                 logger.warn(' ansible_init failed! status is %d, output is %s.', status, result)
                 raise MCError('ansible_init failed! status is %d, output is %s.' % (status, result))
