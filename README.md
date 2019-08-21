@@ -1,28 +1,6 @@
-[![image for the blockchain contest](https://github.com/FISCO-BCOS/FISCO-BCOS/blob/master/doc/imgs/application_contest.png "点击图片报名")](https://con.geekbang.org/)
+# OWMC
 
-## 技术文档
+使用ansible实现的一个简单的区块链部署、管理工具
 
-访问[FISCO BCOS 物理多链物料包使用手册](https://github.com/HaoXuan40404/Over-Wafer-Multi-Chain/tree/dev/doc)，内容包括：
-
-- 环境依赖
-- FISCO BCOS JAVA配置文档
-- OWMC python2.7配置文档
-- ansible 配置文档
-- OWMC搭建示例
-- 多链操作手册
-- FAQ
-
-
-## 联系我们
-
-邮箱：service@fisco.com.cn
-
-微信群：添加群管理员微信号fiscobcosfan，拉您入FISCO BCOS官方技术交流群。
-
-群管理员微信二维码：
-
-![](https://github.com/FISCO-BCOS/web3sdk/raw/master/doc/FISCO-BCOS.jpeg)
-
-诚邀广大安全专家共同关注区块链安全。如果有安全风险，欢迎各位踊跃提交漏洞至[微众SRC](https://security.webank.com)。
 
 
